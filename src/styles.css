@@ -1,1 +1,66 @@
-/* You can add global styles to this file, and also import other style files */
+    /* You can add global styles to this file, and also import other style files */
+    
+    body {
+        /* background-color: #c34613; */
+        /* background-color: #4E936F; */
+        /* background-color: #202C4C; */
+        background-color: #EBEBEE;
+    }
+    
+    h1 {
+        text-align: center;
+        color: #202C4C;
+        font-weight: bold;
+    }
+    
+    h3 {
+        color: #202C4C;
+        font-weight: bold;
+    }
+    
+    th {
+        color: #4E936F;
+        text-align: center;
+        background-color: white;
+    }
+    
+    .ui-datepicker-prev,
+    .ui-datepicker-next {
+        font-weight: bold;
+    }
+    
+    .ui-datepicker-header {
+        background-color: #4E936F;
+        color: white;
+        text-align: center;
+        display: flex;
+        justify-content: space-around;
+    }
+    
+    .ui-datepicker-title {
+        font-weight: bold;
+    }
+    
+    .ui-datepicker-calendar th,
+    td {
+        color: #202C4C;
+        text-align: center;
+    }
+    
+    .ui-datepicker-calendar td:hover {
+        color: #202C4C;
+        background-color: rgb(208, 208, 214);
+        text-align: center;
+    }
+    
+    .ui-datepicker-calendar a {
+        color: #202C4C;
+    }
+    
+    .ui-datepicker,
+    .table-condensed {
+        background-color: #eeeeee;
+        padding: 5px;
+        margin: auto;
+        border-radius: 5%;
+    }

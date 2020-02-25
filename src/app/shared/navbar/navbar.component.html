@@ -1,0 +1,40 @@
+<!-- Just an image -->
+<nav class="navbar navbar-light bg-light mb-3">
+    <a class="navbar-brand">
+        <div id="sidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <div class="acordeon">
+                <img src="../../../assets/img/logo.png" width="100%" height="15%">
+                <div class="acordeon__item">
+                    <input type="radio" name="acordeon" id="item1">
+                    <label for="item1" class="acordeon__titulo">Registrar</label>
+                    <div class="btn-group-vertical acordeon__contenido">
+                        <button type="button" class="btn btn-default" routerLink="/registro-clientes">Clientes</button>
+                        <button type="button" class="btn btn-default" routerLink="/registro-usuarios">Usuarios ASG</button>
+                        <button type="button" class="btn btn-default" routerLink="/registro-proyectos">Proyectos</button>
+                        <button type="button" class="btn btn-default" routerLink="/registro-gastos">Gastos generales</button >
+                    </div>
+                </div>
+                <div class="acordeon__item">
+                    <input type="radio" name="acordeon" id="item2">
+                    <label for="item2" class="acordeon__titulo">Registros</label>
+                    <div class="btn-group-vertical acordeon__contenido">
+                        <button type="button" class="btn btn-default" routerLink="/clientes">Clientes</button>
+                        <button type="button" class="btn btn-default" routerLink="/usuarios">Usuarios ASG</button>
+                        <button type="button" class="btn btn-default" routerLink="/proyectos">Proyectos</button>
+                        <button type="button" class="btn btn-default" routerLink="/gastos">Gastos generales</button >
+                    </div>
+                </div>
+                <div class="acordeon__item">
+                    <input type="radio" name="acordeon" id="item3">
+                    <label  data-toggle="tooltip" data-placement="right" title="Caja" for="item3" class="acordeon__titulo">Oficina</label>
+                    <div class="btn-group-vertical acordeon__contenido">
+                        <button type="button" class="btn btn-default" routerLink="/oficina">Registrar</button>
+                        <button type="button" class="btn btn-default" routerLink="/registro-oficina">Registro</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span onclick="openNav()">&#9776;</span>
+    </a>
+</nav>
