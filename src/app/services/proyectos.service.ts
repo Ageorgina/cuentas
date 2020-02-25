@@ -12,11 +12,8 @@ export class ProyectosService {
   cargarProyectos() {
    return this.db.collection('proyectos').valueChanges();
  }
- addProyectos() {
-   return this.db.collection('proyectos').valueChanges();  }
- updateProyectos() {
-   return this.db.collection('proyectos').valueChanges();  }
- deleteProyectos() {
-   return this.db.collection('proyectos').valueChanges();
-   }
+ cudProyectos() {
+   return this.db.collection('proyectos');
+  }
+
   }

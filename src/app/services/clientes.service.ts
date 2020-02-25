@@ -1,29 +1,25 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
-
-
-
-
-
+import { Cliente } from '../general/model/cliente';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientesService {
+  clientes = [];
   constructor( private db: AngularFirestore ) {
   }
 
   cargarClientes() {
-    return this.db.collection('clientes').valueChanges();
+  this.db.collection('clientes').valueChanges().subscribe(clientes => {
+    this.clientes = clientes;
+  });
+  return this.db.collection('clientes').valueChanges();
 }
-  addClientes() {
-    return this.db.collection('clientes').valueChanges();  }
-  updateClientes() {
-    return this.db.collection('clientes').valueChanges();  }
-  deleteClientes() {
-    return this.db.collection('clientes').valueChanges();
-    }
+  cudCtes() { // create / update / delete
+    return this.db.collection('clientes');
+  }
 
 }

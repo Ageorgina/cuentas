@@ -17,8 +17,8 @@
             <td>{{el.proyecto}}</td>
             <td>{{el.estatus}}</td>
             <td>
-                <button type="button" class="btn btn-outline-success mr-2"><i class="fas fa-edit"></i> Modificar</button>
-                <button type="button" class="btn btn-outline-danger"> <i class="fas fa-trash-alt"></i> Eliminar</button>
+                <button type="button" class="btn btn-outline-success mr-2" (click)="actualizar()"><i class="fas fa-edit"></i> Modificar</button>
+                <button type="button" class="btn btn-outline-danger" (click)="borrar()"> <i class="fas fa-trash-alt"></i> Eliminar</button>
             </td>
         </tr>
 

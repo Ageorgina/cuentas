@@ -9,7 +9,7 @@ import { ProyectosService } from '../../../services/proyectos.service';
 export class InvProyectosComponent implements OnInit {
   titulo = 'Proyectos';
   headTitle = ['Nombre', 'Descripción', 'Duración', 'Monto Presupuestado', 'Monto Disponible', 'Tipo Proyecto',
-                'Cliente', 'Responsable Cliente', 'Responsable ASG', 'Estatus', 'Modificar / Eliminar'];
+              'ID Actividad', 'Proceso', 'Cliente', 'Responsable Cliente', 'Responsable ASG', 'Estatus', 'Modificar / Eliminar'];
   elements = [];
 
   constructor( private _proyS: ProyectosService) {
@@ -21,6 +21,14 @@ export class InvProyectosComponent implements OnInit {
       this.elements = proyectos;
     });
   }
+  borrar() {
+    console.log('se elimino');
+  }
+
+  actualizar() {
+    console.log('se actualizo');
+  }
+
   }
 
 

@@ -17,5 +17,11 @@ export class InvGastosGeneralesComponent implements OnInit {
         this.elements = gastos;
       });
   }
+  borrar() {
+    console.log('se elimino');
+  }
 
+  actualizar() {
+    console.log('se actualizo');
+  }
 }

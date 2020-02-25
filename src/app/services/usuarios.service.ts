@@ -13,11 +13,7 @@ export class UsuariosService {
    cargarUsuarios() {
     return this.db.collection('usuarios').valueChanges();
   }
-  addUsuarios() {
-    return this.db.collection('usuarios').valueChanges();  }
-  updateUsuarios() {
-    return this.db.collection('usuarios').valueChanges();  }
-  deleteUsuarios() {
-    return this.db.collection('usuarios').valueChanges();
-    }
+  cudUsuarios() {
+    return this.db.collection('usuarios');
+  }
   }

@@ -7,15 +7,14 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let el of elements">
-
+        <tr *ngFor="let el of elements; let i of index">
             <td>{{el.nombre}}</td>
             <td>{{el.puesto}}</td>
             <td>{{el.empresa}}</td>
             <td>{{el.celular}}</td>
             <td>
-                <button type="button" class="btn btn-outline-success mr-2"><i class="fas fa-edit"></i> Modificar</button>
-                <button type="button" class="btn btn-outline-danger"> <i class="fas fa-trash-alt"></i> Eliminar</button>
+                <button type="button" class="btn btn-outline-success mr-2" (click)="actualizar()"><i class="fas fa-edit"></i> Modificar</button>
+                <button type="button" class="btn btn-outline-danger" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
             </td>
         </tr>
 

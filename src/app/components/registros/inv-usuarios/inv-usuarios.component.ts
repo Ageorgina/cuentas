@@ -7,7 +7,7 @@ import { UsuariosService } from '../../../services/usuarios.service';
   styleUrls: ['./inv-usuarios.component.css']
 })
 export class InvUsuariosComponent implements OnInit {
-  titulo = ' Usuarios ASG';
+  titulo = 'Usuarios ASG';
   headTitle = ['Nombre', 'Puesto', 'Modificar / Eliminar'];
   elements = [];
 
@@ -18,6 +18,13 @@ export class InvUsuariosComponent implements OnInit {
       this.elements = usuarios;
     }
       );
+  }
+  borrar() {
+    console.log('se elimino');
+  }
+
+  actualizar() {
+    console.log('se actualizo');
   }
 
   }

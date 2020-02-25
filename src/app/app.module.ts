@@ -14,14 +14,15 @@ import { InvGastosGeneralesComponent } from './components/registros/inv-gastos-g
 import { InvUsuariosComponent } from './components/registros/inv-usuarios/inv-usuarios.component';
 import { InvProyectosComponent } from './components/registros/inv-proyectos/inv-proyectos.component';
 import { InvClientesComponent } from './components/registros/inv-clientes/inv-clientes.component';
-// Firebase
+import { InvOficinaComponent } from './components/registros/inv-oficina/inv-oficina.component';
+
+// Formularios
+import { ReactiveFormsModule } from '@angular/forms';
 
 // MDBootstrap
-
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { AlertasComponent } from './shared/alertas/alertas.component';
 import { RegistroOficinaComponent } from './components/altas/registro-oficina/registro-oficina.component';
-import { InvOficinaComponent } from './components/registros/inv-oficina/inv-oficina.component';
 
 // Firebase
 import { AngularFireModule } from '@angular/fire';
@@ -55,7 +56,8 @@ import { environment } from '../environments/environment';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAnalyticsModule,
     AngularFirestoreModule,
-    AngularFireDatabaseModule
+    AngularFireDatabaseModule,
+    ReactiveFormsModule
   ],
   providers: [ ],
   bootstrap: [AppComponent],
