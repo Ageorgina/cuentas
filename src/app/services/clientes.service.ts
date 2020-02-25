@@ -16,14 +16,14 @@ export class ClientesService {
   }
 
   cargarClientes() {
-    return this.db.collectionGroup('clientes').valueChanges();
+    return this.db.collection('clientes').valueChanges();
 }
   addClientes() {
-    return this.db.collectionGroup('clientes').valueChanges();  }
+    return this.db.collection('clientes').valueChanges();  }
   updateClientes() {
-    return this.db.collectionGroup('clientes').valueChanges();  }
+    return this.db.collection('clientes').valueChanges();  }
   deleteClientes() {
-    return this.db.collectionGroup('clientes').valueChanges();
+    return this.db.collection('clientes').valueChanges();
     }
 
 }

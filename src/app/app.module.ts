@@ -29,7 +29,6 @@ import { AngularFireAnalyticsModule } from '@angular/fire/analytics';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { environment } from '../environments/environment';
-import { InvGastosComponent } from './components/registros/inv-gastos/inv-gastos.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +47,6 @@ import { InvGastosComponent } from './components/registros/inv-gastos/inv-gastos
     AlertasComponent,
     RegistroOficinaComponent,
     InvOficinaComponent,
-    InvGastosComponent,
   ],
   imports: [
     BrowserModule,

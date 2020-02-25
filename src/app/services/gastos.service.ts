@@ -6,17 +6,30 @@ import { AngularFirestore } from '@angular/fire/firestore';
 })
 export class GastosService {
 
-  constructor( private db: AngularFirestore ) { 
+  constructor( private db: AngularFirestore ) {
+
   }
+
     cargarGastos() {
-      return this.db.collectionGroup('gastos-generales').valueChanges();
+      return this.db.collection('gastos-generales').valueChanges();
     }
     addGastos() {
-      return this.db.collectionGroup('gastos-generales').valueChanges();  }
+      return this.db.collection('gastos-generales').valueChanges();  }
     updateGastos() {
-      return this.db.collectionGroup('gastos-generales').valueChanges();  }
+      return this.db.collection('gastos-generales').valueChanges();  }
     deleteGastos() {
-      return this.db.collectionGroup('gastos-generales').valueChanges();
+      return this.db.collection('gastos-generales').valueChanges();
       }
-  
+  // OFICINA
+      cargarGastosOF() {
+        this.db.collection('oficina ').valueChanges().subscribe(gastos => console.log(gastos));
+        return this.db.collection('oficina ').valueChanges();
+      }
+      addGastosOF() {
+        return this.db.collection('oficina ').valueChanges();  }
+      updateGastosOF() {
+        return this.db.collection('oficina ').valueChanges();  }
+      deleteGastosOF() {
+        return this.db.collection('oficina ').valueChanges();
+        }
   }

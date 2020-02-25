@@ -1,1 +1,29 @@
-<p>inv-proyectos works!</p>
+<navbar></navbar>
+<h1>Registro {{titulo}}</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th *ngFor="let head of headTitle">{{head}}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let el of elements">
+
+            <td>{{el.nombre}}</td>
+            <td>{{el.descripcion}}</td>
+            <td>{{el.duracion}}</td>
+            <td>{{el.monto_p}}</td>
+            <td>{{el.monto_d}}</td>
+            <td>{{el.tipo_proyecto}}</td>
+            <td>{{el.cliente}}</td>
+            <td>{{el.resp_cte}}</td>
+            <td>{{el.resp_asg}}</td>
+            <td>{{el.estatus}}</td>
+            <td>
+                <button type="button" class="btn btn-outline-success mr-2"><i class="fas fa-edit"></i> Modificar</button>
+                <button type="button" class="btn btn-outline-danger"> <i class="fas fa-trash-alt"></i> Eliminar</button>
+            </td>
+        </tr>
+
+    </tbody>
+</table>

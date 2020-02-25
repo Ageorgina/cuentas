@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ProyectosService } from '../../../services/proyectos.service';
 
 @Component({
   selector: 'app-inv-proyectos',
@@ -6,10 +7,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./inv-proyectos.component.css']
 })
 export class InvProyectosComponent implements OnInit {
+  titulo = 'Proyectos';
+  headTitle = ['Nombre', 'Descripción', 'Duración', 'Monto Presupuestado', 'Monto Disponible', 'Tipo Proyecto',
+                'Cliente', 'Responsable Cliente', 'Responsable ASG', 'Estatus', 'Modificar / Eliminar'];
+  elements = [];
 
-  constructor() { }
+  constructor( private _proyS: ProyectosService) {
 
-  ngOnInit() {
   }
 
-}
+  ngOnInit() {
+    this._proyS.cargarProyectos().subscribe( proyectos => {
+      this.elements = proyectos;
+    });
+  }
+  }
+
+

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GastosService } from '../../../services/gastos.service';
 
 @Component({
   selector: 'app-inv-gastos-generales',
@@ -6,10 +7,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./inv-gastos-generales.component.css']
 })
 export class InvGastosGeneralesComponent implements OnInit {
-
-  constructor() { }
+  titulo = 'Gastos Generales';
+  headTitle = ['Responsable ASG', 'Fecha', 'Cantidad', 'Motivo', 'Tipo', 'Proyecto', 'Estatus', 'Modificar / Eliminar'];
+  elements = [];
+  constructor( private _gstS: GastosService) { }
 
   ngOnInit() {
+    this._gstS.cargarGastos().subscribe(gastos => {
+        this.elements = gastos;
+      });
   }
 
 }

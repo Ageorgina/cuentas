@@ -1,28 +1,23 @@
-<h1>{{titulo}}</h1>
+<navbar></navbar>
+<h1>Registro {{titulo}}</h1>
 <table class="table">
     <thead>
         <tr>
-            <th *ngF>#</th>
+            <th *ngFor="let head of headTitle">{{head}}</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
+        <tr *ngFor="let el of elements">
+
+            <td>{{el.nombre}}</td>
+            <td>{{el.puesto}}</td>
+            <td>{{el.empresa}}</td>
+            <td>{{el.celular}}</td>
+            <td>
+                <button type="button" class="btn btn-outline-success mr-2"><i class="fas fa-edit"></i> Modificar</button>
+                <button type="button" class="btn btn-outline-danger"> <i class="fas fa-trash-alt"></i> Eliminar</button>
+            </td>
         </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Larry</td>
-            <td>the Bird</td>
-            <td>@twitter</td>
-        </tr>
+
     </tbody>
 </table>

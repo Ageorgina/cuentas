@@ -10,8 +10,14 @@ export class UsuariosService {
   constructor( private db: AngularFirestore ) {
 
    }
-
-   borrar(){
-    console.log('db', this.db.collection);
-   }
-}
+   cargarUsuarios() {
+    return this.db.collection('usuarios').valueChanges();
+  }
+  addUsuarios() {
+    return this.db.collection('usuarios').valueChanges();  }
+  updateUsuarios() {
+    return this.db.collection('usuarios').valueChanges();  }
+  deleteUsuarios() {
+    return this.db.collection('usuarios').valueChanges();
+    }
+  }
