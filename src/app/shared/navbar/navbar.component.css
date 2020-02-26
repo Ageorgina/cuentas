@@ -3,7 +3,7 @@
     width: 0;
     position: fixed;
     z-index: 1;
-    top: 7%;
+    top: 5%;
     left: 0;
     background-color: rgba(225, 225, 228, 0.699);
     overflow-x: hidden;
@@ -25,9 +25,8 @@
 
 .sidenav .closebtn {
     position: absolute;
-    top: -2%;
-    margin-left: 68%;
-    ;
+    top: -1%;
+    margin-left: 75%;
     font-size: 36px;
 }
 

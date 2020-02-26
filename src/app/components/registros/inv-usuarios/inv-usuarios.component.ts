@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuariosService } from '../../../services/usuarios.service';
-
 @Component({
   selector: 'app-inv-usuarios',
   templateUrl: './inv-usuarios.component.html',
@@ -11,15 +10,16 @@ export class InvUsuariosComponent implements OnInit {
   headTitle = ['Nombre', 'Puesto', 'Modificar / Eliminar'];
   elements = [];
 
-  constructor(private _userS: UsuariosService) { }
+  constructor(private _user: UsuariosService) { }
 
   ngOnInit() {
-    this._userS.cargarUsuarios().subscribe( usuarios => { 
+    this._user.cargarUsuarios().subscribe( usuarios => { 
       this.elements = usuarios;
     }
       );
   }
-  borrar() {
+  borrar( ) {
+    this._user.deleteUsuarios('1');
     console.log('se elimino');
   }
 

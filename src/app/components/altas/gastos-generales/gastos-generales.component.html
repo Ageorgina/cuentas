@@ -1,31 +1,32 @@
 <navbar></navbar>
 <h1>Registrar Gastos Generales</h1>
 <div class="m-3 col-md-10 card ">
-    <div class="flex-container">
-        <div>
-            <label class="control-label" for="resp_asg">Responsable ASG: </label><br>
-            <select id="resp_asg ">
+    <form [formGroup]="gastosForm" (ngSubmit)="onSubmit()">
+        <div class="flex-container">
+            <div>
+                <label class="control-label" for="resp_asg">Responsable ASG: </label><br>
+                <select id="resp_asg" formControlName="resp_asg">
         <option disabled>Responsable ASG</option>
-        <option value="holi ">Holi</option>
+        <option *ngFor="let resp of usuarios"  >{{resp.nombre}}</option>
       </select>
+            </div>
+            <div>
+                <label class="control-label" for="fecha">Fecha: <span><i class="far fa-calendar-alt "></i></span> </label>
+                <input class="form-control col-md-12" id="fecha" placeholder="Fecha" formControlName="fecha" type="date">
+            </div>
         </div>
         <div>
-            <label class="control-label" for="fecha">Fecha: <span><i class="far fa-calendar-alt "></i></span> </label>
-            <input class="form-control col-md-12" id="fecha" placeholder="Fecha" formControlName="fecha" type="text">
+            <label class="control-label" for="cantidad ">Cantidad: </label>
+            <input class="form-control col-md-12" id="cantidad " placeholder="Cantidad" formControlName="cantidad" type="text">
+            <br/>
+            <label class="control-label" for="descripcion">Motivo: </label>
+            <input class="form-control" id="motivo" placeholder="Motivo" formControlName="motivo" type="text">
+            <br/>
         </div>
-    </div>
-    <div>
-        <label class="control-label" for="cantidad ">Cantidad: </label>
-        <input class="form-control col-md-12" id="cantidad " placeholder="Cantidad" formControlName="cantidad" type="text">
-        <br/>
-        <label class="control-label" for="descripcion">Motivo: </label>
-        <input class="form-control" id="motivo" placeholder="Motivo" formControlName="motivo" type="text">
-        <br/>
-    </div>
-    <div class=" flex-container">
-        <div>
-            <label class="control-label mr-2" for="tipo_gasto ">Tipo gasto:</label><br>
-            <select id="tipo_gasto">
+        <div class=" flex-container">
+            <div>
+                <label class="control-label mr-2" for="tipo_gasto">Tipo gasto:</label><br>
+                <select id="tipo_gasto" formControlName="tipo_gasto">
                 <option disabled class="col-md-8">Tipo gasto</option>
                 <option value="clientes ">Clientes</option>
                 <option value="empresa ">Empresa</option>
@@ -34,25 +35,27 @@
                 <option value="software ">Software</option>
                 <option value="otros ">Otros</option>
               </select></div>
-        <div>
-            <label class="control-label mr-2" for="proyecto">Proyecto:</label><br>
-            <select id="proyecto">
+            <div>
+                <label class="control-label mr-2" for="proyecto">Proyecto:</label><br>
+                <select id="proyecto" formControlName="proyecto">
                     <option disabled class="col-md-8">Proyecto</option>
-                    <option value="clientes ">:D</option>
+                    <option *ngFor="let proyecto of proyectos">{{proyecto.nombre}}</option>
                   </select></div>
-        <div>
-            <label class="control-label mr-2" for="estatus">Estatus:</label><br>
-            <select id="estatus">
+            <div>
+                <label class="control-label mr-2" for="estatus">Estatus:</label><br>
+                <select id="estatus" formControlName="estatus">
                     <option disabled>Estatus</option>
                     <option value="pendiente">Pentiente</option>
                     <option value="pagado">Pagado</option>
                     <option value="pagado">Incompleto</option>
                     <option value="cancelado">Cancelado</option>
                   </select>
+            </div>
         </div>
-    </div>
-    <br>
-    <button type="submit" class="btn btn-dark-green" id="guardar" class="col-md-5" active><i class="fas fa-cloud-download-alt"></i> Guardar </button>
-    <alerta (click)="prueba()"> </alerta>
+        <br>
 
+        <button type="submit" class="btn btn-dark-green" id="guardar" class="col-md-5" active><i class="fas fa-cloud-download-alt"></i> Guardar </button>
+        <alerta> </alerta>
+
+    </form>
 </div>

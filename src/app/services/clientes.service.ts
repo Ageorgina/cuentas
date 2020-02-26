@@ -18,7 +18,8 @@ export class ClientesService {
   });
   return this.db.collection('clientes').valueChanges();
 }
-  cudCtes() { // create / update / delete
+  cudCtes( ) { // create / update / delete
+
     return this.db.collection('clientes');
   }
 

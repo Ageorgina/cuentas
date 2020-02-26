@@ -1,54 +1,65 @@
 <navbar></navbar>
 <h1>Registrar {{titulo}}</h1>
 <div class="m-3 col-md-10 card ">
-    <div class="flex-container">
-        <div>
-            <label class="control-label" for="nombre">Nombre: </label>
-            <input class="form-control  " id="nombre" placeholder="Nombre" formControlName="nombre" type="text">
-            <br>
-            <label class="control-label" for="descripcion">Descripción: </label>
-            <input class="form-control " id="descripcion" placeholder="Descripción" formControlName="descripcion" type="text">
-            <br>
-            <label class="control-label" for="duracion ">Duración: </label>
-            <input class="form-control " id="duracion " placeholder="Duración" formControlName="duracion" type="number">
-            <br>
-            <label class="control-label" for="monto ">Monto Presupuestado: </label>
-            <input class="form-control " id="monto " placeholder="Monto Presupuestado" formControlName="monto" type="text">
-            <br>
-            <label class="control-label" for="tipo_proyecto">Tipo de proyecto: </label>
-            <input class="form-control " id="tipo_proyecto" placeholder="Tipo de proyecto" formControlName="tipo_proyecto" type="text">
-        </div>
-
-        <div>
-            <label class="control-label" for="cliente"> Cliente: </label><br>
-            <select id="cliente">
+    <form [formGroup]="proyectosForm" (ngSubmit)="onSubmit()">
+        <div class="flex-container">
+            <div>
+                <label class="control-label" for="nombre">Nombre: </label>
+                <input class="form-control  " id="nombre" placeholder="Nombre" formControlName="nombre" type="text">
+                <br>
+                <label class="control-label" for="descripcion">Descripción: </label>
+                <input class="form-control " id="descripcion" placeholder="Descripción" formControlName="descripcion" type="text">
+                <br>
+                <label class="control-label" for="duracion ">Duración: </label>
+                <input class="form-control " id="duracion " placeholder="Duración" formControlName="duracion" type="number">
+                <br>
+                <label class="control-label" for="monto_p">Monto Presupuestado: </label>
+                <input class="form-control " id="monto_p" placeholder="Monto Presupuestado" formControlName="monto_p" type="text">
+                <br>
+            </div>
+            <div>
+                <label class="control-label" for="tipo_proyecto">Tipo de proyecto: </label>
+                <input class="form-control " id="tipo_proyecto" placeholder="Tipo de proyecto" formControlName="tipo_proyecto" type="text">
+                <br>
+                <label class="control-label" for="cliente"> Cliente: </label><br>
+                <select id="cliente" formControlName="cliente">
                 <option disabled>Cliente</option>
-                <option value="holi ">Holi</option>
+                <option *ngFor="let cte of clientes">{{cte.nombre}}</option>
               </select>
-            <br><br>
-            <label class="control-label" for="resp_cte">Responsable Cliente:</label>
-            <input class="form-control " id="resp_cte" placeholder="Responsable Cliente" formControlName="resp_cte" type="text">
-            <br>
-            <label class="control-label" for="resp_asg">Responsable ASG:</label><br>
-            <select id="resp_asg ">
+                <br><br>
+                <label class="control-label" for="resp_cte">Responsable Cliente:</label>
+                <input class="form-control " id="resp_cte" placeholder="Responsable Cliente" formControlName="resp_cte" type="text">
+                <br>
+                <label class="control-label" for="resp_asg">Responsable ASG:</label><br>
+                <select id="resp_asg" formControlName="resp_asg">
                 <option disabled>Responsable ASG</option>
-                <option value="holi ">Holi</option>
+                <option *ngFor="let usuario of usuarios">{{usuario.nombre}}</option>
               </select><br>
-            <br>
-            <label class="control-label mr-2" for="estatus">Estatus:</label><br>
-            <select id="estatus">
-                        <option disabled>Estatus</option>
+                <br>
+            </div>
+
+            <div>
+                <label class="control-label" for="ID_act">ID Actividad: </label>
+                <input class="form-control " id="ID_act" placeholder="ID Actividad" formControlName="id_act" type="text">
+                <br>
+                <label class="control-label" for="desc_act">Descripción Actividad: </label>
+                <input class="form-control " id="desc_act" placeholder="Descripción Actividad" formControlName="desc_act" type="text">
+                <br>
+                <label class="control-label" for="proceso">Proceso: </label>
+                <input class="form-control " id="proceso" placeholder="Proceso" formControlName="proceso" type="text">
+                <br>
+                <label class="control-label mr-2" for="estatus">Estatus:</label><br>
+                <select id="estatus" formControlName="estatus">
+                        <option disabled >Estatus</option>
                         <option value="activo">Activo</option>
                         <option value="cancelado">Cancelado</option>
                         <option value="pagado">Finalizado</option>
                         <option value="pausado">Pausado</option>
                         <option value="pendiente">Pentiente</option>
                       </select>
+                <br>
+            </div>
         </div>
-    </div>
-
-    <div>
         <button type="submit" class="btn btn-dark-green" id="guardar" class="col-md-4" active><i class="fas fa-cloud-download-alt"></i> Guardar </button>
-        <!-- <button type="submit" class="btn btn-dark-green" id="guardar" class="col-md-4" active><i class="fas fa-cloud-download-alt"></i> Guardar </button> -->
-    </div>
+    </form>
 </div>

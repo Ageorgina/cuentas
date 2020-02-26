@@ -11,7 +11,9 @@ export class ClientesComponent implements OnInit {
   titulo = 'Cliente';
   cliente = {};
   cteForm: FormGroup;
-  constructor( private _cte: ClientesService, private formBuilder: FormBuilder) {
+               // tslint:disable-next-line: variable-name
+  constructor( private _cte: ClientesService,
+               private formBuilder: FormBuilder) {
 
      }
 

@@ -21,7 +21,7 @@ export class GastosService {
         return this.db.collection('oficina ').valueChanges();
       }
       cudGastosOF() {
-        return this.db.collection('oficina '); 
+        return this.db.collection('oficina ');
       }
 
   }

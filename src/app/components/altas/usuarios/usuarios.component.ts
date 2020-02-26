@@ -28,7 +28,6 @@ export class UsuariosComponent implements OnInit {
 
   onSubmit() {
     this.usuario = this.userForm.value;
-    this._userS.cudUsuarios().add(this.usuario);
-
+    this._userS.addUsuarios().add(this.usuario);
   }
 }
