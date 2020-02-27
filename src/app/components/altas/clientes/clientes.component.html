@@ -1,21 +1,20 @@
 <navbar></navbar>
-<h1>Registrar {{titulo}}</h1>
+<h1>{{ titulo }}</h1>
 <div class="m-3 col-md-10 card ">
     <form [formGroup]="cteForm" (ngSubmit)="onSubmit()">
         <label class="control-label" for="nombre">Nombre: </label>
-        <input class="form-control col-md-10" id="nombre" placeholder="Nombre" formControlName="nombre" type="text">
+        <input class="form-control col-md-10" id="nombre" placeholder="Nombre" formControlName="nombre" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.nombre.errors }">
         <br>
         <label class="control-label" for="empresa">Empresa: </label>
-        <input class="form-control col-md-10 " id="empresa" placeholder="Empresa" formControlName="empresa" type="text">
+        <input class="form-control col-md-10 " id="empresa" placeholder="Empresa" formControlName="empresa" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.empresa.errors }">
         <br>
         <label class="control-label" for="cargo ">Cargo: </label>
-        <input class="form-control col-md-10" id="cargo " placeholder="puesto" formControlName="puesto" type="text">
+        <input class="form-control col-md-10" id="cargo" placeholder="puesto" formControlName="puesto" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.puesto.errors }">
         <br/>
         <label class="control-label" for="celular">Celular: </label>
-        <input class="form-control col-md-10" id="celular " placeholder="Celular" formControlName="celular" type="text">
+        <input class="form-control col-md-10" id="celular" placeholder="Celular" formControlName="celular" type="text" (keyup)="checkNumeros($event)">
         <br/>
         <button type="submit" id="guardar" class="col-md-5"><i class="fas fa-cloud-download-alt"></i>
-            Guardar </button>
+            {{boton}}</button>
     </form>
-
 </div>

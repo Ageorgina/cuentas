@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { UsuariosService } from '../../../services/usuarios.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GastosService } from '../../../services/gastos.service';
+import { Usuario } from '../../../general/model/usuario';
+import { Gasto } from '../../../general/model/gasto';
+import { Oficina } from '../../../general/model/oficina';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-registro-oficina',
@@ -9,39 +13,60 @@ import { GastosService } from '../../../services/gastos.service';
   styleUrls: ['./registro-oficina.component.css']
 })
 export class RegistroOficinaComponent implements OnInit {
-  titulo = 'Gastos Oficina';
-  usuarios =  [];
-  gasto = {};
-  gastos = [];
+  titulo = 'Registrar Gasto Oficina';
+  usuarios: Usuario[] = [];
+  gasto: Oficina;
+  gastos: Gasto[] = [];
+  boton = 'Guardar';
   ofForm: FormGroup;
+  // tslint:disable-next-line: variable-name
+  id_of: string;
+  updateOf: Oficina;
+
   constructor( private formBuilder: FormBuilder,
                // tslint:disable-next-line: variable-name
                private _user: UsuariosService,
                // tslint:disable-next-line: variable-name
-               private _gtsOf: GastosService
-  ) {
-    this._user.cargarUsuarios().subscribe(usuarios => {
-      console.log(usuarios);
-      this.usuarios = usuarios; });
-    }
+               private _ofS: GastosService,
+               private active: ActivatedRoute,
+               private router: Router) {
+                 this.ofForm = this.formBuilder.group({
+                   resp_asg: ['', Validators.required],
+                   fecha: ['', Validators.required],
+                   cantidad: ['', Validators.required],
+                   motivo: ['', Validators.required],
+                   tipo: ['', Validators.required]
+                  });
+                 this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => {
+                    this.usuarios = usuarios; });
 
+                 this.id_of = this.active.snapshot.paramMap.get('id_of');
+                 console.log(this.id_of);
+                 if (this.id_of) {
+                    this.boton = 'Actualizar';
+                    this._ofS.cudGastosOF().doc(this.id_of).valueChanges().subscribe((upOf: Oficina) => {
+                      this.updateOf = upOf;
+                      this.ofForm.get(['resp_asg']).setValue(this.updateOf.resp_asg);
+                      this.ofForm.get(['fecha']).setValue(this.updateOf.fecha);
+                      this.ofForm.get(['cantidad']).setValue(this.updateOf.cantidad);
+                      this.ofForm.get(['motivo']).setValue(this.updateOf.motivo);
+                      this.ofForm.get(['tipo']).setValue(this.updateOf.tipo);
+                    });
+                    }
+               }
 ngOnInit() {
 
-  this.ofForm = this.formBuilder.group({
-
-    resp_asg: ['', Validators.required],
-    fecha: ['', Validators.required],
-    cantidad: ['', Validators.required],
-    motivo: ['', Validators.required],
-    tipo: ['', Validators.required]
-  });
 }
 onSubmit() {
+  if (this.id_of) {
+    this.gasto = this.ofForm.value;
+    this._ofS.cudGastosOF().doc(this.id_of).update(this.gasto);
+    this.router.navigate(['oficina']);
 
+    } else {
 this.gasto = this.ofForm.value;
-console.log(this.gasto)
-console.log(this.ofForm.value.fecha)
-this._gtsOf.cudGastosOF().add(this.gasto);
+this._ofS.cudGastosOF().add(this.gasto);
+}
 }
 
 }

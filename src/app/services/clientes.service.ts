@@ -16,10 +16,9 @@ export class ClientesService {
   this.db.collection('clientes').valueChanges().subscribe(clientes => {
     this.clientes = clientes;
   });
-  return this.db.collection('clientes').valueChanges();
+  return this.db.collection('clientes').valueChanges({idField: 'id_cte'});
 }
-  cudCtes( ) { // create / update / delete
-
+  cudCtes( ) {
     return this.db.collection('clientes');
   }
 

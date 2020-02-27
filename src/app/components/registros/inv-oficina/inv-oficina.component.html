@@ -1,5 +1,7 @@
 <navbar></navbar>
 <h1>Registro {{titulo}}</h1>
+<h3>Monto Disponible: {{titulo}}</h3>
+<br>
 <table class="table">
     <thead>
         <tr>
@@ -7,18 +9,16 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let el of elements">
-
+        <tr *ngFor="let el of elements; let i of index">
             <td>{{el.resp_asg}}</td>
             <td>{{el.fecha}}</td>
             <td>{{el.tipo}}</td>
             <td>{{el.cantidad}}</td>
             <td>{{el.motivo}}</td>
             <td>
-                <button type="button" class="btn btn-outline-success mr-2" (click)="actualizar()"><i class="fas fa-edit"></i> Modificar</button>
-                <button type="button" class="btn btn-outline-danger" (click)="borrar()"> <i class="fas fa-trash-alt"></i> Eliminar</button>
+                <button type="button" class="btn btn-outline-success mr-2" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
+                <button type="button" class="btn btn-outline-danger" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
             </td>
         </tr>
-
     </tbody>
 </table>

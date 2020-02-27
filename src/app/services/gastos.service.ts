@@ -10,7 +10,7 @@ export class GastosService {
   }
 
     cargarGastos() {
-      return this.db.collection('gastos-generales').valueChanges();
+      return this.db.collection('gastos-generales').valueChanges({idField: 'id_gasto'});
     }
     cudGastos() {
       return this.db.collection('gastos-generales');
@@ -18,7 +18,7 @@ export class GastosService {
 
   // OFICINA
       cargarGastosOF() {
-        return this.db.collection('oficina ').valueChanges();
+        return this.db.collection('oficina ').valueChanges({idField: 'id_of'});
       }
       cudGastosOF() {
         return this.db.collection('oficina ');

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProyectosService } from '../../../services/proyectos.service';
+import { Proyecto } from '../../../general/model/proyecto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-inv-proyectos',
@@ -10,24 +12,27 @@ export class InvProyectosComponent implements OnInit {
   titulo = 'Proyectos';
   headTitle = ['Nombre', 'Descripción', 'Duración', 'Monto Presupuestado', 'Monto Disponible', 'Tipo Proyecto',
               'ID Actividad', 'Proceso', 'Cliente', 'Responsable Cliente', 'Responsable ASG', 'Estatus', 'Modificar / Eliminar'];
-  elements = [];
+  elements: Proyecto[] = [];
+  boton = 'Guardar';
 
-  constructor( private _proyS: ProyectosService) {
+  // tslint:disable-next-line: variable-name
+  constructor( private _proyS: ProyectosService , private router: Router) {
 
   }
 
   ngOnInit() {
-    this._proyS.cargarProyectos().subscribe( proyectos => {
+    this._proyS.cargarProyectos().subscribe( (proyectos: Proyecto[]) => {
       this.elements = proyectos;
     });
   }
-  borrar() {
-    console.log('se elimino');
+  borrar( value ) {
+    this._proyS.cudProyectos().doc(value.id_proyecto).delete();
   }
 
-  actualizar() {
-    console.log('se actualizo');
+  actualizar(value) {
+    this.router.navigate(['registro-proyectos', `${value.id_proyecto}`]);
   }
+
 
   }
 

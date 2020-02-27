@@ -1,5 +1,5 @@
 <navbar></navbar>
-<h1>Registrar {{titulo}}</h1>
+<h1>{{ titulo }}</h1>
 <div class="m-3 col-md-10 card ">
     <form [formGroup]="proyectosForm" (ngSubmit)="onSubmit()">
         <div class="flex-container">
@@ -23,7 +23,7 @@
                 <br>
                 <label class="control-label" for="cliente"> Cliente: </label><br>
                 <select id="cliente" formControlName="cliente">
-                <option disabled>Cliente</option>
+                <option disabled value="">Cliente</option>
                 <option *ngFor="let cte of clientes">{{cte.nombre}}</option>
               </select>
                 <br><br>
@@ -32,15 +32,15 @@
                 <br>
                 <label class="control-label" for="resp_asg">Responsable ASG:</label><br>
                 <select id="resp_asg" formControlName="resp_asg">
-                <option disabled>Responsable ASG</option>
+                <option disabled value="">Responsable ASG</option>
                 <option *ngFor="let usuario of usuarios">{{usuario.nombre}}</option>
               </select><br>
                 <br>
             </div>
 
             <div>
-                <label class="control-label" for="ID_act">ID Actividad: </label>
-                <input class="form-control " id="ID_act" placeholder="ID Actividad" formControlName="id_act" type="text">
+                <label class="control-label" for="id_act">ID Actividad: </label>
+                <input class="form-control " id="id_act" placeholder="ID Actividad" formControlName="id_act" type="text">
                 <br>
                 <label class="control-label" for="desc_act">Descripción Actividad: </label>
                 <input class="form-control " id="desc_act" placeholder="Descripción Actividad" formControlName="desc_act" type="text">
@@ -50,7 +50,7 @@
                 <br>
                 <label class="control-label mr-2" for="estatus">Estatus:</label><br>
                 <select id="estatus" formControlName="estatus">
-                        <option disabled >Estatus</option>
+                        <option disabled value="" >Estatus</option>
                         <option value="activo">Activo</option>
                         <option value="cancelado">Cancelado</option>
                         <option value="pagado">Finalizado</option>
@@ -60,6 +60,7 @@
                 <br>
             </div>
         </div>
-        <button type="submit" class="btn btn-dark-green" id="guardar" class="col-md-4" active><i class="fas fa-cloud-download-alt"></i> Guardar </button>
-    </form>
+        <br/>
+        <button type="submit" id="guardar" class="col-md-5"><i class="fas fa-cloud-download-alt"></i>
+            {{boton}}</button> </form>
 </div>

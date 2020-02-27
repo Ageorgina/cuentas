@@ -10,7 +10,7 @@ export class ProyectosService {
 
   }
   cargarProyectos() {
-   return this.db.collection('proyectos').valueChanges();
+   return this.db.collection('proyectos').valueChanges({idField: 'id_proyecto'});
  }
  cudProyectos() {
    return this.db.collection('proyectos');

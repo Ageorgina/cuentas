@@ -11,18 +11,31 @@ import { InvGastosGeneralesComponent } from './components/registros/inv-gastos-g
 import { RegistroOficinaComponent } from './components/altas/registro-oficina/registro-oficina.component';
 import { InvOficinaComponent } from './components/registros/inv-oficina/inv-oficina.component';
 
+
 const routes: Routes = [
+
+  { path: '', redirectTo: 'registro-gastos', pathMatch: 'full' },
+  // ALTAS
   { path: 'registro-usuarios', component: UsuariosComponent },
   { path: 'registro-clientes', component: ClientesComponent },
   { path: 'registro-proyectos', component: ProyectosComponent},
   { path: 'registro-gastos', component: GastosGeneralesComponent },
+  { path: 'registro-oficina', component: RegistroOficinaComponent },
+
+  // INVENTARIOS
   { path: 'usuarios', component: InvUsuariosComponent },
   { path: 'clientes', component: InvClientesComponent },
   { path: 'proyectos', component: InvProyectosComponent},
   { path: 'gastos', component: InvGastosGeneralesComponent },
-  { path: 'oficina', component: RegistroOficinaComponent },
-  { path: 'registro-oficina', component: InvOficinaComponent},
-  { path: '', redirectTo: 'registro-gastos', pathMatch: 'full' }
+  { path: 'oficina', component: InvOficinaComponent},
+
+  // UPDATE
+  { path: 'registro-usuarios/:id_user', component: UsuariosComponent },
+  { path: 'registro-clientes/:id_cte', component: ClientesComponent },
+  { path: 'registro-proyectos/:id_proyecto', component: ProyectosComponent},
+  { path: 'registro-gastos/:id_gasto', component: GastosGeneralesComponent },
+  { path: 'registro-oficina/:id_of', component: RegistroOficinaComponent },
+
 ];
 
 @NgModule({

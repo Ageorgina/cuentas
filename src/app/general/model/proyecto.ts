@@ -1,5 +1,7 @@
 
 export class Proyecto {
+    // tslint:disable-next-line: variable-name
+    id_proyecto: string;
     nombre: string;
     empresa: string;
     descripcion: string;

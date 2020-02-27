@@ -21,7 +21,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 // MDBootstrap
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
-import { AlertasComponent } from './shared/alertas/alertas.component';
 import { RegistroOficinaComponent } from './components/altas/registro-oficina/registro-oficina.component';
 
 // Firebase
@@ -45,7 +44,6 @@ import { environment } from '../environments/environment';
     InvUsuariosComponent,
     InvProyectosComponent,
     InvClientesComponent,
-    AlertasComponent,
     RegistroOficinaComponent,
     InvOficinaComponent,
   ],

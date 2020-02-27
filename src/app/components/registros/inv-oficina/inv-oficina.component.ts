@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GastosService } from '../../../services/gastos.service';
+import { Oficina } from '../../../general/model/oficina';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-inv-oficina',
@@ -9,22 +11,21 @@ import { GastosService } from '../../../services/gastos.service';
 export class InvOficinaComponent implements OnInit {
   titulo = 'Oficina';
   headTitle = ['Responsable ASG', 'Fecha', 'Tipo', 'Cantidad', 'Motivo', 'Modificar / Eliminar'];
-  elements = [];
-
-  constructor( private _gtsOfS: GastosService) { }
+  elements: Oficina[] = [];
+  // tslint:disable-next-line: variable-name
+  constructor( private _gtsOfS: GastosService, private  router: Router) { }
 
   ngOnInit() {
-    this._gtsOfS.cargarGastosOF().subscribe( gastos => {
-      console.log(gastos)
-      this.elements = gastos;
+    this._gtsOfS.cargarGastosOF().subscribe( (ofi: Oficina[] ) => {
+      this.elements = ofi;
     });
   }
-  borrar() {
-    console.log('se elimino');
+  borrar( value ) {
+    this._gtsOfS.cudGastosOF().doc(value.id_of).delete();
   }
 
-  actualizar() {
-    console.log('se actualizo');
+  actualizar(value) {
+    this.router.navigate(['registro-oficina', `${value.id_of}`]);
   }
 
 }
