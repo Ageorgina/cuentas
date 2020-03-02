@@ -34,13 +34,13 @@ export class InvProyectosComponent implements OnInit {
                 // tslint:disable-next-line: deprecation
                 this._proyS.cargarProyectos().subscribe( (proyectos: Proyecto[]) => {
                   this.elements = proyectos;
+                  // tslint:disable-next-line: forin
                   for (const item in this.elements) {
                     this.elements[item].gastos = 0;
                   }
                   this.restarAlgo();
               });
             }
-
 
 ngOnInit()    {
 
