@@ -4,12 +4,10 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/cor
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
-import { FooterComponent } from './shared/footer/footer.component';
 import { UsuariosComponent } from './components/altas/usuarios/usuarios.component';
 import { ClientesComponent } from './components/altas/clientes/clientes.component';
 import { ProyectosComponent } from './components/altas/proyectos/proyectos.component';
 import { GastosGeneralesComponent } from './components/altas/gastos-generales/gastos-generales.component';
-import { TablasComponent } from './shared/tablas/tablas.component';
 import { InvGastosGeneralesComponent } from './components/registros/inv-gastos-generales/inv-gastos-generales.component';
 import { InvUsuariosComponent } from './components/registros/inv-usuarios/inv-usuarios.component';
 import { InvProyectosComponent } from './components/registros/inv-proyectos/inv-proyectos.component';
@@ -34,12 +32,10 @@ import { environment } from '../environments/environment';
   declarations: [
     AppComponent,
     NavbarComponent,
-    FooterComponent,
     UsuariosComponent,
     ClientesComponent,
     ProyectosComponent,
     GastosGeneralesComponent,
-    TablasComponent,
     InvGastosGeneralesComponent,
     InvUsuariosComponent,
     InvProyectosComponent,
