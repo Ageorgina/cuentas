@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AlertasService } from '../../../services/srv_shared/alertas.service';
 import { GastosService } from '../../../services/gastos.service';
 import { Gasto } from '../../../general/model/gasto';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-inv-proyectos',
@@ -17,12 +18,12 @@ export class InvProyectosComponent implements OnInit {
               'ID Actividad', 'Proceso', 'Cliente', 'Responsable Cliente', 'Responsable ASG', 'Estatus', 'Modificar / Eliminar'];
   elements: Proyecto[] = [];
   boton = 'Guardar';
-  gastosp: Gasto[];
+  gastos: Gasto[];
   montoT: any ;
   // tslint:disable-next-line: variable-name
   mont_disp = 0 ;
-  gastosxP: 0;
-  proyectoName = '' ;
+  gastosxP = 0;
+  proyectoName = '';
 
   // tslint:disable-next-line: variable-name
   constructor( private _proyS: ProyectosService,
@@ -33,28 +34,13 @@ export class InvProyectosComponent implements OnInit {
                 // tslint:disable-next-line: deprecation
                 this._proyS.cargarProyectos().subscribe( (proyectos: Proyecto[]) => {
                   this.elements = proyectos;
-                    // tslint:disable-next-line: forin
                   for (const item in this.elements) {
-                      this.proyectoName = this.elements[item].tipo_proyecto;
-                      console.log('proyectoName', this.proyectoName);
-                }
-              });
-                // tslint:disable-next-line: deprecation
-                this._gastos.cargarGastos().subscribe( (gastos: Gasto[]) => {
-                  this.gastosp = gastos;
-                  this.gastosp.filter( data => {
-                    console.log(data.proyecto);
-                    if (data.proyecto === this.proyectoName) {
-                      // tslint:disable-next-line: forin
-                      for (const item in this.gastosp) {
-                        this.gastosxP +=  Number(this.gastosp[item].cantidad);
-                        console.log('gastosxPfor', this.gastosp[item].cantidad);
-                        console.log('gastosxP', this.gastosxP);
-                      }
-                    }
-               });
+                    this.elements[item].gastos = 0;
+                  }
+                  this.restarAlgo();
               });
             }
+
 
 ngOnInit()    {
 
@@ -68,6 +54,26 @@ actualizar(value) {
     this.router.navigate(['registro-proyectos', `${value.id_proyecto}`]);
   }
 
+  private restarAlgo() {
+    this.elements.filter( data => {
+    //  this.mont_disp = data.monto_d - this.gastosxP;
+    });
+
+    this._gastos.cargarGastos().subscribe( (gastos: Gasto[]) => {
+       this.gastos = gastos;
+       this.gastos.filter( data => {
+          // tslint:disable-next-line: forin
+          for (const item in this.elements) {
+             this.proyectoName = this.elements[item].tipo_proyecto;
+             if (data.proyecto === this.proyectoName) {
+               this.elements[item].gastos +=  Number(data.cantidad);
+             }
+             this.elements[item].monto_d = this.elements[item].monto_p - this.elements[item].gastos;
+          }
+    });
+   });
+
+  }
 
   }
 

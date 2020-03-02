@@ -23,5 +23,6 @@ export class Proyecto {
             // tslint:disable-next-line: variable-name
     desc_act: string;
         proceso: string;
+    gastos: number = 0;
 
   }

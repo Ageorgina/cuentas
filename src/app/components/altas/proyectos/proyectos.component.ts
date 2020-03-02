@@ -114,6 +114,7 @@ export class ProyectosComponent implements OnInit {
       return ;
     }
     if (this.id_proyecto && this.proyectosForm.valid) {
+      this.submitted = false;
       this.proyecto = this.proyectosForm.value;
       this.monto_d = this.proyectosForm.value.monto_p; // pediente
       this.proyectosForm.value.monto_d = this.monto_d;
@@ -122,12 +123,13 @@ export class ProyectosComponent implements OnInit {
       this.alert.showSuccess();
       }
     if (!this.id_proyecto && this.proyectosForm.valid) {
-    this.proyecto = this.proyectosForm.value;
-    this.monto_d = this.proyectosForm.value.monto_p; // pediente
-    this.proyectosForm.value.monto_d = this.monto_d;
-    this._proyectoS.cudProyectos().add(this.proyecto);
-    this.alert.showSuccess();
-    this.limpiar();
+      this.submitted = false;
+      this.proyecto = this.proyectosForm.value;
+      this.monto_d = this.proyectosForm.value.monto_p; // pediente
+      this.proyectosForm.value.monto_d = this.monto_d;
+      this._proyectoS.cudProyectos().add(this.proyecto);
+      this.alert.showSuccess();
+      this.limpiar();
   }
 }
 limpiar() {
