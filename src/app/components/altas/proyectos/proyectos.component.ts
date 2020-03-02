@@ -9,6 +9,8 @@ import { Usuario } from '../../../general/model/usuario';
 import { Cliente } from '../../../general/model/cliente';
 import { Gasto } from '../../../general/model/gasto';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Utils } from '../../../general/utils/utils';
+import { AlertasService } from '../../../services/srv_shared/alertas.service';
 
 @Component({
   selector: 'app-proyectos',
@@ -28,6 +30,8 @@ export class ProyectosComponent implements OnInit {
   // tslint:disable-next-line: variable-name
   id_proyecto: string;
   updateP: Proyecto;
+  textError: string;
+  submitted = false;
 
   constructor( private formBuilder: FormBuilder,
                // tslint:disable-next-line: variable-name
@@ -39,7 +43,9 @@ export class ProyectosComponent implements OnInit {
                // tslint:disable-next-line: variable-name
                private _cte: ClientesService,
                private active: ActivatedRoute,
-               private router: Router
+               private router: Router,
+               public alert: AlertasService,
+               private utils: Utils
                ) {
 
     this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => { this.usuarios = usuarios; });
@@ -64,7 +70,7 @@ export class ProyectosComponent implements OnInit {
       desc_act: ['', Validators.required]
   });
     this.id_proyecto = this.active.snapshot.paramMap.get('id_proyecto');
-    if ( this.id_proyecto ) {
+    if (this.id_proyecto) {
       this.titulo = 'Modificar Proyecto';
       this.boton = 'Actualizar';
       this._proyectoS.cudProyectos().doc(this.id_proyecto).valueChanges().subscribe((upP: Proyecto) => {
@@ -90,19 +96,67 @@ export class ProyectosComponent implements OnInit {
 
   ngOnInit() {
   }
+  get fval() {
+    return this.proyectosForm.controls;
+  }
   onSubmit() {
-    if (this.id_proyecto) {
+    this.submitted = true;
+    if (!this.id_proyecto && this.proyectosForm.invalid) {
+      this.textError = '¡Faltan campos por llenar!';
+      this.alert.textError = this.textError;
+      this.alert.showError();
+      return ;
+    }
+    if (!this.proyectosForm.valid) {
+      this.textError = '¡Faltan campos por llenar!';
+      this.alert.textError = this.textError;
+      this.alert.showError();
+      return ;
+    }
+    if (this.id_proyecto && this.proyectosForm.valid) {
       this.proyecto = this.proyectosForm.value;
       this.monto_d = this.proyectosForm.value.monto_p; // pediente
       this.proyectosForm.value.monto_d = this.monto_d;
       this._proyectoS.cudProyectos().doc(this.id_proyecto).update(this.proyecto);
       this.router.navigate(['proyectos']);
-      } else {
+      this.alert.showSuccess();
+      }
+    if (!this.id_proyecto && this.proyectosForm.valid) {
     this.proyecto = this.proyectosForm.value;
     this.monto_d = this.proyectosForm.value.monto_p; // pediente
     this.proyectosForm.value.monto_d = this.monto_d;
     this._proyectoS.cudProyectos().add(this.proyecto);
+    this.alert.showSuccess();
+    this.limpiar();
   }
+}
+limpiar() {
+  // tslint:disable-next-line: no-unused-expression
+  this.submitted;
+  this.proyectosForm.get(['resp_asg']).setValue('');
+  this.proyectosForm.get(['nombre']).setValue('');
+  this.proyectosForm.get(['cliente']).setValue('');
+  this.proyectosForm.get(['descripcion']).setValue('');
+  this.proyectosForm.get(['tipo_proyecto']).setValue('');
+  this.proyectosForm.get(['duracion']).setValue('');
+  this.proyectosForm.get(['monto_p']).setValue('');
+  this.proyectosForm.get(['resp_cte']).setValue('');
+  this.proyectosForm.get(['estatus']).setValue('');
+  this.proyectosForm.get(['proceso']).setValue('');
+  this.proyectosForm.get(['resp_cte']).setValue('');
+  this.proyectosForm.get(['id_act']).setValue('');
+  this.proyectosForm.get(['desc_act']).setValue('');
+  this.proyectosForm.get(['monto_d']).setValue('');
+}
+checkLetras($event: KeyboardEvent) {
+  this.utils.letras($event);
+}
+
+checkNumeros($event: KeyboardEvent) {
+  this.utils.numerosp($event);
+}
+checkCaracteres($event: KeyboardEvent) {
+  this.utils.letrasCaracteres($event);
 }
 
 }

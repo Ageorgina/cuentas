@@ -5,34 +5,37 @@
         <div class="flex-container">
             <div>
                 <label class="control-label" for="nombre">Nombre: </label>
-                <input class="form-control  " id="nombre" placeholder="Nombre" formControlName="nombre" type="text">
+                <input class="form-control" id="nombre" placeholder="Nombre" formControlName="nombre" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.nombre.errors }">
                 <br>
                 <label class="control-label" for="descripcion">Descripción: </label>
-                <input class="form-control " id="descripcion" placeholder="Descripción" formControlName="descripcion" type="text">
+                <input class="form-control " id="descripcion" placeholder="Descripción" formControlName="descripcion" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.descripcion.errors }">
                 <br>
                 <label class="control-label" for="duracion ">Duración: </label>
-                <input class="form-control " id="duracion " placeholder="Duración" formControlName="duracion" type="number">
+                <input class="form-control " id="duracion " placeholder="Duración" formControlName="duracion" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkNumeros($event)" [ngClass]="{ 'is-invalid': submitted && fval.duracion.errors }">
                 <br>
                 <label class="control-label" for="monto_p">Monto Presupuestado: </label>
-                <input class="form-control " id="monto_p" placeholder="Monto Presupuestado" formControlName="monto_p" type="text">
+                <input class="form-control " id="monto_p" placeholder="Monto Presupuestado" formControlName="monto_p" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkNumeros($event)" [ngClass]="{ 'is-invalid': submitted && fval.monto_p.errors }">
                 <br>
             </div>
             <div>
                 <label class="control-label" for="tipo_proyecto">Tipo de proyecto: </label>
-                <input class="form-control " id="tipo_proyecto" placeholder="Tipo de proyecto" formControlName="tipo_proyecto" type="text">
+                <input class="form-control " id="tipo_proyecto" placeholder="Tipo de proyecto" formControlName="tipo_proyecto" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.tipo_proyecto.errors }">
                 <br>
                 <label class="control-label" for="cliente"> Cliente: </label><br>
+                <p *ngIf="submitted && fval.cliente.invalid">*Este campo no puede ir vacío</p>
                 <select id="cliente" formControlName="cliente">
-                <option disabled value="">Cliente</option>
+                <option disabled value=''>Cliente</option>
                 <option *ngFor="let cte of clientes">{{cte.nombre}}</option>
               </select>
-                <br><br>
+                <br>
+                <br>
                 <label class="control-label" for="resp_cte">Responsable Cliente:</label>
-                <input class="form-control " id="resp_cte" placeholder="Responsable Cliente" formControlName="resp_cte" type="text">
+                <input class="form-control " id="resp_cte" placeholder="Responsable Cliente" formControlName="resp_cte" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.resp_cte.errors }">
                 <br>
                 <label class="control-label" for="resp_asg">Responsable ASG:</label><br>
+                <p *ngIf="submitted && fval.resp_asg.invalid">*Este campo no puede ir vacío</p>
                 <select id="resp_asg" formControlName="resp_asg">
-                <option disabled value="">Responsable ASG</option>
+                <option disabled value=''>Responsable ASG</option>
                 <option *ngFor="let usuario of usuarios">{{usuario.nombre}}</option>
               </select><br>
                 <br>
@@ -40,15 +43,16 @@
 
             <div>
                 <label class="control-label" for="id_act">ID Actividad: </label>
-                <input class="form-control " id="id_act" placeholder="ID Actividad" formControlName="id_act" type="text">
+                <input class="form-control" id="id_act" placeholder="ID Actividad" formControlName="id_act" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkCaracteres($event)" [ngClass]="{ 'is-invalid': submitted && fval.id_act.errors }">
                 <br>
                 <label class="control-label" for="desc_act">Descripción Actividad: </label>
-                <input class="form-control " id="desc_act" placeholder="Descripción Actividad" formControlName="desc_act" type="text">
+                <input class="form-control " id="desc_act" placeholder="Descripción Actividad" formControlName="desc_act" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkCaracteres($event)" [ngClass]="{ 'is-invalid': submitted && fval.desc_act.errors }">
                 <br>
                 <label class="control-label" for="proceso">Proceso: </label>
-                <input class="form-control " id="proceso" placeholder="Proceso" formControlName="proceso" type="text">
+                <input class="form-control " id="proceso" placeholder="Proceso" formControlName="proceso" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkCaracteres($event)" [ngClass]="{ 'is-invalid': submitted && fval.proceso.errors }">
                 <br>
                 <label class="control-label mr-2" for="estatus">Estatus:</label><br>
+                <p *ngIf="submitted && fval.estatus.invalid">*Este campo no puede ir vacío</p>
                 <select id="estatus" formControlName="estatus">
                         <option disabled value="" >Estatus</option>
                         <option value="activo">Activo</option>

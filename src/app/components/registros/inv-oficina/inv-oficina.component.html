@@ -1,6 +1,6 @@
 <navbar></navbar>
 <h1>Registro {{titulo}}</h1>
-<h3>Monto Disponible: {{titulo}}</h3>
+<h3>Monto Disponible: {{saldoDisp | currency}}</h3>
 <br>
 <table class="table">
     <thead>
@@ -13,11 +13,11 @@
             <td>{{el.resp_asg}}</td>
             <td>{{el.fecha}}</td>
             <td>{{el.tipo}}</td>
-            <td>{{el.cantidad}}</td>
+            <td style="text-align: right;">{{el.cantidad | currency }}</td>
             <td>{{el.motivo}}</td>
             <td>
-                <button type="button" class="btn btn-outline-success mr-2" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
-                <button type="button" class="btn btn-outline-danger" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
+                <button type=" button " class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(i) "><i class="fas fa-edit "></i> Modificar</button>
+                <button type="button " class="btn btn-outline-danger btn-sm " (click)="borrar(i) "> <i class="fas fa-trash-alt "></i> Eliminar</button>
             </td>
         </tr>
     </tbody>

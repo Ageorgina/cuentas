@@ -5,9 +5,14 @@ import Swal from 'sweetalert2';
   providedIn: 'root'
 })
 export class AlertasService {
-  textError = 'Holi';
+  textError = 'Error';
+  textWarning = 'Alerta!';
+  textWarningSuccess = 'Alerta!';
+  textInfo = 'Alerta!';
 
-  constructor(){}
+  constructor() {
+
+  }
 
   showSuccess() {
     Swal.fire({
@@ -26,11 +31,11 @@ export class AlertasService {
       showCancelButton: true,
       confirmButtonColor: '#4E936F',
       cancelButtonColor: '#c34613',
-      confirmButtonText: 'Si, eliminar!'
+      confirmButtonText: this.textWarning
     }).then((result) => {
       if (result.value) {
         Swal.fire(
-          'ELIMINADO!',
+          this.textWarningSuccess,
           '',
           'success',
         );
@@ -51,10 +56,9 @@ export class AlertasService {
     Swal.fire({
       position: 'center',
       icon: 'info',
-      title: 'Se realizo con éxito la operación',
+      title: this.textInfo,
       showConfirmButton: true,
       confirmButtonColor: '#4E936F',
-
     });
   }
 

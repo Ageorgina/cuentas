@@ -7,6 +7,9 @@ import { Gasto } from '../../../general/model/gasto';
 import { Usuario } from '../../../general/model/usuario';
 import { Proyecto } from '../../../general/model/proyecto';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Utils } from '../../../general/utils/utils';
+import { AlertasService } from '../../../services/srv_shared/alertas.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-gastos-generales',
@@ -25,6 +28,8 @@ export class GastosGeneralesComponent implements OnInit {
   // tslint:disable-next-line: variable-name
   id_gasto: string;
   updateG: Gasto;
+  textError: string;
+  submitted = false;
 
   constructor( private formBuilder: FormBuilder,
                // tslint:disable-next-line: variable-name
@@ -34,9 +39,11 @@ export class GastosGeneralesComponent implements OnInit {
                // tslint:disable-next-line: variable-name
                private __gastoS: GastosService,
                private active: ActivatedRoute,
-               private router: Router
+               private router: Router,
+               private utils: Utils,
+               public alert: AlertasService
                ) {
-    this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => { this.usuarios = usuarios; });
+    this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => { this.usuarios = usuarios;  });
     this._pyt.cargarProyectos().subscribe((proyectos: Proyecto[]) => { this.proyectos = proyectos; });
 
     this.gastosForm = this.formBuilder.group({
@@ -71,16 +78,60 @@ export class GastosGeneralesComponent implements OnInit {
 
   }
 
+  get fval() {
+    return this.gastosForm.controls;
+}
+
   onSubmit() {
-    if (this.id_gasto) {
+    this.submitted = true;
+    if (!this.id_gasto && this.gastosForm.invalid) {
+      this.textError = '¡Faltan campos por llenar!';
+      this.alert.textError = this.textError;
+      this.alert.showError();
+      return ;
+    }
+    if (!this.gastosForm.valid) {
+      this.textError = '¡Faltan campos por llenar!';
+      this.alert.textError = this.textError;
+      this.alert.showError();
+      return ;
+    }
+    if (this.id_gasto && this.gastosForm.valid) {
+      this.submitted = false;
       this.gasto = this.gastosForm.value;
       this.__gastoS.cudGastos().doc(this.id_gasto).update(this.gasto);
+      this.alert.showSuccess();
       this.router.navigate(['gastos']);
-      } else {
-    this.gasto = this.gastosForm.value;
-    this.fecha = this.gastosForm.value.fecha;
-    this.__gastoS.cudGastos().add(this.gasto);
+      }
+    if (!this.id_gasto && this.gastosForm.valid) {
+      this.submitted = false;
+      this.gasto = this.gastosForm.value;
+      this.fecha = this.gastosForm.value.fecha;
+      this.__gastoS.cudGastos().add(this.gasto);
+      this.alert.showSuccess();
+      this.limpiar();
   }
+}
+checkLetras($event: KeyboardEvent) {
+  this.utils.letras($event);
+}
+
+checkNumeros($event: KeyboardEvent) {
+  this.utils.numerosp($event);
+}
+checkL_N($event: KeyboardEvent) {
+  this.utils.letrasNumeros($event);
+}
+limpiar() {
+  // tslint:disable-next-line: no-unused-expression
+  this.submitted = false;
+  this.gastosForm.get(['resp_asg']).setValue('');
+  this.gastosForm.get(['fecha']).setValue('');
+  this.gastosForm.get(['cantidad']).setValue('');
+  this.gastosForm.get(['motivo']).setValue('');
+  this.gastosForm.get(['tipo_gasto']).setValue('');
+  this.gastosForm.get(['proyecto']).setValue('');
+  this.gastosForm.get(['estatus']).setValue('');
 }
 
 }

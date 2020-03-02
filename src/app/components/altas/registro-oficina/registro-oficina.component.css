@@ -3,6 +3,10 @@
     justify-content: space-between;
 }
 
+.footer {
+    margin-top: 52%;
+}
+
 .card {
     margin-left: 10% !important;
     padding-top: 2%;

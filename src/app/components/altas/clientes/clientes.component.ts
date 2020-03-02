@@ -4,8 +4,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Cliente } from '../../../general/model/cliente';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertasService } from 'src/app/services/srv_shared/alertas.service';
-import { Utils } from '../../../general/model/utils/utils';
-import { error } from 'util';
+import { Utils } from '../../../general/utils/utils';
 
 @Component({
   selector: 'app-clientes',
@@ -77,6 +76,7 @@ export class ClientesComponent implements OnInit {
     }
 
     if (!this.id_cte && this.cteForm.valid) {
+      this.submitted = false;
       this.cliente = this.cteForm.value;
       this._cteS.cudCtes().add(this.cliente);
       this.alert.showSuccess();
@@ -84,6 +84,7 @@ export class ClientesComponent implements OnInit {
     }
 
     if (this.id_cte && this.cteForm.valid) {
+      this.submitted = false;
       this.cliente = this.cteForm.value;
       this._cteS.cudCtes().doc(this.id_cte).update(this.cliente);
       this.router.navigate(['clientes']);
@@ -92,12 +93,13 @@ export class ClientesComponent implements OnInit {
     }
 
 limpiar() {
+  // tslint:disable-next-line: no-unused-expression
+  this.submitted;
   this.cteForm.get(['nombre']).setValue('');
   this.cteForm.get(['puesto']).setValue('');
   this.cteForm.get(['empresa']).setValue('');
   this.cteForm.get(['celular']).setValue('');
-  // tslint:disable-next-line: no-unused-expression
-  this.submitted;
+
 }
 
 checkLetras($event: KeyboardEvent) {
@@ -107,4 +109,5 @@ checkLetras($event: KeyboardEvent) {
 checkNumeros($event: KeyboardEvent) {
   this.utils.numeros($event);
 }
+
 }

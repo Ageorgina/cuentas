@@ -8,8 +8,8 @@
         <label class="control-label" for="empresa">Empresa: </label>
         <input class="form-control col-md-10 " id="empresa" placeholder="Empresa" formControlName="empresa" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.empresa.errors }">
         <br>
-        <label class="control-label" for="cargo ">Cargo: </label>
-        <input class="form-control col-md-10" id="cargo" placeholder="puesto" formControlName="puesto" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.puesto.errors }">
+        <label class="control-label" for="puesto">Puesto: </label>
+        <input class="form-control col-md-10" id="puesto" placeholder="Puesto" formControlName="puesto" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.puesto.errors }">
         <br/>
         <label class="control-label" for="celular">Celular: </label>
         <input class="form-control col-md-10" id="celular" placeholder="Celular" formControlName="celular" type="text" (keyup)="checkNumeros($event)">

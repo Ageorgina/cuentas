@@ -12,8 +12,8 @@
             <td>{{el.nombre}}</td>
             <td>{{el.descripcion}}</td>
             <td>{{el.duracion}}</td>
-            <td>{{el.monto_p}}</td>
-            <td>{{el.monto_d}}</td>
+            <td>{{el.monto_p | currency }}</td>
+            <td>{{el.monto_d | currency }}</td>
             <td>{{el.tipo_proyecto}}</td>
             <td>{{el.id_act}}</td>
             <td>{{el.proceso}}</td>
@@ -22,8 +22,8 @@
             <td>{{el.resp_asg}}</td>
             <td>{{el.estatus}}</td>
             <td>
-                <button type="button" class="btn btn-outline-success mr-2" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
-                <button type="button" class="btn btn-outline-danger" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
+                <button type="button" class="btn btn-outline-success btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
+                <button type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
             </td>
         </tr>
 

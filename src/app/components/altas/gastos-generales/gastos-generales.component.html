@@ -5,55 +5,62 @@
         <div class="flex-container">
             <div>
                 <label class="control-label" for="resp_asg">Responsable ASG: </label><br>
-                <select id="resp_asg" formControlName="resp_asg">
-        <option disabled value="">Responsable ASG</option>
-        <option *ngFor="let resp of usuarios">{{resp.nombre}}</option>
-      </select>
+                <p *ngIf="submitted && fval.resp_asg.invalid">*Este campo no puede ir vacío</p>
+                <select id="resp_asg" formControlName="resp_asg" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio ">
+                    <option disabled value=''>Responsable ASG</option>
+                    <option *ngFor="let resp of usuarios ">{{resp.nombre}}</option>
+                </select>
             </div>
             <div>
-                <label class="control-label" for="fecha">Fecha: <span><i class="far fa-calendar-alt "></i></span> </label>
-                <input class="form-control col-md-12" id="fecha" placeholder="Fecha" formControlName="fecha" type="date">
+                <label class="control-label " for="fecha">Fecha: <span><i class="far fa-calendar-alt "></i></span> </label>
+                <p *ngIf="submitted && fval.fecha.invalid">*Este campo no puede ir vacío</p>
+                <input class="form-control col-md-12 " id="fecha" placeholder="Fecha" formControlName="fecha" type="date" data-toggle="tooltip " title="*Campo obligatorio ">
             </div>
         </div>
-        <div>
-            <label class="control-label" for="cantidad ">Cantidad: </label>
-            <input class="form-control col-md-12" id="cantidad" placeholder="Cantidad" formControlName="cantidad" type="text">
-            <br/>
-            <label class="control-label" for="descripcion">Motivo: </label>
-            <input class="form-control" id="motivo" placeholder="Motivo" formControlName="motivo" type="text">
-            <br/>
-        </div>
-        <div class=" flex-container">
+
+        <label class="control-label " for="monto ">Monto: </label>
+        <input class="form-control col-md-12 " id="monto" placeholder="Monto" formControlName="cantidad" type="text" data-toggle="tooltip " title="*Campo obligatorio " (keyup)="checkNumeros($event) " [ngClass]="{ 'is-invalid': submitted && fval.cantidad.errors
+                    } ">
+        <br>
+        <label class="control-label" for="motivo">Motivo: </label>
+        <input class="form-control" id="motivo" placeholder="Motivo" formControlName="motivo" type="text" data-toggle="tooltip" title="*Campo obligatorio " (keyup)="checkL_N($event) " [ngClass]="{ 'is-invalid': submitted && fval.motivo.errors
+                    } ">
+        <br/>
+
+        <div class=" flex-container ">
             <div>
-                <label class="control-label mr-2" for="tipo_gasto">Tipo gasto:</label><br>
+                <label class="control-label mr-2 " for="tipo_gasto">Tipo gasto:</label><br>
+                <p *ngIf="submitted && fval.tipo_gasto.invalid">*Este campo no puede ir vacío</p>
                 <select id="tipo_gasto" formControlName="tipo_gasto">
-                <option disabled class="col-md-8" value="">Tipo gasto</option>
-                <option value="clientes ">Clientes</option>
-                <option value="empresa ">Empresa</option>
-                <option value="hardware ">Hardware</option>
-                <option value="papeleria ">Papeleria</option>
-                <option value="software ">Software</option>
-                <option value="otros ">Otros</option>
+                <option disabled class="col-md-8 " value=''>Tipo gasto</option>
+                <option value="Clientes">Clientes</option>
+                <option value="Empresa">Empresa</option>
+                <option value="Hardware">Hardware</option>
+                <option value="Papeleria">Papeleria</option>
+                <option value="Software">Software</option>
+                <option value="Otros">Otros</option>
               </select></div>
             <div>
-                <label class="control-label mr-2" for="proyecto">Proyecto:</label><br>
+                <label class="control-label mr-2 " for="proyecto">Proyecto:</label><br>
+                <p *ngIf="submitted && fval.proyecto.invalid">*Este campo no puede ir vacío</p>
                 <select id="proyecto" formControlName="proyecto">
-                    <option disabled class="col-md-8" value="">Proyecto</option>
+                    <option disabled class="col-md-8 " value=''>Proyecto</option>
                     <option *ngFor="let proyecto of proyectos">{{proyecto.nombre}}</option>
                   </select></div>
             <div>
-                <label class="control-label mr-2" for="estatus">Estatus:</label><br>
+                <label class="control-label mr-2 " for="estatus">Estatus:</label><br>
+                <p *ngIf="submitted && fval.estatus.invalid">*Este campo no puede ir vacío</p>
                 <select id="estatus" formControlName="estatus">
-                    <option disabled value="">Estatus</option>
-                    <option value="pendiente">Pentiente</option>
-                    <option value="pagado">Pagado</option>
-                    <option value="pagado">Incompleto</option>
-                    <option value="cancelado">Cancelado</option>
+                    <option disabled value=''>Estatus</option>
+                    <option value="Pendiente">Pentiente</option>
+                    <option value="Pagado">Pagado</option>
+                    <option value="Incompleto">Incompleto</option>
+                    <option value="Cancelado">Cancelado</option>
                   </select>
             </div>
         </div>
         <br>
-        <button type="submit" id="guardar" class="col-md-5"><i class="fas fa-cloud-download-alt"></i>
+        <button type="submit " id="guardar" class="col-md-5 "><i class="fas fa-cloud-download-alt "></i>
             {{boton}}</button>
     </form>
 </div>
