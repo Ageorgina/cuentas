@@ -13,9 +13,15 @@
         <input class="form-control" id="puesto" placeholder="Puesto" formControlName="puesto" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.puesto.errors }">
         <br/>
         <label class="control-label" for="celular">Celular: </label>
-        <input class="form-control" id="celular" placeholder="Celular" formControlName="celular" type="text" (keyup)="checkNumeros($event)">
+        <input class="form-control" maxlength="10" id="celular" placeholder="Celular" formControlName="celular" type="text" (keyup)="checkNumeros($event)">
         <br/>
-        <button type="submit" id="guardar" class="col-md-5"><i class="fas fa-cloud-download-alt"></i>
-            {{boton}}</button>
+        <div *ngIf="actualizar" class="center">
+            <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class="fas fa-times"></i>
+                Cancelar</button>
+            <button type="submit" id="eliminar" class="btn btn-outline-warning"><i class="fas fa-sync-alt"></i>
+                    Actualizar</button>
+        </div>
+        <button *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="fas fa-cloud-download-alt"></i>
+        {{boton}}</button>
     </form>
 </div>
