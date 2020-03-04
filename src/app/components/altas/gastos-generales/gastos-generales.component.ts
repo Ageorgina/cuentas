@@ -30,6 +30,8 @@ export class GastosGeneralesComponent implements OnInit {
   updateG: Gasto;
   textError: string;
   submitted = false;
+  loading = true;
+  actualizar = false;
 
   constructor( private formBuilder: FormBuilder,
                // tslint:disable-next-line: variable-name
@@ -60,7 +62,7 @@ export class GastosGeneralesComponent implements OnInit {
     this.id_gasto = this.active.snapshot.paramMap.get('id_gasto');
     if ( this.id_gasto ) {
       this.titulo = 'Modificar Gasto';
-      this.boton = 'Actualizar';
+      this.actualizar = true;
       this.__gastoS.cudGastos().doc(this.id_gasto).valueChanges().subscribe((upG: Gasto) => {
         this.updateG = upG;
         this.gastosForm.get(['resp_asg']).setValue(this.updateG.resp_asg);
@@ -75,7 +77,7 @@ export class GastosGeneralesComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.loading = false;
   }
 
   get fval() {
@@ -83,17 +85,20 @@ export class GastosGeneralesComponent implements OnInit {
 }
 
   onSubmit() {
+    this.loading = true;
     this.submitted = true;
     if (!this.id_gasto && this.gastosForm.invalid) {
       this.textError = '¡Faltan campos por llenar!';
       this.alert.textError = this.textError;
       this.alert.showError();
+      this.loading = false;
       return ;
     }
     if (!this.gastosForm.valid) {
       this.textError = '¡Faltan campos por llenar!';
       this.alert.textError = this.textError;
       this.alert.showError();
+      this.loading = false;
       return ;
     }
     if (this.id_gasto && this.gastosForm.valid) {
@@ -101,6 +106,7 @@ export class GastosGeneralesComponent implements OnInit {
       this.gasto = this.gastosForm.value;
       this.__gastoS.cudGastos().doc(this.id_gasto).update(this.gasto);
       this.alert.showSuccess();
+      this.loading = false;
       this.router.navigate(['gastos']);
       }
     if (!this.id_gasto && this.gastosForm.valid) {
@@ -109,6 +115,7 @@ export class GastosGeneralesComponent implements OnInit {
       this.fecha = this.gastosForm.value.fecha;
       this.__gastoS.cudGastos().add(this.gasto);
       this.alert.showSuccess();
+      this.loading = false;
       this.limpiar();
   }
 }
@@ -125,6 +132,7 @@ checkL_N($event: KeyboardEvent) {
 limpiar() {
   // tslint:disable-next-line: no-unused-expression
   this.submitted = false;
+  this.loading = false;
   this.gastosForm.get(['resp_asg']).setValue('');
   this.gastosForm.get(['fecha']).setValue('');
   this.gastosForm.get(['cantidad']).setValue('');
@@ -132,6 +140,9 @@ limpiar() {
   this.gastosForm.get(['tipo_gasto']).setValue('');
   this.gastosForm.get(['proyecto']).setValue('');
   this.gastosForm.get(['estatus']).setValue('');
+}
+regresar() {
+  this.router.navigate(['gastos']);
 }
 
 }

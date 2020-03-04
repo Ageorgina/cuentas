@@ -13,22 +13,29 @@ export class InvGastosGeneralesComponent implements OnInit {
   titulo = 'Gastos Generales';
   headTitle = ['Responsable ASG', 'Fecha', 'Monto', 'Motivo', 'Tipo', 'Proyecto', 'Estatus', 'Modificar / Eliminar'];
   elements: Gasto[] = [];
+  loading = true;
   // tslint:disable-next-line: variable-name
   constructor( private _gstS: GastosService,
                private router: Router,
-               private alert: AlertasService) { }
+               private alert: AlertasService) {
+                this._gstS.cargarGastos().subscribe((gastos: Gasto[]) => {
+                  this.elements = gastos;
+                  this.loading = false;
+                });
+                }
 
   ngOnInit() {
-    this._gstS.cargarGastos().subscribe((gastos: Gasto[]) => {
-        this.elements = gastos;
-      });
+
   }
   borrar( value ) {
+    this.loading = true;
     this._gstS.cudGastos().doc(value.id_gasto).delete();
     this.alert.showSuccess();
+    this.loading = false;
   }
 
   actualizar(value) {
+    this.loading = true;
     this.router.navigate(['registro-gastos', `${value.id_gasto}`]);
   }
 

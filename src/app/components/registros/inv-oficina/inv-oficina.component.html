@@ -1,6 +1,7 @@
 <navbar></navbar>
 <h1>Registro {{titulo}}</h1>
-<h3>Monto Disponible: {{saldoDisp | currency}}</h3>
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+<h3 class="ml-4">Monto Disponible: {{saldoDisp | currency}}</h3>
 <br>
 <table class="table">
     <thead>

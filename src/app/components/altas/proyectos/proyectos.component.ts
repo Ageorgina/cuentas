@@ -32,6 +32,8 @@ export class ProyectosComponent implements OnInit {
   updateP: Proyecto;
   textError: string;
   submitted = false;
+  loading = true;
+  actualizar = false;
 
   constructor( private formBuilder: FormBuilder,
                // tslint:disable-next-line: variable-name
@@ -47,18 +49,17 @@ export class ProyectosComponent implements OnInit {
                public alert: AlertasService,
                private utils: Utils
                ) {
-
     this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => { this.usuarios = usuarios; });
     this._cte.cargarClientes().subscribe((cts: Cliente[]) => { this.clientes = cts; } );
     this._gst.cargarGastos().subscribe((gastos: Gasto[]) => { this.gastos = gastos; });
     this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => { this.usuarios = usuarios; });
 
-
     this.proyectosForm = this.formBuilder.group({
       nombre: ['', Validators.required],
       cliente: ['', Validators.required],
       descripcion: ['', Validators.required],
-      duracion: ['', Validators.required],
+      fechaini: ['', Validators.required],
+      fechafin: ['', Validators.required],
       monto_p: ['', Validators.required],
       monto_d: [''],
       resp_asg: ['', Validators.required],
@@ -72,7 +73,7 @@ export class ProyectosComponent implements OnInit {
     this.id_proyecto = this.active.snapshot.paramMap.get('id_proyecto');
     if (this.id_proyecto) {
       this.titulo = 'Modificar Proyecto';
-      this.boton = 'Actualizar';
+      this.actualizar = true;
       this._proyectoS.cudProyectos().doc(this.id_proyecto).valueChanges().subscribe((upP: Proyecto) => {
         this.updateP = upP;
         this.proyectosForm.get(['resp_asg']).setValue(this.updateP.resp_asg);
@@ -80,7 +81,8 @@ export class ProyectosComponent implements OnInit {
         this.proyectosForm.get(['cliente']).setValue(this.updateP.cliente);
         this.proyectosForm.get(['descripcion']).setValue(this.updateP.descripcion);
         this.proyectosForm.get(['tipo_proyecto']).setValue(this.updateP.tipo_proyecto);
-        this.proyectosForm.get(['duracion']).setValue(this.updateP.duracion);
+        this.proyectosForm.get(['fechaini']).setValue(this.updateP.fechaini);
+        this.proyectosForm.get(['fechafin']).setValue(this.updateP.fechafin);
         this.proyectosForm.get(['monto_p']).setValue(this.updateP.monto_p);
         this.proyectosForm.get(['resp_cte']).setValue(this.updateP.resp_cte);
         this.proyectosForm.get(['estatus']).setValue(this.updateP.estatus);
@@ -95,25 +97,31 @@ export class ProyectosComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loading = false;
   }
   get fval() {
     return this.proyectosForm.controls;
   }
   onSubmit() {
+    this.loading = true;
     this.submitted = true;
     if (!this.id_proyecto && this.proyectosForm.invalid) {
+
       this.textError = '¡Faltan campos por llenar!';
       this.alert.textError = this.textError;
       this.alert.showError();
+      this.loading = false;
       return ;
     }
     if (!this.proyectosForm.valid) {
       this.textError = '¡Faltan campos por llenar!';
       this.alert.textError = this.textError;
       this.alert.showError();
+      this.loading = false;
       return ;
     }
     if (this.id_proyecto && this.proyectosForm.valid) {
+
       this.submitted = false;
       this.proyecto = this.proyectosForm.value;
       this.monto_d = this.proyectosForm.value.monto_p; // pediente
@@ -121,8 +129,10 @@ export class ProyectosComponent implements OnInit {
       this._proyectoS.cudProyectos().doc(this.id_proyecto).update(this.proyecto);
       this.router.navigate(['proyectos']);
       this.alert.showSuccess();
+      this.loading = false;
       }
     if (!this.id_proyecto && this.proyectosForm.valid) {
+      this.loading = false;
       this.submitted = false;
       this.proyecto = this.proyectosForm.value;
       this.monto_d = this.proyectosForm.value.monto_p; // pediente
@@ -130,17 +140,20 @@ export class ProyectosComponent implements OnInit {
       this._proyectoS.cudProyectos().add(this.proyecto);
       this.alert.showSuccess();
       this.limpiar();
+      this.loading = false;
   }
 }
 limpiar() {
   // tslint:disable-next-line: no-unused-expression
   this.submitted;
+  this.loading = false;
   this.proyectosForm.get(['resp_asg']).setValue('');
   this.proyectosForm.get(['nombre']).setValue('');
   this.proyectosForm.get(['cliente']).setValue('');
   this.proyectosForm.get(['descripcion']).setValue('');
   this.proyectosForm.get(['tipo_proyecto']).setValue('');
-  this.proyectosForm.get(['duracion']).setValue('');
+  this.proyectosForm.get(['fechaini']).setValue('');
+  this.proyectosForm.get(['fechafin']).setValue('');
   this.proyectosForm.get(['monto_p']).setValue('');
   this.proyectosForm.get(['resp_cte']).setValue('');
   this.proyectosForm.get(['estatus']).setValue('');
@@ -159,6 +172,9 @@ checkNumeros($event: KeyboardEvent) {
 }
 checkCaracteres($event: KeyboardEvent) {
   this.utils.letrasCaracteres($event);
+}
+regresar(){
+  this.router.navigate(['proyectos']);
 }
 
 }

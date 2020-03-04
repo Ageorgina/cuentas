@@ -13,24 +13,30 @@ export class InvUsuariosComponent implements OnInit {
   headTitle = ['Nombre', 'Puesto', 'Modificar / Eliminar'];
   elements: Usuario[] = [];
   usuario = Usuario;
+  loading = true;
 
   // tslint:disable-next-line: variable-name
   constructor( private _user: UsuariosService,
                private router: Router,
-               private alert: AlertasService) { }
+               private alert: AlertasService) {
+                this._user.cargarUsuarios().subscribe( (usuarios: Usuario[]) => {
+                  this.elements = usuarios;
+                  this.loading = false;
+                });
+                }
 
   ngOnInit() {
-    this._user.cargarUsuarios().subscribe( (usuarios: Usuario[]) => {
-      this.elements = usuarios;
-    }
-      );
+
   }
   borrar( value ) {
+    this.loading = true;
     this._user.cudUsuarios().doc(value.id_user).delete();
     this.alert.showSuccess();
+    this.loading = false;
   }
 
   actualizar(value) {
+    this.loading = true;
     this.router.navigate(['registro-usuarios', `${value.id_user}`]);
   }
 

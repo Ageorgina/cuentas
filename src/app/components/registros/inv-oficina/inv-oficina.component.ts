@@ -18,6 +18,7 @@ export class InvOficinaComponent implements OnInit {
   egresos: any;
   ingresoT = 0;
   egresoT  = 0;
+  loading = true;
   // tslint:disable-next-line: variable-name
   constructor( private _gtsOfS: GastosService,
                private  router: Router,
@@ -41,16 +42,20 @@ export class InvOficinaComponent implements OnInit {
           }
       }
         this.saldoDisp = this.ingresoT - this.egresoT;
+        this.loading = false;
     });
     });
 
   }
   borrar( value ) {
+    this.loading = true;
     this._gtsOfS.cudGastosOF().doc(value.id_of).delete();
     this.alert.showSuccess();
+    this.loading = false;
   }
 
   actualizar(value) {
+    this.loading = true;
     this.router.navigate(['registro-oficina', `${value.id_of}`]);
   }
 

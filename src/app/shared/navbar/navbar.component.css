@@ -85,3 +85,7 @@
 .acordeon input:checked~.acordeon__contenido {
     height: auto;
 }
+
+.navbar {
+    width: 100%;
+}

@@ -1,7 +1,6 @@
 .flex-container {
     display: flex;
     justify-content: space-between;
-    margin-right: 20%;
 }
 
 .card {

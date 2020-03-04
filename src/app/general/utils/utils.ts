@@ -26,8 +26,7 @@ export class Utils {
   numeros($event: KeyboardEvent) {
     const value = ($event.target as HTMLInputElement).value;
     if ($event.target) {
-      ($event.target as HTMLInputElement).value = value.replace(/[^1-5\.]+/g, '');
-      ($event.target as HTMLInputElement).value = value.replace(/[^-.\s]+/g, '');
+      ($event.target as HTMLInputElement).value = value.replace(/[^0-9]+/g, '');
     }
 }
 numerosp($event: KeyboardEvent) {

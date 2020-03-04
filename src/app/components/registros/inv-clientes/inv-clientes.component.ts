@@ -13,22 +13,29 @@ export class InvClientesComponent implements OnInit {
   titulo = 'Clientes';
   headTitle = ['Nombre', 'Puesto', 'Empresa', 'Celular', 'Modificar / Eliminar'];
   elements: Cliente[] = [];
+  loading = true;
   // tslint:disable-next-line: variable-name
-  constructor( private _cteS: ClientesService, 
-                private router: Router,
-                private alert: AlertasService) { }
+  constructor( private _cteS: ClientesService,
+               private router: Router,
+               private alert: AlertasService) {
+                  this._cteS.cargarClientes().subscribe( (clientes: Cliente[]) => {
+                    this.elements = clientes;
+                    this.loading = false;
+                  });
+                 }
 
   ngOnInit() {
-    this._cteS.cargarClientes().subscribe( (clientes: Cliente[]) => {
-      this.elements = clientes;
-    });
+
   }
   borrar( value ) {
+    this.loading = true;
     this._cteS.cudCtes().doc(value.id_cte).delete();
     this.alert.showSuccess();
+    this.loading = false;
   }
 
   actualizar(value) {
+    this.loading = true;
     this.router.navigate(['registro-clientes', `${value.id_cte}`]);
   }
 

@@ -5,7 +5,6 @@ export class Proyecto {
     nombre: string;
     empresa: string;
     descripcion: string;
-    duracion: string;
     // tslint:disable-next-line: variable-name
     monto_p: number;
     // tslint:disable-next-line: variable-name
@@ -24,5 +23,7 @@ export class Proyecto {
     desc_act: string;
         proceso: string;
     gastos: number = 0;
+    fechaini: string;
+    fechafin: string;
 
   }

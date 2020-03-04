@@ -2,8 +2,9 @@
 <h1>{{ titulo }}</h1>
 <div class="m-3 col-md-10 card ">
     <form [formGroup]="gastosForm" (ngSubmit)="onSubmit()">
+        <div class="loading" *ngIf="loading">Loading&#8230;</div>
         <div class="flex-container">
-            <div>
+            <div class="col-md-5">
                 <label class="control-label" for="resp_asg">Responsable ASG: </label><br>
                 <p *ngIf="submitted && fval.resp_asg.invalid">*Este campo no puede ir vacío</p>
                 <select id="resp_asg" formControlName="resp_asg" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio ">
@@ -14,17 +15,16 @@
             <div>
                 <label class="control-label " for="fecha">Fecha: <span><i class="far fa-calendar-alt "></i></span> </label>
                 <p *ngIf="submitted && fval.fecha.invalid">*Este campo no puede ir vacío</p>
-                <input class="form-control col-md-12 " id="fecha" placeholder="Fecha" formControlName="fecha" type="date" data-toggle="tooltip " title="*Campo obligatorio ">
+                <input class="form-control" id="fecha" placeholder="Fecha" formControlName="fecha" type="date" data-toggle="tooltip " title="*Campo obligatorio ">
             </div>
         </div>
 
         <label class="control-label " for="monto ">Monto: </label>
-        <input class="form-control col-md-12 " id="monto" placeholder="Monto" formControlName="cantidad" type="text" data-toggle="tooltip " title="*Campo obligatorio " (keyup)="checkNumeros($event) " [ngClass]="{ 'is-invalid': submitted && fval.cantidad.errors
+        <input class="form-control " id="monto" placeholder="Monto" formControlName="cantidad" type="text" data-toggle="tooltip " title="*Campo obligatorio " (keyup)="checkNumeros($event) " [ngClass]="{ 'is-invalid': submitted && fval.cantidad.errors
                     } ">
         <br>
         <label class="control-label" for="motivo">Motivo: </label>
-        <input class="form-control" id="motivo" placeholder="Motivo" formControlName="motivo" type="text" data-toggle="tooltip" title="*Campo obligatorio " (keyup)="checkL_N($event) " [ngClass]="{ 'is-invalid': submitted && fval.motivo.errors
-                    } ">
+        <input class="form-control" id="motivo" placeholder="Motivo" formControlName="motivo" type="text" data-toggle="tooltip" title="*Campo obligatorio " (keyup)="checkL_N($event) " [ngClass]="{ 'is-invalid': submitted && fval.motivo.errors } ">
         <br/>
 
         <div class=" flex-container ">
@@ -32,7 +32,7 @@
                 <label class="control-label mr-2 " for="tipo_gasto">Tipo gasto:</label><br>
                 <p *ngIf="submitted && fval.tipo_gasto.invalid">*Este campo no puede ir vacío</p>
                 <select id="tipo_gasto" formControlName="tipo_gasto">
-                <option disabled class="col-md-8 " value=''>Tipo gasto</option>
+                <option disabled value=''>Tipo gasto</option>
                 <option value="Clientes">Clientes</option>
                 <option value="Empresa">Empresa</option>
                 <option value="Hardware">Hardware</option>
@@ -60,7 +60,13 @@
             </div>
         </div>
         <br>
-        <button type="submit " id="guardar" class="col-md-5 "><i class="fas fa-cloud-download-alt "></i>
-            {{boton}}</button>
+        <div *ngIf="actualizar" class="center">
+            <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class="fas fa-times"></i>
+                Cancelar</button>
+            <button type="submit" id="eliminar" class="btn btn-outline-warning"><i class="fas fa-sync-alt"></i>
+                    Actualizar</button>
+        </div>
+        <button *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="fas fa-cloud-download-alt"></i>
+        {{boton}}</button>
     </form>
 </div>

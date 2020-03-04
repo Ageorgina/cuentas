@@ -14,7 +14,7 @@ import { element } from 'protractor';
 })
 export class InvProyectosComponent implements OnInit {
   titulo = 'Proyectos';
-  headTitle = ['Nombre', 'Descripción', 'Duración', 'Monto Presupuestado', 'Monto Disponible', 'Tipo Proyecto',
+  headTitle = ['Nombre', 'Descripción', 'Fecha Inicio', 'Fecha Fin', 'Monto Presupuestado', 'Monto Disponible', 'Tipo Proyecto',
               'ID Actividad', 'Proceso', 'Cliente', 'Responsable Cliente', 'Responsable ASG', 'Estatus', 'Modificar / Eliminar'];
   elements: Proyecto[] = [];
   boton = 'Guardar';
@@ -24,6 +24,7 @@ export class InvProyectosComponent implements OnInit {
   mont_disp = 0 ;
   gastosxP = 0;
   proyectoName = '';
+  loading = true;
 
   // tslint:disable-next-line: variable-name
   constructor( private _proyS: ProyectosService,
@@ -46,12 +47,15 @@ ngOnInit()    {
 
   }
 borrar( value ) {
-    this._proyS.cudProyectos().doc(value.id_proyecto).delete();
-    this.alert.showSuccess();
+  this.loading = true;
+  this._proyS.cudProyectos().doc(value.id_proyecto).delete();
+  this.alert.showSuccess();
+  this.loading = false;
   }
 
 actualizar(value) {
-    this.router.navigate(['registro-proyectos', `${value.id_proyecto}`]);
+  this.loading = true;
+  this.router.navigate(['registro-proyectos', `${value.id_proyecto}`]);
   }
 
   private restarAlgo() {
@@ -69,6 +73,7 @@ actualizar(value) {
                this.elements[item].gastos +=  Number(data.cantidad);
              }
              this.elements[item].monto_d = this.elements[item].monto_p - this.elements[item].gastos;
+             this.loading = false;
           }
     });
    });

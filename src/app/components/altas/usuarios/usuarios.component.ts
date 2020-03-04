@@ -23,6 +23,7 @@ export class UsuariosComponent implements OnInit {
   id_user: string;
   textError: string;
   submitted = false;
+  actualizar = false;
   // tslint:disable-next-line: variable-name
   constructor( private _userS: UsuariosService ,
                private formBuilder: FormBuilder,
@@ -30,20 +31,19 @@ export class UsuariosComponent implements OnInit {
                private router: Router,
                private utils: Utils,
                public alert: AlertasService) {
-                this.loading = true;
                 this.userForm = this.formBuilder.group({
                   nombre: ['', Validators.required],
                   puesto: ['', Validators.required]
                 });
-                if (!this.id_user) {
-                  this.loading = false;
-                }
+                // if (!this.id_user) {
+
+                // }
                 this.id_user = this.active.snapshot.paramMap.get('id_user');
                 if (this.id_user) {
                   // tslint:disable-next-line: no-unused-expression
                   this.loading;
                   this.titulo = 'Modificar Usuario ASG';
-                  this.boton = 'Actualizar';
+                  this.actualizar = true;
                   this._userS.cudUsuarios().doc(this.id_user).valueChanges().subscribe((upusuario: Usuario) => {
                     this.updateU = upusuario;
                     this.userForm.get(['nombre']).setValue(this.updateU.nombre);
@@ -54,6 +54,7 @@ export class UsuariosComponent implements OnInit {
 
 
   ngOnInit() {
+    this.loading = false;
   }
   get fval() {
     return this.userForm.controls;
@@ -63,33 +64,34 @@ export class UsuariosComponent implements OnInit {
     this.loading = true;
     if (!this.id_user && this.userForm.invalid) {
       // tslint:disable-next-line: no-unused-expression
-      this.loading = false ;
+
       this.textError = '¡Faltan campos por llenar!';
       this.alert.textError = this.textError;
       this.alert.showError();
+      this.loading = false;
       return ;
   }
     if (!this.userForm.valid) {
       // tslint:disable-next-line: no-unused-expression
-      this.loading = false;
       this.textError = '¡Faltan campos por llenar!';
       this.alert.textError = this.textError;
       this.alert.showError();
+      this.loading = false;
       return ;
   }
     if (this.id_user && this.userForm.valid) {
       this.submitted = false;
-      this.loading = false;
       this.usuario = this.userForm.value;
       this._userS.cudUsuarios().doc(this.id_user).update(this.usuario);
       this.router.navigate(['usuarios']);
+      this.loading = false;
       }
     if (!this.id_user && this.userForm.valid) {
         this.submitted = false;
-        this.loading = false;
         this.usuario = this.userForm.value;
         this._userS.cudUsuarios().add(this.usuario);
         this.alert.showSuccess();
+        this.loading = false;
         this.limpiar();
       }
   }
@@ -105,4 +107,9 @@ export class UsuariosComponent implements OnInit {
     this.userForm.get(['nombre']).setValue('');
     this.userForm.get(['puesto']).setValue('');
   }
+  
+  regresar() {
+    this.router.navigate(['usuarios']);
+  }
+
 }

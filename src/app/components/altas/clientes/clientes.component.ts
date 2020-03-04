@@ -21,7 +21,8 @@ export class ClientesComponent implements OnInit {
   updateCte: Cliente;
   textError: string;
   submitted = false;
-
+  loading = true;
+  actualizar = false;
 
                // tslint:disable-next-line: variable-name
   constructor( private _cteS: ClientesService,
@@ -40,7 +41,8 @@ export class ClientesComponent implements OnInit {
 
                 this.id_cte = this.active.snapshot.paramMap.get('id_cte');
                 if (this.id_cte) {
-                  this.boton = 'Actualizar';
+                  this.loading = false;
+                  this.actualizar = true;
                   this._cteS.cudCtes().doc(this.id_cte).valueChanges().subscribe((upCte: Cliente) => {
                     this.updateCte = upCte;
                     this.cteForm.get(['nombre']).setValue(this.updateCte.nombre);
@@ -52,7 +54,7 @@ export class ClientesComponent implements OnInit {
       }
 
   ngOnInit() {
-
+    this.loading = false;
   }
 
   get fval() {
@@ -61,17 +63,21 @@ export class ClientesComponent implements OnInit {
   }
 
   onSubmit() {
+    this.loading = true;
     this.submitted = true;
     if (!this.id_cte && this.cteForm.invalid) {
       this.textError = '¡Faltan campos por llenar!';
       this.alert.textError = this.textError;
       this.alert.showError();
+      this.loading = false;
       return ;
     }
     if (!this.cteForm.valid) {
+
       this.textError = '¡Faltan campos por llenar!';
       this.alert.textError = this.textError;
       this.alert.showError();
+      this.loading = false;
       return ;
     }
 
@@ -81,6 +87,7 @@ export class ClientesComponent implements OnInit {
       this._cteS.cudCtes().add(this.cliente);
       this.alert.showSuccess();
       this.limpiar();
+      this.loading = false;
     }
 
     if (this.id_cte && this.cteForm.valid) {
@@ -89,6 +96,7 @@ export class ClientesComponent implements OnInit {
       this._cteS.cudCtes().doc(this.id_cte).update(this.cliente);
       this.router.navigate(['clientes']);
       this.alert.showSuccess();
+      this.loading = false;
       }
     }
 
@@ -99,7 +107,7 @@ limpiar() {
   this.cteForm.get(['puesto']).setValue('');
   this.cteForm.get(['empresa']).setValue('');
   this.cteForm.get(['celular']).setValue('');
-
+  this.loading = false;
 }
 
 checkLetras($event: KeyboardEvent) {
@@ -109,5 +117,7 @@ checkLetras($event: KeyboardEvent) {
 checkNumeros($event: KeyboardEvent) {
   this.utils.numeros($event);
 }
-
+regresar() {
+  this.router.navigate(['clientes']);
+}
 }

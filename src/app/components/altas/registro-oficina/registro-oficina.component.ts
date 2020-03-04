@@ -26,6 +26,8 @@ export class RegistroOficinaComponent implements OnInit {
   updateOf: Oficina;
   textError: string;
   submitted = false;
+  loading = true;
+  actualizar = false;
 
   constructor( private formBuilder: FormBuilder,
                // tslint:disable-next-line: variable-name
@@ -48,7 +50,7 @@ export class RegistroOficinaComponent implements OnInit {
 
                  this.id_of = this.active.snapshot.paramMap.get('id_of');
                  if (this.id_of) {
-                    this.boton = 'Actualizar';
+                    this.actualizar = true;
                     this._ofS.cudGastosOF().doc(this.id_of).valueChanges().subscribe((upOf: Oficina) => {
                       this.updateOf = upOf;
                       this.ofForm.get(['resp_asg']).setValue(this.updateOf.resp_asg);
@@ -60,23 +62,27 @@ export class RegistroOficinaComponent implements OnInit {
                     }
                }
   ngOnInit() {
+    this.loading = false;
 
   }
   get fval() {
   return this.ofForm.controls;
   }
   onSubmit() {
+    this.loading = true;
     this.submitted = true;
     if (!this.id_of && this.ofForm.invalid) {
       this.textError = '¡Faltan campos por llenar!';
       this.alert.textError = this.textError;
       this.alert.showError();
+      this.loading = false;
       return ;
   }
     if (!this.ofForm.valid) {
       this.textError = '¡Faltan campos por llenar!';
       this.alert.textError = this.textError;
       this.alert.showError();
+      this.loading = false;
       return ;
   }
     if (this.id_of && this.ofForm.valid) {
@@ -85,12 +91,14 @@ export class RegistroOficinaComponent implements OnInit {
       this._ofS.cudGastosOF().doc(this.id_of).update(this.gasto);
       this.router.navigate(['oficina']);
       this.alert.showSuccess();
+      this.loading = false;
   }
     if (!this.id_of && this.ofForm.valid) {
       this.submitted = false;
       this.gasto = this.ofForm.value;
       this._ofS.cudGastosOF().add(this.gasto);
       this.alert.showSuccess();
+      this.loading = false;
       this.limpiar();
     }
 }
@@ -109,13 +117,16 @@ checkCaracteres($event: KeyboardEvent) {
   this.utils.letrasCaracteres($event);
 }
 limpiar() {
+  this.loading = false;
   this.ofForm.get(['resp_asg']).setValue('');
   this.ofForm.get(['fecha']).setValue('');
   this.ofForm.get(['cantidad']).setValue('');
   this.ofForm.get(['motivo']).setValue('');
   this.ofForm.get(['tipo']).setValue('');
 }
-
+regresar() {
+  this.router.navigate(['oficina']);
+}
 
 }
 

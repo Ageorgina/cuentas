@@ -1,5 +1,7 @@
 <navbar></navbar>
 <h1>Registro {{titulo}}</h1>
+
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
 <table class="table">
     <thead>
         <tr>
@@ -11,7 +13,8 @@
 
             <td>{{el.nombre}}</td>
             <td>{{el.descripcion}}</td>
-            <td>{{el.duracion}}</td>
+            <td>{{el.fechaini}}</td>
+            <td>{{el.fechafin}}</td>
             <td>{{el.monto_p | currency }}</td>
             <td>{{el.monto_d | currency }}</td>
             <td>{{el.tipo_proyecto}}</td>
