@@ -14,7 +14,6 @@
         <br/>
         <label class="control-label" for="celular">Celular: </label>
         <input class="form-control" maxlength="10" id="celular" placeholder="Celular" formControlName="celular" type="text" (keyup)="checkNumeros($event)">
-        <p *ngIf="fval.maxlength.invalid">*No puede ser mayor a 10 digitos</p>
         <br/>
         <div *ngIf="actualizar" class="center">
             <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class="fas fa-times"></i>
