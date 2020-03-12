@@ -175,3 +175,13 @@ button#guardar {
         transform: rotate(360deg);
     }
 }
+
+input:focus {
+    border-bottom-color: #c34613 !important;
+    box-shadow: 0 1px 1px transparent !important;
+}
+
+select:focus {
+    border-bottom-color: #c34613 !important;
+    box-shadow: 0 1px 1px transparent !important;
+}
