@@ -23,47 +23,42 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 
+    <!-- sidebar -->
     <script>
         $(document).mouseup(function(cierre) {
             if ($(cierre)[0].target.localName != 'label') {
                 closeNav()
             }
-
         });
 
         function openNav() {
-            document.getElementById("sidenav").style.width = "170px";
-
+            document.getElementById("sidenav").style.width = "160px";
         }
 
         function closeNav() {
             document.getElementById("sidenav").style.width = "0";
         }
     </script>
+    <!-- /sidebar -->
 
-    <!-- The core Firebase JS SDK is always required and must be listed first -->
-    <script src="https://www.gstatic.com/firebasejs/7.9.1/firebase-app.js"></script>
-
-    <!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
-    <script src="https://www.gstatic.com/firebasejs/7.9.1/firebase-analytics.js"></script>
-
-    <script>
-        // Your web app's Firebase configuration
-        var firebaseConfig = {
-            apiKey: "AIzaSyBKYXOwuYivzLms7JPUGNLlkdRrD1b5lf8",
-            authDomain: "gastos-asg.firebaseapp.com",
-            databaseURL: "https://gastos-asg.firebaseio.com",
-            projectId: "gastos-asg",
-            storageBucket: "gastos-asg.appspot.com",
-            messagingSenderId: "937489035289",
-            appId: "1:937489035289:web:cb26b5b057c50ec22c7a88",
-            measurementId: "G-3XRB47S9KQ"
-        };
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        firebase.analytics();
+    <!-- checkbox -->
+    <script type="text/javascript">
+        function showContent() {
+            op1 = document.getElementById("op1_true");
+            op2 = document.getElementById('op2_true');
+            check = document.getElementById("check");
+            if (check.checked) {
+                op1.style.display = 'block';
+                op2.style.display = 'none';
+            } else {
+                op1.style.display = 'none';
+                op2.style.display = 'block';
+            }
+        }
     </script>
+    <!-- /checkbox -->
+
+
 
 </body>
 

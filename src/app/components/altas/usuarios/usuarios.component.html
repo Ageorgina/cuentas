@@ -1,24 +1,79 @@
 <navbar></navbar>
-<div class="flex-container row">
+<div class="column">
     <h1 class="center">{{ titulo }}</h1>
-    <div class="m-3 col-md-10 card ">
+    <div class="m-3 card ">
         <div class="loading" *ngIf="loading">Loading&#8230;</div>
-        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-            <label class="control-label" for="nombre">Nombre: </label>
-            <input class="form-control " id="nombre" placeholder="Nombre" formControlName="nombre" type="text" data-toggle="tooltip " title="*Campo obligatorio " (keyup)="checkLetras($event) " [ngClass]="{ 'is-invalid': submitted && fval.nombre.errors }">
+        <form class="m-3" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+            <div class="around">
+                <div class="col-md-3 mt-3">
+                    <label class="control-label" for="ap_p">Apellido Paterno: </label>
+                    <input class="form-control " id="ap_p" placeholder="Apellido Paterno" formControlName="ap_p" type="text" data-toggle="tooltip " title="*Campo obligatorio " (keyup)="checkLetras($event) " [ngClass]="{ 'is-invalid': submitted && fval.ap_p.errors }">
+
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="control-label" for="ap_m">Apellido Materno: </label>
+                    <input class="form-control " id="ap_m" placeholder="Apellido Materno" formControlName="ap_m" type="text" data-toggle="tooltip " title="*Campo obligatorio " (keyup)="checkLetras($event) " [ngClass]="{ 'is-invalid': submitted && fval.ap_m.errors }">
+
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="control-label" for="nombre">Nombre(s): </label>
+                    <input class="form-control " id="nombre" placeholder="Nombre(s)" formControlName="nombre" type="text" data-toggle="tooltip " title="*Campo obligatorio " (keyup)="checkLetras($event) " [ngClass]="{ 'is-invalid': submitted && fval.nombre.errors }">
+
+                </div>
+            </div>
+            <div class="around">
+                <div class="col-md-3 mt-3">
+                    <label class="control-label" for="correo">Correo: </label>
+                    <input class="form-control " id="correo" placeholder="Correo" formControlName="correo" type="email" data-toggle="tooltip " title="*Campo obligatorio" [ngClass]="{ 'is-invalid': submitted && fval.correo.errors }">
+                    <p class="error" *ngIf="userForm.get('correo').hasError('email')">*Correo Invalido</p>
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="control-label" for="password">Contraseña: </label>
+                    <input class="form-control " id="password" placeholder="Contraseña" formControlName="password" type="text" data-toggle="tooltip " title="*Campo obligatorio " [ngClass]="{ 'is-invalid': submitted && fval.password.errors }">
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="control-label" for="resp_area">Personal a su cargo: </label><br>
+                    <label class="switch">
+                        <input type="checkbox" formControlName="resp_area">
+                        <span class="slider round"></span>
+                      </label>
+                </div>
+
+            </div>
+            <div class="around">
+                <div class="col-md-3 mt-3">
+                    <label class="control-label" for="resp_asg">Jefe Inmediato: </label><br>
+                    <select id="resp_asg" formControlName="resp_asg" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio ">
+                     <option disabled value=''>Jefe inmediato</option> 
+                     <option *ngFor="let resp of usuarios">{{resp.nombre}}</option> 
+                     </select>
+                    <p *ngIf="submitted && fval.resp_asg.invalid">*Este campo no puede ir vacío</p>
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="control-label" for="area">Área: </label><br>
+                    <select id="area" formControlName="area" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio ">
+                        <option disabled value=''>Área</option>
+                        <option *ngFor="let area of areas ">{{area.nombre_area}}</option>
+                    </select>
+                    <p *ngIf="submitted && fval.area.invalid">*Este campo no puede ir vacío</p>
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="control-label" for="puesto">Puesto: </label>
+                    <input class="form-control" id="puesto" placeholder="Puesto" formControlName="puesto" type="text" data-toggle="tooltip " title="*Campo obligatorio " (keyup)="checkLetras($event) " [ngClass]="{ 'is-invalid': submitted && fval.puesto.errors }">
+                </div>
+            </div>
             <br>
-            <label class="control-label" for="puesto ">Puesto: </label>
-            <input class="form-control" id="puesto" placeholder="Puesto" formControlName="puesto" type="text" data-toggle="tooltip " title="*Campo obligatorio " (keyup)="checkLetras($event) " [ngClass]="{ 'is-invalid': submitted && fval.puesto.errors }">
-            <br/>
             <div *ngIf="actualizar" class="center">
                 <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class="fas fa-times"></i>
                     Cancelar</button>
                 <button type="submit" id="eliminar" class="btn btn-outline-warning"><i class="fas fa-sync-alt"></i>
                         Actualizar</button>
             </div>
-            <button *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="fas fa-cloud-download-alt"></i>
-            {{boton}}</button>
+
+            <div class="center">
+                <button #guardar *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="fas fa-cloud-download-alt"></i>
+                    {{boton}}</button>
+            </div>
         </form>
     </div>
-
 </div>

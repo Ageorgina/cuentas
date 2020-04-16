@@ -9,7 +9,11 @@ import { Proyecto } from '../../../general/model/proyecto';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Utils } from '../../../general/utils/utils';
 import { AlertasService } from '../../../services/srv_shared/alertas.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { finalize } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { ArchivosService } from '../../../services/archivos.service';
+import { FileItem } from '../../../general/model/file-item';
 
 @Component({
   selector: 'app-gastos-generales',
@@ -21,6 +25,7 @@ export class GastosGeneralesComponent implements OnInit {
   titulo = 'Registrar Gasto';
   boton = 'Guardar';
   usuarios: Usuario[] = [];
+  tipoGto: any[];
   proyectos: Proyecto[] = [];
   gastosForm: FormGroup;
   gasto: Gasto;
@@ -32,8 +37,22 @@ export class GastosGeneralesComponent implements OnInit {
   submitted = false;
   loading = true;
   actualizar = false;
+  nameFile: string;
+  //filePercent: Observable<number>;
+  //urlFile: Observable<string>;
+  //date = new Date();
+  //idFile = this.date.getTime().toString();
+ // carpetaGasto = this.date.getFullYear().toString() + (this.date.getMonth() + 1).toString() + this.date.getDate().toString();
+  //CARPETA_FILES = `comprobantes/${this.carpetaGasto}/${this.id_gasto}/ ${this.nameFile}`;
+  estaSobreElemento = false;
+  archivos: FileItem[] = [];
 
-  constructor( private formBuilder: FormBuilder,
+  headTitle = ['Nombre', 'Progreso'];
+
+  // tslint:disable-next-line: variable-name
+  constructor( private _fileS: ArchivosService,
+               private storage: AngularFireStorage,
+               private formBuilder: FormBuilder,
                // tslint:disable-next-line: variable-name
                private _user: UsuariosService,
                // tslint:disable-next-line: variable-name
@@ -47,6 +66,7 @@ export class GastosGeneralesComponent implements OnInit {
                ) {
     this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => { this.usuarios = usuarios;  });
     this._pyt.cargarProyectos().subscribe((proyectos: Proyecto[]) => { this.proyectos = proyectos; });
+    this.__gastoS.cargarTipoGtos().subscribe((tipoGtos: any[]) => { this.tipoGto = tipoGtos; });
 
     this.gastosForm = this.formBuilder.group({
 
@@ -57,6 +77,8 @@ export class GastosGeneralesComponent implements OnInit {
       tipo_gasto: ['', Validators.required],
       proyecto: ['', Validators.required],
       estatus: ['', Validators.required],
+      reembolso: [''],
+      comprobantes: [''],
   });
 
     this.id_gasto = this.active.snapshot.paramMap.get('id_gasto');
@@ -72,6 +94,7 @@ export class GastosGeneralesComponent implements OnInit {
         this.gastosForm.get(['tipo_gasto']).setValue(this.updateG.tipo_gasto);
         this.gastosForm.get(['proyecto']).setValue(this.updateG.proyecto);
         this.gastosForm.get(['estatus']).setValue(this.updateG.estatus);
+        this.gastosForm.get(['comprobantes']).setValue(this.updateG.comprobantes);
       });
       }
   }
@@ -144,5 +167,25 @@ limpiar() {
 regresar() {
   this.router.navigate(['gastos']);
 }
+
+guardarArchivos( archivo ) {
+  console.log(archivo);
+
+}
+
+
+cargarArchivos() {
+  this._fileS.cargarArchivosFb( this.archivos );
+}
+
+limpiarArchivos(archivo) {
+  console.log(this.archivos.includes(archivo));
+  this.archivos.splice(archivo, 1);
+  this._fileS.cargarArchivosFb;
+  console.log( this._fileS.cargarArchivosFb);
+
+}
+
+
 
 }

@@ -1,26 +1,29 @@
 <navbar></navbar>
 <h1>Registro {{titulo}}</h1>
 <div class="loading" *ngIf="loading">Loading&#8230;</div>
-<table class="table">
-    <thead>
-        <tr>
-            <th *ngFor="let head of headTitle">{{head}}</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let el of elements; let i of index">
-            <td>{{el.resp_asg}}</td>
-            <td>{{el.fecha}}</td>
-            <td style="text-align: right;">{{el.cantidad | currency }}</td>
-            <td>{{el.motivo}}</td>
-            <td>{{el.tipo_gasto}}</td>
-            <td>{{el.proyecto}}</td>
-            <td>{{el.estatus}}</td>
-            <td>
-                <button type="button" class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
-                <button type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
-            </td>
-        </tr>
+<div id="tabla">
+    <table class="table">
+        <thead>
+            <tr>
+                <th *ngFor="let head of headTitle">{{head}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let el of elements; let i of index">
+                <td>{{el.resp_asg}}</td>
+                <td>{{el.fecha}}</td>
+                <td style="text-align: right;">{{el.cantidad | currency }}</td>
+                <td>{{el.motivo}}</td>
+                <td>{{el.tipo_gasto}}</td>
+                <td>{{el.proyecto}}</td>
+                <td>{{el.estatus}}</td>
+                <td>
+                    <button type="button" class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
+                </td>
+            </tr>
 
-    </tbody>
-</table>
+        </tbody>
+    </table>
+
+</div>

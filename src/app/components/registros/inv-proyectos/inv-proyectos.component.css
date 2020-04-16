@@ -1,0 +1,4 @@
+div#tabla_p {
+    overflow: auto !important;
+    width: 99.9%;
+}

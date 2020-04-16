@@ -15,6 +15,9 @@ export class GastosService {
     cudGastos() {
       return this.db.collection('gastos-generales');
     }
+    cargarTipoGtos() {
+      return this.db.collection('tipo_gto').valueChanges({idFile: 'id_tipo_gto'});
+    }
 
   // OFICINA
       cargarGastosOF() {

@@ -10,7 +10,7 @@ import { AlertasService } from '../../../services/srv_shared/alertas.service';
 })
 export class InvUsuariosComponent implements OnInit {
   titulo = 'Usuarios ASG';
-  headTitle = ['Nombre', 'Puesto', 'Modificar / Eliminar'];
+  headTitle = ['Nombre', 'Área', 'Jefe Inmediato', 'Correo', 'Puesto', 'Modificar / Eliminar'];
   elements: Usuario[] = [];
   usuario = Usuario;
   loading = true;

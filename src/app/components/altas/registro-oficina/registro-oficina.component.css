@@ -34,4 +34,5 @@ select {
     border-right: none;
     box-shadow: transparent;
     background-color: transparent;
+    outline: none;
 }

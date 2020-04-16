@@ -26,7 +26,10 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireAnalyticsModule } from '@angular/fire/analytics';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { AngularFireStorageModule } from '@angular/fire/storage';
+
 import { environment } from '../environments/environment';
+import { NgDropFilesDirective } from './directives/ng-drop-files.directive';
 
 @NgModule({
   declarations: [
@@ -42,6 +45,7 @@ import { environment } from '../environments/environment';
     InvClientesComponent,
     RegistroOficinaComponent,
     InvOficinaComponent,
+    NgDropFilesDirective,
   ],
   imports: [
     BrowserModule,
@@ -51,7 +55,8 @@ import { environment } from '../environments/environment';
     AngularFireAnalyticsModule,
     AngularFirestoreModule,
     AngularFireDatabaseModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AngularFireStorageModule
   ],
   providers: [ ],
   bootstrap: [AppComponent],

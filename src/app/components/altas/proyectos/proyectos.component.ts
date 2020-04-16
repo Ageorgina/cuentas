@@ -59,7 +59,7 @@ export class ProyectosComponent implements OnInit {
       cliente: ['', Validators.required],
       descripcion: ['', Validators.required],
       fechaini: ['', Validators.required],
-      fechafin: ['', Validators.required],
+      fechafin: [''],
       monto_p: ['', Validators.required],
       monto_d: [''],
       resp_asg: ['', Validators.required],

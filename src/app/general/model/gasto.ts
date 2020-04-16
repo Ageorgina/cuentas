@@ -1,3 +1,4 @@
+import { FileItem } from './file-item';
 export class Gasto {
     // tslint:disable-next-line: variable-name
     id_gasto: string;
@@ -10,5 +11,7 @@ export class Gasto {
     tipo_gasto: string;
     proyecto: string;
     estatus: string;
+    reembolso: boolean;
+    comprobantes: FileItem[];
 }
 

@@ -35,7 +35,6 @@ const routes: Routes = [
   { path: 'registro-proyectos/:id_proyecto', component: ProyectosComponent},
   { path: 'registro-gastos/:id_gasto', component: GastosGeneralesComponent },
   { path: 'registro-oficina/:id_of', component: RegistroOficinaComponent },
-
 ];
 
 @NgModule({

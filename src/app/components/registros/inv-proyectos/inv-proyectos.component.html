@@ -1,34 +1,64 @@
 <navbar></navbar>
-<h1>Registro {{titulo}}</h1>
+<h1>Registro {{ titulo }}</h1>
 
 <div class="loading" *ngIf="loading">Loading&#8230;</div>
-<table class="table">
-    <thead>
-        <tr>
-            <th *ngFor="let head of headTitle">{{head}}</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let el of elements; let i of index">
+<div id="tabla_p">
+    <table class="table">
+        <thead>
+            <tr>
+                <th *ngFor="let head of headTitle">{{head}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let el of elements; let i of index">
+                <td>{{el.nombre}}</td>
+                <td>{{el.descripcion}}</td>
+                <td>{{el.fechaini}}</td>
+                <td>{{el.fechafin}}</td>
+                <td>{{el.monto_p | currency }}</td>
+                <td>{{el.monto_d | currency }}</td>
+                <td>{{el.tipo_proyecto}}
+                    <p><button type="button" class="btn btn-outline-info btn-sm" (click)="elementoSelected(i)" data-toggle="modal" data-target="#more"> Más Información...</button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-outline-success btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
+                </td>
+            </tr>
 
-            <td>{{el.nombre}}</td>
-            <td>{{el.descripcion}}</td>
-            <td>{{el.fechaini}}</td>
-            <td>{{el.fechafin}}</td>
-            <td>{{el.monto_p | currency }}</td>
-            <td>{{el.monto_d | currency }}</td>
-            <td>{{el.tipo_proyecto}}</td>
-            <td>{{el.id_act}}</td>
-            <td>{{el.proceso}}</td>
-            <td>{{el.cliente}}</td>
-            <td>{{el.resp_cte}}</td>
-            <td>{{el.resp_asg}}</td>
-            <td>{{el.estatus}}</td>
-            <td>
-                <button type="button" class="btn btn-outline-success btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
-                <button type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
-            </td>
-        </tr>
+        </tbody>
+    </table>
 
-    </tbody>
-</table>
+    <!-- Modal -->
+    <div #more id="more" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th *ngFor="let head of subTh">{{head}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{info.id_act}}</td>
+                                <td>{{info.proceso}}</td>
+                                <td>{{info.cliente}}</td>
+                                <td>{{info.resp_cte}}</td>
+                                <td>{{info.resp_asg}}</td>
+                                <td>{{info.estatus}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

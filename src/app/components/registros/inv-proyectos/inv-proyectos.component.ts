@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { AlertasService } from '../../../services/srv_shared/alertas.service';
 import { GastosService } from '../../../services/gastos.service';
 import { Gasto } from '../../../general/model/gasto';
-import { element } from 'protractor';
 
 @Component({
   selector: 'app-inv-proyectos',
@@ -14,8 +13,9 @@ import { element } from 'protractor';
 })
 export class InvProyectosComponent implements OnInit {
   titulo = 'Proyectos';
-  headTitle = ['Nombre', 'Descripción', 'Fecha Inicio', 'Fecha Fin', 'Monto Presupuestado', 'Monto Disponible', 'Tipo Proyecto',
-              'ID Actividad', 'Proceso', 'Cliente', 'Responsable Cliente', 'Responsable ASG', 'Estatus', 'Modificar / Eliminar'];
+  headTitle = ['Nombre', 'Descripción', 'Fecha Inicio', 'Fecha Fin', 'Monto Presupuestado',
+               'Monto Disponible', 'Tipo Proyecto', 'Modificar / Eliminar'];
+  subTh = ['ID Actividad', 'Proceso', 'Cliente', 'Responsable Cliente', 'Responsable ASG', 'Estatus'];
   elements: Proyecto[] = [];
   boton = 'Guardar';
   gastos: Gasto[];
@@ -25,6 +25,7 @@ export class InvProyectosComponent implements OnInit {
   gastosxP = 0;
   proyectoName = '';
   loading = true;
+  info: Proyecto;
 
   // tslint:disable-next-line: variable-name
   constructor( private _proyS: ProyectosService,
@@ -43,9 +44,9 @@ export class InvProyectosComponent implements OnInit {
               });
             }
 
-ngOnInit()    {
-
+ngOnInit() {
   }
+
 borrar( value ) {
   this.loading = true;
   this._proyS.cudProyectos().doc(value.id_proyecto).delete();
@@ -59,10 +60,6 @@ actualizar(value) {
   }
 
   private restarAlgo() {
-    this.elements.filter( data => {
-    //  this.mont_disp = data.monto_d - this.gastosxP;
-    });
-
     this._gastos.cargarGastos().subscribe( (gastos: Gasto[]) => {
        this.gastos = gastos;
        this.gastos.filter( data => {
@@ -79,7 +76,14 @@ actualizar(value) {
    });
 
   }
-
+  elementoSelected(value) {
+    this.loading = true;
+    if (value === undefined) {
+      this.loading = false;
+      return;
+    } else {
+      this.loading = false;
+      this.info = value;
   }
-
-
+    }
+  }

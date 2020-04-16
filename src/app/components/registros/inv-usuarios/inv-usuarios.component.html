@@ -2,20 +2,25 @@
 <h1>Registro {{titulo}}</h1>
 
 <div class="loading" *ngIf="loading">Loading&#8230;</div>
-<table class="table">
-    <thead>
-        <tr>
-            <th *ngFor="let head of headTitle">{{head}}</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let el of elements; let i of index">
-            <td>{{el.nombre}}</td>
-            <td>{{el.puesto}}</td>
-            <td>
-                <button type="button" class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
-                <button type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<div id="tabla">
+    <table class="table">
+        <thead>
+            <tr>
+                <th *ngFor="let head of headTitle">{{head}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let el of elements; let i of index">
+                <td class="left">{{el.ap_p}} {{el.ap_m}} {{el.nombre}}</td>
+                <td class="left">{{el.area}}</td>
+                <td class="left">{{el.resp_asg}}</td>
+                <td class="left">{{el.correo}}</td>
+                <td class="left">{{el.puesto}}</td>
+                <td class="center">
+                    <button type="button" class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

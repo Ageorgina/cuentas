@@ -1,31 +1,10 @@
-.flex-container {
-    display: flex;
-    justify-content: space-between;
-}
-
-.card {
-    margin-left: 10% !important;
-    padding-top: 2%;
-    padding-bottom: 2%;
-}
-
-label {
-    font-weight: bold;
-    color: #202C4C;
-}
-
-button#guardar {
-    background-color: #4E936F;
-    color: white;
-    font-weight: bold;
-    border-radius: 5%;
-    margin-left: 25%;
-}
-
-input {
+input,
+select {
     border-bottom: 1px solid #ebebee;
     border-top: none;
     border-left: none;
     border-right: none;
     box-shadow: transparent;
+    background-color: transparent;
+    outline: none;
 }
