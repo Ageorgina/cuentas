@@ -30,6 +30,8 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 
 import { environment } from '../environments/environment';
 import { NgDropFilesDirective } from './directives/ng-drop-files.directive';
+import { LoginComponent } from './login/login.component';
+import { LogoutComponent } from './security/logout/logout.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,8 @@ import { NgDropFilesDirective } from './directives/ng-drop-files.directive';
     RegistroOficinaComponent,
     InvOficinaComponent,
     NgDropFilesDirective,
+    LoginComponent,
+    LogoutComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,29 @@
+<section class="view intro intro-2 ">
+    <div class="card center">
+        <h2 class=" text-center mb-5 mt-4 font-bold"><strong>Inicio de sesión</strong></h2>
+        <!-- <div *ngIf="errorLogin" class="row mt-1 text-danger px-2"> -->
+        <!-- <h5 class="mx-2 px-2">El usuario o contraseña son incorrectos</h5> -->
+        <!-- </div> -->
+        <!-- <hr *ngIf="errorLogin"> -->
+        <div class="row pb-4 d-flex justify-content-center mb-4">
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <div class="md-form">
+                    <mdb-icon fas icon="user" class="dark-grey-text"></mdb-icon>
+                    <input type="text" id="username" formControlName="username" class="form-control">
+                    <label for="username">Tu correo</label>
+                </div>
+
+                <div class="md-form">
+                    <mdb-icon fas icon="lock" class="dark-grey-text"></mdb-icon>
+                    <input type="password" id="pass" formControlName="password" class="form-control">
+                    <label for="passs">Tu contraseña</label>
+                </div>
+                <div class="text-center">
+                    <button class="">Ingresar </button><br>
+                    <a routerLink="" class="btn btn-link">Recuperar contraseña</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</section>

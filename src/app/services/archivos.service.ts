@@ -1,5 +1,5 @@
 
-import { Injectable, Input } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase';
 import { FileItem } from '../general/model/file-item';
@@ -10,6 +10,9 @@ import { FileItem } from '../general/model/file-item';
 })
 export class ArchivosService {
   CARPETA_FILES = 'comprobantes';
+  fileUrl: string;
+  filesUrl: any[] = [];
+  urlFiles: string[] = [];
 
   constructor(private db: AngularFirestore) { }
 
@@ -28,8 +31,6 @@ export class ArchivosService {
                    item.progreso = ( snapshot.bytesTransferred / snapshot.totalBytes ) * 100,
                    ( error ) => console.error( 'Error al subir', error ),
                    () => {
-                    console.log('Archivo cargado correctamente');
-                    // tslint:disable-next-line: deprecation
                     uploadTask.snapshot.ref.getDownloadURL().then(( downloadURL ) => {
                     item.url = downloadURL;
                     item.estaSubiendo = false;
@@ -45,8 +46,5 @@ export class ArchivosService {
   private guardarArchivos( file: { nombre: string, url: string } ) {
     // this.db.collection( `/${ this.CARPETA_FILES }` )
     // .add( file );
-  }
-  eliminarArchivo() {
-
   }
 }

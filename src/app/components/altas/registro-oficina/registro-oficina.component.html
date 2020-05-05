@@ -6,7 +6,7 @@
         <div class="flex-container">
             <div>
                 <label class="control-label" for="resp_asg">Responsable ASG: </label><br>
-                <p *ngIf="submitted && fval.resp_asg.invalid">*Este campo no puede ir vacío</p>
+                <p #error id="error" *ngIf="submitted && fval.resp_asg.invalid">*Este campo no puede ir vacío</p>
                 <select id="resp_asg" formControlName="resp_asg">
                 <option disabled value="">Responsable ASG</option>
                 <option *ngFor="let usuario of usuarios">{{usuario.nombre}}</option>
@@ -14,7 +14,7 @@
             </div>
             <div>
                 <label class="control-label mr-2" for="tipo_gasto">Tipo:</label><br>
-                <p *ngIf="submitted && fval.tipo.invalid">*Este campo no puede ir vacío</p>
+                <p #error id="error" *ngIf="submitted && fval.tipo.invalid">*Este campo no puede ir vacío</p>
                 <select id="tipo_gasto" formControlName="tipo">
                     <option disabled value="">Tipo</option>
                     <option value="Egreso">Egreso</option>
@@ -23,7 +23,7 @@
             </div>
             <div>
                 <label class="control-label" for="fecha">Fecha: <span><i class="far fa-calendar-alt "></i></span> </label>
-                <p *ngIf="submitted && fval.fecha.invalid">*Este campo no puede ir vacío</p>
+                <p #error id="error" *ngIf="submitted && fval.fecha.invalid">*Este campo no puede ir vacío</p>
                 <input class="form-control col-md-12" id="fecha" placeholder="Fecha" formControlName="fecha" type="date">
             </div>
         </div>

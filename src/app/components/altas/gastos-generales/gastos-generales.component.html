@@ -9,18 +9,17 @@
                 <div class="col-md-8 mt-3">
                     <div class="col-md-4">
                         <label class="control-label " for="fecha">Fecha: <span><i class="far fa-calendar-alt "></i></span> </label>
-                        <p *ngIf="submitted && fval.fecha.invalid">*Este campo no puede ir vacío</p>
                         <input class="form-control" id="fecha" placeholder="Fecha" formControlName="fecha" type="date" data-toggle="tooltip " title="*Campo obligatorio ">
-
+                        <p id="error" *ngIf="submitted && fval.fecha.invalid">*Este campo no puede ir vacío</p>
                     </div>
                 </div>
                 <div class="col-md-3 mt-3">
                     <label class="control-label mr-2" for="tipo_gasto">Tipo gasto:</label><br>
-                    <p *ngIf="submitted && fval.tipo_gasto.invalid">*Este campo no puede ir vacío</p>
                     <select id="tipo_gasto" formControlName="tipo_gasto">
                 <option disabled value=''>Tipo gasto</option>
                 <option *ngFor="let gto of tipoGto " >{{gto.gasto}}</option>
               </select>
+                    <p id="error" *ngIf="submitted && fval.tipo_gasto.invalid">*Este campo no puede ir vacío</p>
                 </div>
             </div>
             <div class="mt-3">
@@ -35,14 +34,14 @@
             <div class="around">
                 <div class="col-md-3 mt-3">
                     <label class="control-label mr-2 " for="proyecto">Proyecto:</label><br>
-                    <p *ngIf="submitted && fval.proyecto.invalid">*Este campo no puede ir vacío</p>
                     <select id="proyecto" formControlName="proyecto">
                     <option disabled class="col-md-8 " value=''>Proyecto</option>
                     <option *ngFor="let proyecto of proyectos">{{proyecto.nombre}}</option>
-                  </select></div>
+                  </select>
+                    <p id="error" *ngIf="submitted && fval.proyecto.invalid">*Este campo no puede ir vacío</p>
+                </div>
                 <div class="col-md-3 mt-3">
                     <label class="control-label mr-2 " for="estatus">Estatus:</label><br>
-                    <p *ngIf="submitted && fval.estatus.invalid">*Este campo no puede ir vacío</p>
                     <select id="estatus" formControlName="estatus">
                     <option disabled value=''>Estatus</option>
                     <option value="Pendiente">Pentiente</option>
@@ -50,6 +49,7 @@
                     <option value="Incompleto">Incompleto</option>
                     <option value="Cancelado">Cancelado</option>
                   </select>
+                    <p id="error" *ngIf="submitted && fval.estatus.invalid">*Este campo no puede ir vacío</p>
                 </div>
                 <div class="col-md-3 mt-3">
                     <label class="control-label">Reembolso: </label><br>
@@ -62,7 +62,7 @@
             </div>
             <div class="mt-5 between">
                 <div class="drop-img mt-3 col-md-5">
-                    <div appNgDropFiles [archivos]="archivos" (mouseSobre)="estaSobreElemento = $event; cargarArchivos()" [ngClass]="{ 'file-over': estaSobreElemento }" class="well drop-zone">
+                    <div appNgDropFiles [archivos]="archivos" (mouseSobre)="estaSobreElemento = $event; cargarArchivos(); " [ngClass]="{ 'file-over': estaSobreElemento }" class="well drop-zone">
                         <h4>Arrastrar archivos</h4>
                         <img src="../../../assets/img/drop-images.png" alt="drop-images">
                     </div>
@@ -77,8 +77,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let archivo of archivos" (change)="guardarArchivos(archivos)">
-                                <td [ngClass]="{'text-green': archivo.progreso >= 100}">{{archivo.nombreArchivo}} </td>
+                            <tr *ngFor="let archivo of archivos">
+                                <td>{{archivo.nombreArchivo}} </td>
                                 <td>
                                     <div class="progress">
                                         <div class="progress-bar mr-2" role="progressbar" [ngStyle]="{'width': archivo.progreso + '%'}" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>

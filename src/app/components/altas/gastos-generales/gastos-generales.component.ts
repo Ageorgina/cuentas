@@ -10,8 +10,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Utils } from '../../../general/utils/utils';
 import { AlertasService } from '../../../services/srv_shared/alertas.service';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { finalize } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 import { ArchivosService } from '../../../services/archivos.service';
 import { FileItem } from '../../../general/model/file-item';
 
@@ -38,16 +36,13 @@ export class GastosGeneralesComponent implements OnInit {
   loading = true;
   actualizar = false;
   nameFile: string;
-  //filePercent: Observable<number>;
-  //urlFile: Observable<string>;
-  //date = new Date();
-  //idFile = this.date.getTime().toString();
- // carpetaGasto = this.date.getFullYear().toString() + (this.date.getMonth() + 1).toString() + this.date.getDate().toString();
-  //CARPETA_FILES = `comprobantes/${this.carpetaGasto}/${this.id_gasto}/ ${this.nameFile}`;
+  ruta = 'gs://gastos-asg.appspot.com/comprobantes/';
   estaSobreElemento = false;
   archivos: FileItem[] = [];
-
+  comprobantes: any;
+  file: FileItem;
   headTitle = ['Nombre', 'Progreso'];
+  filesUrl: FileItem[] = [];
 
   // tslint:disable-next-line: variable-name
   constructor( private _fileS: ArchivosService,
@@ -69,8 +64,6 @@ export class GastosGeneralesComponent implements OnInit {
     this.__gastoS.cargarTipoGtos().subscribe((tipoGtos: any[]) => { this.tipoGto = tipoGtos; });
 
     this.gastosForm = this.formBuilder.group({
-
-      resp_asg: ['', Validators.required],
       fecha: ['', Validators.required],
       cantidad: ['', Validators.required],
       motivo: ['', Validators.required],
@@ -87,7 +80,6 @@ export class GastosGeneralesComponent implements OnInit {
       this.actualizar = true;
       this.__gastoS.cudGastos().doc(this.id_gasto).valueChanges().subscribe((upG: Gasto) => {
         this.updateG = upG;
-        this.gastosForm.get(['resp_asg']).setValue(this.updateG.resp_asg);
         this.gastosForm.get(['fecha']).setValue(this.updateG.fecha);
         this.gastosForm.get(['cantidad']).setValue(this.updateG.cantidad);
         this.gastosForm.get(['motivo']).setValue(this.updateG.motivo);
@@ -135,6 +127,7 @@ export class GastosGeneralesComponent implements OnInit {
     if (!this.id_gasto && this.gastosForm.valid) {
       this.submitted = false;
       this.gasto = this.gastosForm.value;
+      this.gastosForm.value.comprobantes = this.comprobantes;
       this.fecha = this.gastosForm.value.fecha;
       this.__gastoS.cudGastos().add(this.gasto);
       this.alert.showSuccess();
@@ -156,7 +149,6 @@ limpiar() {
   // tslint:disable-next-line: no-unused-expression
   this.submitted = false;
   this.loading = false;
-  this.gastosForm.get(['resp_asg']).setValue('');
   this.gastosForm.get(['fecha']).setValue('');
   this.gastosForm.get(['cantidad']).setValue('');
   this.gastosForm.get(['motivo']).setValue('');
@@ -168,22 +160,21 @@ regresar() {
   this.router.navigate(['gastos']);
 }
 
-guardarArchivos( archivo ) {
-  console.log(archivo);
-
+ guardarArchivos(files) {
+   console.log(files);
 }
-
 
 cargarArchivos() {
   this._fileS.cargarArchivosFb( this.archivos );
+  this.archivos.filter(file => {
+    this.filesUrl.push(file);
+    this.guardarArchivos(this.filesUrl);
+  });
 }
 
 limpiarArchivos(archivo) {
-  console.log(this.archivos.includes(archivo));
   this.archivos.splice(archivo, 1);
-  this._fileS.cargarArchivosFb;
-  console.log( this._fileS.cargarArchivosFb);
-
+  this.storage.storage.refFromURL(this.ruta + archivo.nombreArchivo).delete();
 }
 
 

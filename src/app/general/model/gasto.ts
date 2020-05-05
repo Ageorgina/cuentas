@@ -3,7 +3,6 @@ export class Gasto {
     // tslint:disable-next-line: variable-name
     id_gasto: string;
     // tslint:disable-next-line: variable-name
-    resp_asg: string;
     fecha: Date;
     cantidad: number;
     motivo: string;
@@ -12,6 +11,6 @@ export class Gasto {
     proyecto: string;
     estatus: string;
     reembolso: boolean;
-    comprobantes: FileItem[];
+    comprobantes: string;
 }
 

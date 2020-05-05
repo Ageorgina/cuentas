@@ -173,7 +173,7 @@ checkNumeros($event: KeyboardEvent) {
 checkCaracteres($event: KeyboardEvent) {
   this.utils.letrasCaracteres($event);
 }
-regresar(){
+regresar() {
   this.router.navigate(['proyectos']);
 }
 

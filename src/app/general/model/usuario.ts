@@ -16,4 +16,23 @@ export class Usuario {
     id_user: string;
     // tslint:disable-next-line:variable-name
     resp_area: boolean;
+
+  authenticated: boolean;
+  rol: string;
+
+  constructor(init?: Partial<Usuario>) {
+    Object.assign(this, init);
+  }
+
+  contieneRol(r: string) {
+    if (this.rol) {
+      const ks = Object.keys(this.rol);
+      for (const k of ks) {
+        if (this.rol[k] === r) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
   }

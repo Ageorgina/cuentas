@@ -1,5 +1,5 @@
 <!-- Just an image -->
-<nav class="navbar navbar-light bg-light mb-3">
+<nav class="navbar navbar-light bg-light mb-3 between">
     <a class="navbar-brand">
         <div id="sidenav" class="sidenav">
             <!-- <a href="javascript:void(0)" id='closebtn' class="closebtn" onclick="closeNav()">&times;</a> -->
@@ -35,7 +35,11 @@
                 </div>
             </div>
         </div>
-        <span onclick="openNav()">&#9776;</span>
+        <div> <span onclick="openNav()">&#9776;</span></div>
     </a>
-    <a>©2020 Copyright ASG Advisory Services</a>
+    <div style="text-align: end;">
+        <a (click)="logout()"><i class="fas fa-sign-out-alt mr-1" clic></i>Salir</a>
+        <br> <a>©2020 Copyright ASG Advisory Services</a>
+    </div>
+
 </nav>

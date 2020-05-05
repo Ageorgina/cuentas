@@ -10,11 +10,13 @@ import { InvProyectosComponent } from './components/registros/inv-proyectos/inv-
 import { InvGastosGeneralesComponent } from './components/registros/inv-gastos-generales/inv-gastos-generales.component';
 import { RegistroOficinaComponent } from './components/altas/registro-oficina/registro-oficina.component';
 import { InvOficinaComponent } from './components/registros/inv-oficina/inv-oficina.component';
+import { LoginComponent } from './login/login.component';
 
 
 const routes: Routes = [
 
-  { path: '', redirectTo: 'registro-gastos', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
   // ALTAS
   { path: 'registro-usuarios', component: UsuariosComponent },
   { path: 'registro-clientes', component: ClientesComponent },
