@@ -1,26 +1,26 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewChecked, AfterViewInit, Output } from '@angular/core';
-import { ProyectosService } from '../../../services/proyectos.service';
-import { UsuariosService } from '../../../services/usuarios.service';
-import { GastosService } from '../../../services/gastos.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Gasto } from '../../../general/model/gasto';
+import { Component, OnInit } from '@angular/core';
+import { UsuariosService } from 'src/app/services/usuarios.service';
+import { ArchivosService } from 'src/app/services/archivos.service';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { ProyectosService } from 'src/app/services/proyectos.service';
+import { GastosService } from 'src/app/services/gastos.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Utils } from 'src/app/general/utils/utils';
+import { AlertasService } from 'src/app/services/srv_shared/alertas.service';
 import { Usuario } from '../../../general/model/usuario';
 import { Proyecto } from '../../../general/model/proyecto';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Utils } from '../../../general/utils/utils';
-import { AlertasService } from '../../../services/srv_shared/alertas.service';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { ArchivosService } from '../../../services/archivos.service';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { Gasto } from '../../../general/model/gasto';
 import { FileItem } from '../../../general/model/file-item';
 
 @Component({
-  selector: 'app-gastos-generales',
-  templateUrl: './gastos-generales.component.html',
-  styleUrls: ['./gastos-generales.component.css']
+  selector: 'app-reembolso',
+  templateUrl: './reembolso.component.html',
+  styleUrls: ['./reembolso.component.css']
 })
-export class GastosGeneralesComponent implements OnInit {
+export class ReembolsoComponent implements OnInit {
   exito: boolean ;
-  titulo = 'Registrar Gastos Generales';
+  titulo = 'Solicitar Reembolso';
   boton = 'Guardar';
   usuarios: Usuario[] = [];
   tipoGto: any[];
@@ -42,7 +42,7 @@ export class GastosGeneralesComponent implements OnInit {
   comprobantes: any;
   file: FileItem;
   headTitle = ['Nombre', 'Progreso'];
-  comprobante : string;
+  comprobante: string;
   arrayUrl: any[] = [];
 
   // tslint:disable-next-line: variable-name
@@ -179,6 +179,4 @@ limpiarArchivos(archivo) {
   this.storage.storage.refFromURL(this.ruta + archivo.nombreArchivo).delete();
 }
 
-
 }
-

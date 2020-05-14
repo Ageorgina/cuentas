@@ -18,5 +18,3 @@ export class LogoutAction implements Action {
 }
 
 export type authActions = LoginAction | LogoutAction;
-
-

@@ -1,14 +1,16 @@
 
 import { Directive, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { FileItem } from '../general/model/file-item';
+import { AlertasService } from '../services/srv_shared/alertas.service';
 
 @Directive({
   selector: '[appNgDropFiles]'
 })
 export class NgDropFilesDirective {
+  existeArch: boolean;
   @Input() archivos: FileItem[] = [];
   @Output() mouseSobre: EventEmitter<boolean> = new EventEmitter();
-  constructor() { }
+  constructor(public alert: AlertasService) { }
   @HostListener('dragover', ['$event'])
   public onDragEnter( event: any ) {
     this.mouseSobre.emit( true );
@@ -34,28 +36,37 @@ export class NgDropFilesDirective {
   }
 
   private _extraerArchivos(archivosLista: FileList) {
-
     // tslint:disable-next-line: forin
     for ( const propiedad in Object.getOwnPropertyNames( archivosLista ) ) {
       const archivoTemporal = archivosLista[propiedad];
-
       if (this._archivoPuedeSerCargado( archivoTemporal ) && this.archivos.length <= 2) {
         const nuevoArchivo = new FileItem( archivoTemporal );
-        this.archivos.push(nuevoArchivo);
+        if (!this.archivos.includes(nuevoArchivo)) {
+          this.archivos.push(nuevoArchivo);
       }
+        if (this.archivos.length > 2) {
+         const excedeCapacidad = 'No se pueden agregar más de 3 archivos, solo se cargaran 3 archivos';
+         this.alert.textInfo = excedeCapacidad;
+         this.alert.showInfo();
+       }
+      }
+
     }
   }
 
-  // Validaciones
   private _archivoPuedeSerCargado( archivo: File ): boolean {
     if ((!this._archivoDroppeado(archivo.name) && this._esImagen( archivo.type )) ||
     (!this._archivoDroppeado(archivo.name) && this._esPdf( archivo.type ))) {
       return true;
-    } else {
-      return false;
     }
-
+    if ((!this._archivoDroppeado(archivo.name) && !this._esImagen( archivo.type )) ||
+    (!this._archivoDroppeado(archivo.name) && !this._esPdf( archivo.type ))) {
+      const formatovalido = 'No se admite este formato';
+      this.alert.textInfo = formatovalido;
+      this.alert.showInfo();
+      return false;
   }
+}
 
   private _prevenirDetener( event ) {
     event.preventDefault();
@@ -65,6 +76,9 @@ export class NgDropFilesDirective {
   private _archivoDroppeado(nombreArchivo: string): boolean {
     for (const archivo of this.archivos) {
       if (archivo.nombreArchivo === nombreArchivo) {
+        const infoexiste = 'El archivo ya existe';
+        this.alert.textInfo = infoexiste;
+        this.alert.showInfo();
         return true;
       }
     }

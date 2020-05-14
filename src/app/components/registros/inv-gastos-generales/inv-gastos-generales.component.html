@@ -10,7 +10,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let el of elements; let i of index">
-                <td>{{el.resp_asg}}</td>
+                <!-- <td>{{el.resp_asg}}</td> -->
                 <td>{{el.fecha}}</td>
                 <td style="text-align: right;">{{el.cantidad | currency }}</td>
                 <td>{{el.motivo}}</td>
@@ -18,12 +18,32 @@
                 <td>{{el.proyecto}}</td>
                 <td>{{el.estatus}}</td>
                 <td>
-                    <button type="button" class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
-                    <button type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
-                </td>
-            </tr>
+                    <button class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#comprobante"> Ver comprobantes ...
+                    <div #comprobante id="comprobante" class="modal fade">
+                        <div class="modal-dialog modal-lg">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-body" >
+                                       <img class="zoom m-2" *ngFor="let imagen of comprobantes" [src]="imagen">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+</div>
+</div>
+</div>
+</div>
+</button>
 
-        </tbody>
-    </table>
+</td>
+<td>
+    <button type="button" class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
+    <button type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
+</td>
+</tr>
+
+</tbody>
+</table>
+
+
 
 </div>

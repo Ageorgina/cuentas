@@ -11,6 +11,8 @@ import { InvGastosGeneralesComponent } from './components/registros/inv-gastos-g
 import { RegistroOficinaComponent } from './components/altas/registro-oficina/registro-oficina.component';
 import { InvOficinaComponent } from './components/registros/inv-oficina/inv-oficina.component';
 import { LoginComponent } from './login/login.component';
+import { ReembolsoComponent } from './components/altas/reembolso/reembolso.component';
+import { InvReembolsoComponent } from './components/registros/inv-reembolso/inv-reembolso.component';
 
 
 const routes: Routes = [
@@ -23,6 +25,7 @@ const routes: Routes = [
   { path: 'registro-proyectos', component: ProyectosComponent},
   { path: 'registro-gastos', component: GastosGeneralesComponent },
   { path: 'registro-oficina', component: RegistroOficinaComponent },
+  { path: 'registro-reembolso', component: ReembolsoComponent},
 
   // INVENTARIOS
   { path: 'usuarios', component: InvUsuariosComponent },
@@ -30,6 +33,8 @@ const routes: Routes = [
   { path: 'proyectos', component: InvProyectosComponent},
   { path: 'gastos', component: InvGastosGeneralesComponent },
   { path: 'oficina', component: InvOficinaComponent},
+  { path: 'reembolsos', component: InvReembolsoComponent},
+
 
   // UPDATE
   { path: 'registro-usuarios/:id_user', component: UsuariosComponent },
@@ -37,6 +42,7 @@ const routes: Routes = [
   { path: 'registro-proyectos/:id_proyecto', component: ProyectosComponent},
   { path: 'registro-gastos/:id_gasto', component: GastosGeneralesComponent },
   { path: 'registro-oficina/:id_of', component: RegistroOficinaComponent },
+  { path: 'registro-reembolsos/:id_reembolso', component: InvReembolsoComponent},
 ];
 
 @NgModule({

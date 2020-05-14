@@ -28,10 +28,20 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 
+
 import { environment } from '../environments/environment';
 import { NgDropFilesDirective } from './directives/ng-drop-files.directive';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './security/logout/logout.component';
+import { ReembolsoComponent } from './components/altas/reembolso/reembolso.component';
+import { InvReembolsoComponent } from './components/registros/inv-reembolso/inv-reembolso.component';
+
+// http
+import { HttpClientModule} from '@angular/common/http';
+
+// ngrx
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
   declarations: [
@@ -50,6 +60,8 @@ import { LogoutComponent } from './security/logout/logout.component';
     NgDropFilesDirective,
     LoginComponent,
     LogoutComponent,
+    ReembolsoComponent,
+    InvReembolsoComponent,
   ],
   imports: [
     BrowserModule,
@@ -60,7 +72,10 @@ import { LogoutComponent } from './security/logout/logout.component';
     AngularFirestoreModule,
     AngularFireDatabaseModule,
     ReactiveFormsModule,
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    HttpClientModule,
+    StoreModule.forRoot({}),
+    StoreDevtoolsModule
   ],
   providers: [ ],
   bootstrap: [AppComponent],

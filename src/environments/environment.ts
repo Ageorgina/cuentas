@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  gtosUrl: 'http://localhost:11200',
   firebaseConfig: false,
   firebase: {
     apiKey: 'AIzaSyBKYXOwuYivzLms7JPUGNLlkdRrD1b5lf8',

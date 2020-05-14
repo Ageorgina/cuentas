@@ -11,9 +11,10 @@ import { AlertasService } from '../../../services/srv_shared/alertas.service';
 })
 export class InvGastosGeneralesComponent implements OnInit {
   titulo = 'Gastos Generales';
-  headTitle = ['Responsable ASG', 'Fecha', 'Monto', 'Motivo', 'Tipo', 'Proyecto', 'Estatus', 'Modificar / Eliminar'];
+  headTitle = ['Fecha', 'Monto', 'Motivo', 'Tipo', 'Proyecto', 'Estatus', 'Comprobantes', 'Modificar / Eliminar'];
   elements: Gasto[] = [];
   loading = true;
+  comprobantes: any[] = [];
   // tslint:disable-next-line: variable-name
   constructor( private _gstS: GastosService,
                private router: Router,
@@ -21,10 +22,13 @@ export class InvGastosGeneralesComponent implements OnInit {
                 this._gstS.cargarGastos().subscribe((gastos: Gasto[]) => {
                   this.elements = gastos;
                   this.loading = false;
+                  this.elements.filter(registro =>
+                    this.comprobantes = registro.comprobantes.split(','));
                 });
                 }
 
   ngOnInit() {
+
 
   }
   borrar( value ) {

@@ -1,0 +1,10 @@
+input,
+select {
+    border-bottom: 1px solid #ebebee;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    box-shadow: transparent;
+    background-color: transparent;
+    outline: none;
+}

@@ -5,12 +5,14 @@ export class FileItem {
     public estaSubiendo: boolean;
     public progreso: number;
     public token: string;
+    public completo: boolean;
 
     constructor( archivo: File ) {
         this.archivo = archivo;
         this.nombreArchivo = archivo.name;
         this.estaSubiendo = false;
         this.progreso = 0;
-
+        this.url = 'NO TIENE URL';
+        this.completo = false;
     }
 }
