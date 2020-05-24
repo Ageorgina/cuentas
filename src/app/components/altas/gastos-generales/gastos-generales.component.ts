@@ -43,7 +43,7 @@ export class GastosGeneralesComponent implements OnInit {
   file: FileItem;
   headTitle = ['Nombre', 'Progreso'];
   comprobante : string;
-  arrayUrl: any[] = [];
+  arrayUrl: string[] = [];
 
   // tslint:disable-next-line: variable-name
   constructor( private _fileS: ArchivosService,
@@ -72,7 +72,7 @@ export class GastosGeneralesComponent implements OnInit {
       proyecto: ['', Validators.required],
       estatus: ['', Validators.required],
       reembolso: [''],
-      comprobantes: [''],
+      comprobantes: ['']
   });
 
     this.id_gasto = this.active.snapshot.paramMap.get('id_gasto');
@@ -103,14 +103,21 @@ export class GastosGeneralesComponent implements OnInit {
   onSubmit() {
     this.loading = true;
     this.submitted = true;
-    if (!this.id_gasto && this.gastosForm.invalid) {
-      this.textError = '¡Faltan campos por llenar!';
-      this.alert.textError = this.textError;
-      this.alert.showError();
-      this.loading = false;
-      return ;
+    this.arrayUrl = [];
+    this.archivos.filter( data => {
+      if (data.url !== 'NO TIENE URL') {
+        this.arrayUrl.push(data.url);
+      }
+    });
+    if (this.archivos.length === 0) {
+      this.comprobantes = '';
+    } else {
+      this.comprobantes = this.arrayUrl.join(',');
+      console.log(this.arrayUrl);
     }
+    this.gastosForm.value.comprobantes = this.comprobantes;
     if (!this.gastosForm.valid) {
+      console.log(this.gastosForm.controls);
       this.textError = '¡Faltan campos por llenar!';
       this.alert.textError = this.textError;
       this.alert.showError();
@@ -126,15 +133,16 @@ export class GastosGeneralesComponent implements OnInit {
       this.router.navigate(['gastos']);
       }
     if (!this.id_gasto && this.gastosForm.valid) {
-      this.submitted = false;
+      this.loading = true;
       this.gasto = this.gastosForm.value;
-      this.gastosForm.value.comprobantes = this.comprobantes;
       this.fecha = this.gastosForm.value.fecha;
-      this.gastosForm.value.comprobantes = this.comprobante;
+      console.log(this.gasto)
+      this.submitted = false;
       this.__gastoS.cudGastos().add(this.gasto);
       this.alert.showSuccess();
       this.loading = false;
       this.limpiar();
+
   }
 }
 checkLetras($event: KeyboardEvent) {
@@ -158,25 +166,17 @@ regresar() {
   this.router.navigate(['gastos']);
 }
 
-cargarArchivos() {
-  this._fileS.cargarArchivosFb( this.archivos).then(() => {
-    this.archivos.filter(file => {
-        if (this.arrayUrl.includes(file.url) || file.completo === false) {
-          return ;
-        } else {
-          this.arrayUrl.push(file.url);
-          console.log('arrayUrl', this.arrayUrl);
-          this.comprobante = this.arrayUrl.join();
-        }
-    });
+async cargarArchivos() {
+  let algo: FileItem[] = await new Promise((resolve, reject) => {
+    this._fileS.cargarArchivosFb( this.archivos).finally(() => { resolve(this.archivos); })
+    .catch(() => reject([]));
   });
-
 }
 
 
 limpiarArchivos(archivo) {
   this.archivos.splice(archivo, 1);
-  this.storage.storage.refFromURL(this.ruta + archivo.nombreArchivo).delete();
+//  this.storage.storage.refFromURL(this.ruta + archivo.nombreArchivo).delete();
 }
 
 

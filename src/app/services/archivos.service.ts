@@ -24,7 +24,7 @@ export class ArchivosService {
         continue ;
       }
 
-      const uploadTask: firebase.storage.UploadTask = storageRef.child(`${ this.CARPETA_FILES}/${ item.nombreArchivo }`)
+      const uploadTask: firebase.storage.UploadTask = storageRef.child(`${ this.CARPETA_FILES}/${ item.archivo.lastModified }`)
       .put( item.archivo );
 
       uploadTask.on( firebase.storage.TaskEvent.STATE_CHANGED,
@@ -39,6 +39,7 @@ export class ArchivosService {
                       item.url = downloadURL;
                       item.estaSubiendo = false;
                       item.completo = true;
+                      console.log(item.archivo.name)
                       this.guardarArchivos({
                           nombre: item.nombreArchivo,
                           url: item.url

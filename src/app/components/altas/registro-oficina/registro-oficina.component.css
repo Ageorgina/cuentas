@@ -36,3 +36,22 @@ select {
     background-color: transparent;
     outline: none;
 }
+
+[data-tooltip]:before {
+    position: absolute;
+    content: attr(data-tooltip);
+    opacity: 0;
+}
+
+[data-tooltip]:hover:before {
+    opacity: 1;
+    border-radius: 10%;
+    background-color: rgba(145, 141, 141, 0.863);
+    left: 80%;
+    width: 100%;
+    top: -10px;
+}
+
+[data-tooltip]:not([data-tooltip-persistent]):before {
+    pointer-events: none;
+}

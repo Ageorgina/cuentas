@@ -9,6 +9,9 @@ export class AlertasService {
   textWarning = 'Alerta!';
   textWarningSuccess = 'Alerta!';
   textInfo = 'Alerta!';
+  tittleS = 'Se realizó con éxito la operación';
+  timer = 1500;
+  seguro = true;
 
   constructor() {
 
@@ -18,9 +21,9 @@ export class AlertasService {
     Swal.fire({
       position: 'center',
       icon: 'success',
-      title: 'Se realizó con éxito la operación',
+      title: this.tittleS,
       showConfirmButton: false,
-      timer: 1500
+      timer: this.timer
     });
   }
   showWarning() {

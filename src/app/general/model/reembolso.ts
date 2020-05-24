@@ -9,9 +9,10 @@ export class Reembolso {
     tipo_gasto: string;
     proyecto: string;
     estatus: string;
+    // tslint:disable-next-line:variable-name
+    solicitante: string;
+    aprobo: string;
     comprobantes: string;
-   public status: string;
-    constructor( ) {
-        this.estatus = 'Aprobar';
-    }
+    status: string;
+
 }

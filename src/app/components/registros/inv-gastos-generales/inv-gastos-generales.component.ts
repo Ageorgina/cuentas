@@ -14,16 +14,18 @@ export class InvGastosGeneralesComponent implements OnInit {
   headTitle = ['Fecha', 'Monto', 'Motivo', 'Tipo', 'Proyecto', 'Estatus', 'Comprobantes', 'Modificar / Eliminar'];
   elements: Gasto[] = [];
   loading = true;
-  comprobantes: any[] = [];
   // tslint:disable-next-line: variable-name
   constructor( private _gstS: GastosService,
                private router: Router,
                private alert: AlertasService) {
+                this.loading = false;
                 this._gstS.cargarGastos().subscribe((gastos: Gasto[]) => {
                   this.elements = gastos;
-                  this.loading = false;
-                  this.elements.filter(registro =>
-                    this.comprobantes = registro.comprobantes.split(','));
+                  this.elements.filter(registro => {
+                    console.log('Proyecto ->', registro.motivo);                    
+                    registro.arrComprobantes = registro.comprobantes.split(',');
+                    console.log('Imagenes ->', registro.arrComprobantes);
+                  });
                 });
                 }
 

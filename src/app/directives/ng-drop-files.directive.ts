@@ -39,7 +39,8 @@ export class NgDropFilesDirective {
     // tslint:disable-next-line: forin
     for ( const propiedad in Object.getOwnPropertyNames( archivosLista ) ) {
       const archivoTemporal = archivosLista[propiedad];
-      if (this._archivoPuedeSerCargado( archivoTemporal ) && this.archivos.length <= 2) {
+      if (this._archivoPuedeSerCargado( archivoTemporal ) && this.archivos.length <= 3) {
+        console.log(archivoTemporal)
         const nuevoArchivo = new FileItem( archivoTemporal );
         if (!this.archivos.includes(nuevoArchivo)) {
           this.archivos.push(nuevoArchivo);
@@ -49,18 +50,21 @@ export class NgDropFilesDirective {
          this.alert.textInfo = excedeCapacidad;
          this.alert.showInfo();
        }
+       if (this.archivos.length < 1) {
+        const minimo = 'Requiere minimo un comprobante';
+        this.alert.textInfo = minimo;
+        this.alert.showInfo();
+      }
       }
 
     }
   }
 
   private _archivoPuedeSerCargado( archivo: File ): boolean {
-    if ((!this._archivoDroppeado(archivo.name) && this._esImagen( archivo.type )) ||
-    (!this._archivoDroppeado(archivo.name) && this._esPdf( archivo.type ))) {
+    if ((!this._archivoDroppeado(archivo.name) && this._esImagen( archivo.type ))) {
       return true;
     }
-    if ((!this._archivoDroppeado(archivo.name) && !this._esImagen( archivo.type )) ||
-    (!this._archivoDroppeado(archivo.name) && !this._esPdf( archivo.type ))) {
+    if ((!this._archivoDroppeado(archivo.name) && !this._esImagen( archivo.type ))) {
       const formatovalido = 'No se admite este formato';
       this.alert.textInfo = formatovalido;
       this.alert.showInfo();
@@ -91,5 +95,4 @@ export class NgDropFilesDirective {
    private _esPdf(tipoArchivo: string): boolean {
     return (tipoArchivo === '' || tipoArchivo === undefined ) ? false : tipoArchivo.startsWith('application/pdf');
   }
-
 }

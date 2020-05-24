@@ -10,8 +10,8 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let el of elements; let i of index">
-                <td class="left">{{el.ap_p}} {{el.ap_m}} {{el.nombre}}</td>
+            <tr *ngFor="let el of elements; let i of index" [ngStyle]="{'color': el.activo ? ' #202C4C': 'red'}">
+                <td class="left"> {{el.ap_p}} {{el.ap_m}} {{el.nombre}}</td>
                 <td class="left">{{el.area}}</td>
                 <td class="left">{{el.resp_asg}}</td>
                 <td class="left">{{el.correo}}</td>

@@ -13,36 +13,36 @@ import { InvOficinaComponent } from './components/registros/inv-oficina/inv-ofic
 import { LoginComponent } from './login/login.component';
 import { ReembolsoComponent } from './components/altas/reembolso/reembolso.component';
 import { InvReembolsoComponent } from './components/registros/inv-reembolso/inv-reembolso.component';
-
+import { AuthGuard } from './security/guards/auth.guard';
 
 const routes: Routes = [
-
+  
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
+  { path: 'login', component: LoginComponent},
   // ALTAS
-  { path: 'registro-usuarios', component: UsuariosComponent },
-  { path: 'registro-clientes', component: ClientesComponent },
-  { path: 'registro-proyectos', component: ProyectosComponent},
-  { path: 'registro-gastos', component: GastosGeneralesComponent },
-  { path: 'registro-oficina', component: RegistroOficinaComponent },
-  { path: 'registro-reembolso', component: ReembolsoComponent},
+  { path: 'registro-usuarios', component: UsuariosComponent,canActivate: [AuthGuard]},
+  { path: 'registro-clientes', component: ClientesComponent,canActivate: [AuthGuard]},
+  { path: 'registro-proyectos', component: ProyectosComponent,canActivate: [AuthGuard]},
+  { path: 'registro-gastos', component: GastosGeneralesComponent,canActivate: [AuthGuard]},
+  { path: 'registro-oficina', component: RegistroOficinaComponent,canActivate: [AuthGuard]},
+  { path: 'registro-reembolso', component: ReembolsoComponent,canActivate: [AuthGuard]},
 
   // INVENTARIOS
-  { path: 'usuarios', component: InvUsuariosComponent },
-  { path: 'clientes', component: InvClientesComponent },
-  { path: 'proyectos', component: InvProyectosComponent},
-  { path: 'gastos', component: InvGastosGeneralesComponent },
-  { path: 'oficina', component: InvOficinaComponent},
-  { path: 'reembolsos', component: InvReembolsoComponent},
+  { path: 'usuarios', component: InvUsuariosComponent,canActivate: [AuthGuard]},
+  { path: 'clientes', component: InvClientesComponent,canActivate: [AuthGuard]},
+  { path: 'proyectos', component: InvProyectosComponent,canActivate: [AuthGuard]},
+  { path: 'gastos', component: InvGastosGeneralesComponent,canActivate: [AuthGuard]},
+  { path: 'oficina', component: InvOficinaComponent,canActivate: [AuthGuard]},
+  { path: 'reembolsos', component: InvReembolsoComponent,canActivate: [AuthGuard]},
 
 
   // UPDATE
-  { path: 'registro-usuarios/:id_user', component: UsuariosComponent },
-  { path: 'registro-clientes/:id_cte', component: ClientesComponent },
-  { path: 'registro-proyectos/:id_proyecto', component: ProyectosComponent},
-  { path: 'registro-gastos/:id_gasto', component: GastosGeneralesComponent },
-  { path: 'registro-oficina/:id_of', component: RegistroOficinaComponent },
-  { path: 'registro-reembolsos/:id_reembolso', component: InvReembolsoComponent},
+  { path: 'registro-usuarios/:id_user', component: UsuariosComponent,canActivate: [AuthGuard]},
+  { path: 'registro-clientes/:id_cte', component: ClientesComponent,canActivate: [AuthGuard]},
+  { path: 'registro-proyectos/:id_proyecto', component: ProyectosComponent,canActivate: [AuthGuard]},
+  { path: 'registro-gastos/:id_gasto', component: GastosGeneralesComponent,canActivate: [AuthGuard]},
+  { path: 'registro-oficina/:id_of', component: RegistroOficinaComponent,canActivate: [AuthGuard]},
+  { path: 'registro-reembolso/:id_reembolso', component: ReembolsoComponent,canActivate: [AuthGuard]},
 ];
 
 @NgModule({

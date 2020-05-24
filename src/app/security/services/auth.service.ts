@@ -9,15 +9,25 @@
  import {catchError} from 'rxjs/operators';
  import {Store} from '@ngrx/store';
  import {AppState} from '../../security/store/reducers/app.reducers';
- import {LoginAction, LogoutAction} from '../../security/store/actions/auth.actions';
+ import {LoginAction, LogoutAction, DesactivarLoadingAction} from '../../security/store/actions';
+ import { UsuariosService } from '../../services/usuarios.service';
+ import { Usuario } from '../../general/model/usuario';
+import { Router } from '@angular/router';
 
  @Injectable({providedIn: 'root'})
 export class AuthService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
+  public loading: boolean;
+  public admin: string;
+  public usuario: string;
+  public tesorero: string;
 
-
-  constructor(private http: HttpClient, private store: Store<AppState>) {
+  constructor( private http: HttpClient,
+               private store: Store<AppState>,
+               private userS: UsuariosService,
+               private router: Router) {
+    localStorage.removeItem('currentUser');
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -26,23 +36,52 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  login(email: string, password: string, idModulo: number) {
-    localStorage.removeItem('currentUser');
-    return this.http.post<any>(`${environment.gtosUrl}/entrar`, {email, password, idModulo})
+  login(username: string, password: string) {
+    return this.http.post<any>(`${environment.gtosUrl}/login`, {username, password})
       .pipe(map(user => {
-        if (user && user.resultado.access_token) {
-           console.log('currentUser', user.resultado);
-           localStorage.setItem('currentUser', JSON.stringify(user.resultado));
-           this.currentUserSubject.next(user.resultado);
-           this.store.dispatch(new LoginAction(user.resultado));
+        if (user && user.access_token ) {
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.currentUserSubject.next(user);
+          this.store.dispatch(new LoginAction(user));
+          }
+        this.store.dispatch(new DesactivarLoadingAction());
+        return user;
+        }), catchError(err => {
+          if ( err.statusText === 'Internal Server Error') {
+            return 'I';
+          } else if (err.statusText === 'Unauthorized') {
+            return 'F';
+          } else {
+            return 'U';
+          }
+        }));
+    }
+
+  usuariofb() {
+    this.userS.cargarUsuarios().subscribe((usuarios: Usuario[]) => {
+      usuarios.filter(responsable => {
+        if (responsable.correo === this.currentUserValue.usuario.username) {
+          if (responsable.rol === 'Administrador') {
+            return this.admin = responsable.rol;
+          } else if (responsable.rol === 'Usuario') {
+            return this.usuario = responsable.rol;
+          } else if (responsable.rol === 'Tesorero') {
+            return this.tesorero = responsable.rol;
+          }
         }
-      }));
+      });
+    });
   }
 
   logout() {
-    // remove user from local storage to log user out
+    window.onload = function (){
+      window.localStorage.clear();
+    }
+    this.store.dispatch(new DesactivarLoadingAction());
+    this.store.dispatch(new LogoutAction());
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
-    this.store.dispatch(new LogoutAction());
+    this.router.navigate(['/login']);
+    console.log('refresco')
   }
 }

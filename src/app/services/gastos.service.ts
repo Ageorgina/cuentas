@@ -18,13 +18,12 @@ export class GastosService {
     cargarTipoGtos() {
       return this.db.collection('tipo_gto').valueChanges({idFile: 'id_tipo_gto'});
     }
+    cargarReembolsos() {
+      return this.db.collection('reembolsos').valueChanges({idField: 'id_reembolso'});
+    }
+    cudReembolsos() {
+      return this.db.collection('reembolsos');
+    }
 
-  // OFICINA
-      cargarGastosOF() {
-        return this.db.collection('oficina ').valueChanges({idField: 'id_of'});
-      }
-      cudGastosOF() {
-        return this.db.collection('oficina ');
-      }
 
   }

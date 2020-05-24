@@ -1,36 +1,33 @@
 <navbar hidden></navbar>
-
-<section class="view intro intro-2 ">
+<section class="view intro fondo">
     <div class="loading" *ngIf="loading">Loading&#8230;</div>
-    <div class="card">
-        <h2 class="text-center mb-5 mt-4 font-bold"><strong>Inicio de sesión</strong></h2>
-        <div class="around">
-            <!-- <div>
-                <img src="../../assets/img/logo.png">
-            </div> -->
-            <div>
-                <div class="row pb-4 d-flex justify-content-center mb-4">
-                    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-                        <div class="md-form">
-                            <mdb-icon fas icon="user" class="dark-grey-text mr-2"></mdb-icon> <label for="email">Correo</label>
-                            <input type="email" id="email" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
-                            <p id="error" *ngIf="loginForm.get('email').hasError('required')">* Este campo no puede ir vacío</p>
-                            <p id="error" class="error" *ngIf="loginForm.get('email').hasError('email')">*Correo Invalido</p>
+    <div class="center">
+        <div class="center" style="width: 90%;">
+            <div class="card">
+                <h2 class="text-center font-bold "> <img src="../../assets/img/logo.png "><br><strong>Inicio de sesión</strong></h2>
+                <div class="d-flex">
+                    <form [formGroup]="loginForm " (ngSubmit)="onSubmit() ">
+                        <div id="formulario" class="md-form ">
+                            <mdb-icon fas icon="user" class="dark-grey-text mr-2 "></mdb-icon> <label for="username">Correo</label>
+                            <input type="email" id="username" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors } ">
+                            <p id="error " class="mt-2 " *ngIf="loginForm.get( 'username').hasError( 'required') && submitted ">* Este campo no puede ir vacío</p>
+                            <p id="error2 " class="mt-2 " *ngIf="loginForm.get( 'username').hasError( 'email') && submitted ">*Correo Invalido</p>
                         </div>
-
-                        <div class="md-form">
-                            <mdb-icon fas icon="lock" class="dark-grey-text mr-2"></mdb-icon> <label for="pass">Contraseña</label>
-                            <input type="password" id="pass" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
-                            <p id="error" *ngIf="loginForm.get('password').hasError('required')">* Este campo no puede ir vacío</p>
-                            <p id="error" *ngIf="loginForm.get('password').hasError('minLength')">* Min. 6 caracteres</p>
+                        <div id="formulario1" class="md-form ">
+                            <mdb-icon fas icon="lock " class="dark-grey-text mr-2 "></mdb-icon> <label for="pass ">Contraseña</label>
+                            <input type="password" id="pass" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors } ">
+                            <p id="error " class="mt-2 " *ngIf="loginForm.get( 'password').hasError( 'required') && submitted ">* Este campo no puede ir vacío</p>
+                            <p id="error2 " class="mt-2 " *ngIf="loginForm.get( 'password').hasError( 'minLength') ">* Min. 6 caracteres</p>
                         </div>
                         <div class="text-center">
-                            <button class="">Ingresar </button><br>
-                            <a routerLink="" class="btn btn-link">Recuperar contraseña</a>
+                            <br>
+                            <button class=" btn btn-outline-secondary ">Ingresar </button><br>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+        <br> <strong id="footer" class="text-center ">©2020 Copyright ASG Advisory Services</strong>
     </div>
+
 </section>

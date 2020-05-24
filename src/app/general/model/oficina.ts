@@ -6,5 +6,21 @@ export class Oficina {
     fecha: Date;
     cantidad: number;
     motivo: string;
-    tipo: string;
+    // tslint:disable-next-line: variable-name
+    id_partidafb: string;
+    // tslint:disable-next-line:variable-name
+    id_partida: Date;
 }
+export class Partida {
+    fecha: Date;
+    cantidad: number;
+    // tslint:disable-next-line:variable-name
+    id_partida: Date;
+    devolver: boolean;
+    sobrante: number;
+    devuelto: number;
+    // tslint:disable-next-line:variable-name
+    id_partidafb: string;
+
+}
+

@@ -12,5 +12,6 @@ export class Gasto {
     estatus: string;
     reembolso: boolean;
     comprobantes: string;
+    arrComprobantes: string[];
 }
 

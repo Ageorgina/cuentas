@@ -10,8 +10,8 @@
                     <label for="item1" class="acordeon__titulo">Registrar</label>
                     <div class="btn-group-vertical acordeon__contenido">
                         <button type="button" class="btn btn-default" routerLink="/registro-clientes">Clientes</button>
-                        <button type="button" class="btn btn-default" routerLink="/registro-gastos">Gastos Generales</button >
-                        <button type="button" class="btn btn-default" routerLink="/registro-proyectos">Proyectos</button>
+                        <button *ngIf="!admin" type="button" class="btn btn-default" routerLink="/registro-gastos">Gastos Generales</button >
+                        <button *ngIf="!admin" type="button" class="btn btn-default" routerLink="/registro-proyectos">Proyectos</button>
                         <button type="button" class="btn btn-default" routerLink="/registro-reembolso">Reembolso</button >
                         <button type="button" class="btn btn-default" routerLink="/registro-usuarios">Usuarios ASG</button>
                     </div>

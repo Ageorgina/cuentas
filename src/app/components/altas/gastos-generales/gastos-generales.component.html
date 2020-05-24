@@ -44,7 +44,7 @@
                     <label class="control-label mr-2 " for="estatus">Estatus:</label><br>
                     <select id="estatus" formControlName="estatus">
                     <option disabled value=''>Estatus</option>
-                    <option value="Pendiente">Pentiente</option>
+                    <option value="Pendiente">Pendiente</option>
                     <option value="Pagado">Pagado</option>
                     <option value="Incompleto">Incompleto</option>
                     <option value="Cancelado">Cancelado</option>
@@ -82,7 +82,7 @@
                                 </td>
                                 <td>
                                     <div class="progress">
-                                        <div class="progress-bar mr-2" role="progressbar" [ngStyle]="{'width': archivo.progreso + '%'}" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar" role="progressbar" [ngStyle]="{'width': archivo.progreso + '%', 'background-color':  archivo.completo?'green':'blue' }" aria-valuenow="{{ archivo.progreso }}" aria-valuemin="0" aria-valuemax="100">{{archivo.progreso}} </div>
                                     </div>
                                     <i class="fas fa-times btn-outline-danger" (click)="limpiarArchivos(archivo)"></i>
                                 </td>

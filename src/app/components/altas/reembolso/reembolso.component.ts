@@ -10,8 +10,8 @@ import { AlertasService } from 'src/app/services/srv_shared/alertas.service';
 import { Usuario } from '../../../general/model/usuario';
 import { Proyecto } from '../../../general/model/proyecto';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { Gasto } from '../../../general/model/gasto';
 import { FileItem } from '../../../general/model/file-item';
+import { Reembolso } from '../../../general/model/reembolso';
 
 @Component({
   selector: 'app-reembolso',
@@ -20,17 +20,18 @@ import { FileItem } from '../../../general/model/file-item';
 })
 export class ReembolsoComponent implements OnInit {
   exito: boolean ;
+  nuevoR = true;
   titulo = 'Solicitar Reembolso';
   boton = 'Guardar';
   usuarios: Usuario[] = [];
   tipoGto: any[];
   proyectos: Proyecto[] = [];
-  gastosForm: FormGroup;
-  gasto: Gasto;
+  reembolsoForm: FormGroup;
+  reembolso: Reembolso;
   fecha: string;
   // tslint:disable-next-line: variable-name
-  id_gasto: string;
-  updateG: Gasto;
+  id_reembolso: string;
+  updateR: Reembolso;
   textError: string;
   submitted = false;
   loading = true;
@@ -44,6 +45,8 @@ export class ReembolsoComponent implements OnInit {
   headTitle = ['Nombre', 'Progreso'];
   comprobante: string;
   arrayUrl: any[] = [];
+  aprobar: any;
+  usuarioLocal: any;
 
   // tslint:disable-next-line: variable-name
   constructor( private _fileS: ArchivosService,
@@ -64,74 +67,79 @@ export class ReembolsoComponent implements OnInit {
     this._pyt.cargarProyectos().subscribe((proyectos: Proyecto[]) => { this.proyectos = proyectos; });
     this.__gastoS.cargarTipoGtos().subscribe((tipoGtos: any[]) => { this.tipoGto = tipoGtos; });
 
-    this.gastosForm = this.formBuilder.group({
+    this.reembolsoForm = this.formBuilder.group({
       fecha: ['', Validators.required],
       cantidad: ['', Validators.required],
       motivo: ['', Validators.required],
-      tipo_gasto: ['', Validators.required],
-      proyecto: ['', Validators.required],
-      estatus: ['', Validators.required],
-      reembolso: [''],
+      estatus: [''],
       comprobantes: [''],
+      solicitante: [''],
+      aprobo: ['']
   });
 
-    this.id_gasto = this.active.snapshot.paramMap.get('id_gasto');
-    if ( this.id_gasto ) {
-      this.titulo = 'Modificar Gasto';
+    this.id_reembolso = this.active.snapshot.paramMap.get('id_reembolso');
+    if ( this.id_reembolso ) {
+      this.nuevoR = false;
+      this.titulo = 'Modificar Reembolso';
       this.actualizar = true;
-      this.__gastoS.cudGastos().doc(this.id_gasto).valueChanges().subscribe((upG: Gasto) => {
-        this.updateG = upG;
-        this.gastosForm.get(['fecha']).setValue(this.updateG.fecha);
-        this.gastosForm.get(['cantidad']).setValue(this.updateG.cantidad);
-        this.gastosForm.get(['motivo']).setValue(this.updateG.motivo);
-        this.gastosForm.get(['tipo_gasto']).setValue(this.updateG.tipo_gasto);
-        this.gastosForm.get(['proyecto']).setValue(this.updateG.proyecto);
-        this.gastosForm.get(['estatus']).setValue(this.updateG.estatus);
-        this.gastosForm.get(['comprobantes']).setValue(this.updateG.comprobantes);
+      this.__gastoS.cudReembolsos().doc(this.id_reembolso).valueChanges().subscribe((upR: Reembolso) => {
+        this.updateR = upR;
+        this.reembolsoForm.get(['fecha']).setValue(this.updateR.fecha);
+        this.reembolsoForm.get(['cantidad']).setValue(this.updateR.cantidad);
+        this.reembolsoForm.get(['motivo']).setValue(this.updateR.motivo);
+        this.reembolsoForm.get(['estatus']).setValue(this.updateR.estatus);
+        this.reembolsoForm.get(['comprobantes']).setValue(this.updateR.comprobantes);
+        this.reembolsoForm.get(['solicitante']).setValue(this.updateR.solicitante);
       });
+      } else {
+        this.nuevoR = true;
+        this.reembolsoForm.value.status = 'Aprobar';
+        this.aprobar = this.reembolsoForm.value.estatus;
+        this.reembolsoForm.controls['estatus'].disable();
       }
   }
 
   ngOnInit() {
+    this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
     this.loading = false;
   }
 
   get fval() {
-    return this.gastosForm.controls;
+    return this.reembolsoForm.controls;
 }
 
   onSubmit() {
     this.loading = true;
     this.submitted = true;
-    if (!this.id_gasto && this.gastosForm.invalid) {
+    if ((!this.id_reembolso && this.reembolsoForm.invalid) || !this.reembolsoForm.valid ) {
+      console.log('this.reembolsoForm', this.reembolso);
       this.textError = '¡Faltan campos por llenar!';
       this.alert.textError = this.textError;
       this.alert.showError();
       this.loading = false;
       return ;
     }
-    if (!this.gastosForm.valid) {
-      this.textError = '¡Faltan campos por llenar!';
-      this.alert.textError = this.textError;
-      this.alert.showError();
-      this.loading = false;
-      return ;
-    }
-    if (this.id_gasto && this.gastosForm.valid) {
+    if (this.id_reembolso && this.reembolsoForm.valid) {
+      this.reembolso = this.reembolsoForm.value;
+      this.reembolso.solicitante = this.updateR.solicitante;
       this.submitted = false;
-      this.gasto = this.gastosForm.value;
-      this.__gastoS.cudGastos().doc(this.id_gasto).update(this.gasto);
+      if (this.reembolso.estatus !== 'Aprobar' ) {
+      this.reembolso.aprobo = this.usuarioLocal.usuario.username;
+      }
+      this.__gastoS.cudReembolsos().doc(this.id_reembolso).update(this.reembolso);
       this.alert.showSuccess();
       this.loading = false;
-      this.router.navigate(['gastos']);
+      this.router.navigate(['reembolsos']);
       }
-    if (!this.id_gasto && this.gastosForm.valid) {
+    if (!this.id_reembolso && this.reembolsoForm.valid) {
+
       this.submitted = false;
-      this.gasto = this.gastosForm.value;
-      this.gastosForm.value.comprobantes = this.comprobantes;
-      this.fecha = this.gastosForm.value.fecha;
-      this.gastosForm.value.comprobantes = this.comprobante;
-      this.__gastoS.cudGastos().add(this.gasto);
+      this.reembolso = this.reembolsoForm.value;
+      this.fecha = this.reembolsoForm.value.fecha;
+      this.reembolsoForm.value.estatus = 'Aprobar';
+      const solicitante = this.usuarioLocal.usuario.username;
+      this.reembolso.solicitante = solicitante;
+      this.__gastoS.cudReembolsos().add(this.reembolso);
       this.alert.showSuccess();
       this.loading = false;
       this.limpiar();
@@ -151,15 +159,15 @@ limpiar() {
   // tslint:disable-next-line: no-unused-expression
   this.submitted = false;
   this.loading = false;
-  this.gastosForm.reset();
+  this.reembolsoForm.reset();
   this.archivos = [];
 }
 regresar() {
-  this.router.navigate(['gastos']);
+  this.router.navigate(['reembolsos']);
 }
 
 cargarArchivos() {
-  this._fileS.cargarArchivosFb( this.archivos).then(() => {
+ /*this._fileS.cargarArchivosFb( this.archivos).then(() => {
     this.archivos.filter(file => {
         if (this.arrayUrl.includes(file.url) || file.completo === false) {
           return ;
@@ -169,7 +177,7 @@ cargarArchivos() {
           this.comprobante = this.arrayUrl.join();
         }
     });
-  });
+  });*/
 
 }
 

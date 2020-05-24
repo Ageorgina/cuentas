@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {first} from 'rxjs/operators';
 
 import {AuthService} from '../security/services/auth.service';
-import { User } from '../security/model/User';
+import { AlertasService } from '../services/srv_shared/alertas.service';
+import { UsuariosService } from '../services/usuarios.service';
 
 @Component({
   selector: 'app-login',
@@ -14,41 +14,47 @@ import { User } from '../security/model/User';
 
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  loading = false;
+  loading = true;
   submitted = false;
   errorLogin = false;
   returnUrl: string;
   return1Url: string;
   return2Url: string;
-
+  errorText: string;
   search: any;
   stringSearch: string;
+  errorT: string;
+  correo: string;
+  usuarioL: any;
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     // tslint:disable-next-line:variable-name
-    private _authS: AuthService
+    private _authS: AuthService,
+    private alert: AlertasService,
+    private _userS: UsuariosService
   ) {
-    if (this._authS.currentUserValue) {
-      this.router.navigate(['/reembolso']);
-     }
+    this.loading = false;
+    this.usuarioL = JSON.parse(localStorage.getItem('currentUser'));
+
   }
 
-
   ngOnInit() {
+    this.submitted = false;
     this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required , Validators.email]],
+      username: ['', [Validators.required , Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
 
     this.route.queryParams.subscribe( data => {
       this.returnUrl = decodeURI (data.returnUrl || '/');
+      this.return2Url = decodeURI (data.return2Url || '/');
       this.stringSearch = decodeURI (data.search || '?');
     });
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/reembolso';
-    this.return2Url = this.route.snapshot.queryParams.returnUrl || '/proyectos';
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/registro-reembolso';
+    this.return2Url = this.route.snapshot.queryParams.return2Url || '/registro-gastos';
   }
 
   get f() {
@@ -56,71 +62,84 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    this.loading = true;
     this.submitted = true;
-    this.errorLogin = false;
-    if (this.loginForm.invalid) {
-    this.errorLogin = true;
-    this.loading = false;
-    return ;
-    }
-    this.loading = false;
-    this._authS.login(this.f.email.value, this.f.password.value, 2)
-      .pipe(first())
-      .subscribe(
-        data => {
-          console.log('entro data ->');
-          console.log('data ->', data);
-       /*   if (data === 'e') {
-            this.errorLogin = true;
-            console.log('Entro en error');
-            this.loading = false;
-          } else {
-            const user = this._authS.currentUserValue;
-            if (user) {
-              const usuario = user.usuario;
-              // if (usuario && this.contieneRol(usuario, 'USUARIO')) {
-                   console.log('Entro [USUARIO]');
-              //     this.router.navigate([this.returnUrl], {queryParams: this.search});
-              //   // console.log('Entro [Usuario]');
-              // } else if (usuario && this.contieneRol(usuario, 'GESTOR')) {
-              //   this.router.navigate([this.return1Url]);
-              //   console.log('Entro [GESTOR]');
-              // } else if (usuario && this.contieneRol(usuario, 'TESORERO')) {
-              //   this.router.navigate([this.return2Url]);
-              //   console.log('Entro [TESORERO]');
-              // }
-            }
-           this.router.navigate([this.returnUrl]);
+    this._userS.cargarUsuarios().subscribe(usuarios => {
+    usuarios.filter(usuario => {
+        if ( (usuario['correo'] === this.f.username.value) && (usuario['activo'] === true)) {
+          this.correo = usuario['correo'];
+          this.usuarioL = usuario;
           }
-        },
-        error => {
-          this.loading = false;
-        });
-    return;
-  }*/
-        });
+      });
+    this.validar();
+    }
+    );
 
-// contieneRol(usuario: User, rol: string){
-//      if (usuario.rol) {
-//        const ks = Object.keys(usuario.rol);
-//        for (const k of ks) {
-//          if (usuario.rol[k] === rol) {
-//            return true;
-//          }
-//        }
-//      }
-//      return false;
-//   }
+  }
+   validar() {
+           if (this.correo === undefined) {
+            this.correo = '';
+          }
 
-// getUrlParams(search); {
-//      const hashes = search.slice(search.indexOf('?') + 1).split('&');
-//      const params = {};
-//      hashes.map(hash => {
-//        const [key, val] = hash.split('=');
-//        params[key] = decodeURIComponent(val);
-//      });
-//      return params;
-//    }
-        }
+           this._authS.login(this.f.username.value, this.f.password.value)
+              .subscribe(data => {
+                if ((this.f.username.value !== '') && this.correo === this.f.username.value ) {
+                  if ( data === 'F') {
+                    if (this._userS.newPass === 'exito') {
+                      return ;
+                    } else if ( !this._userS.newPass) {
+                    this.submitted = false;
+                    this.loading = false;
+                    const errorT = 'Contraseña invalida';
+                    this.alert.textError = errorT;
+                    this.alert.showError();
+                  }
+                  }
+                  if (data === 'U') {
+                    this.loading = false;
+                    this.errorT = 'Error en el servidor. Intentalo mas tarde';
+                    this.alert.textError = this.errorT;
+                    this.alert.showError();
+                  } else if (data === 'I') {
+                    this.loading = false;
+                    this.errorT = 'Datos inválidos';
+                    this.alert.textError = this.errorT;
+                    this.alert.showError();
+                  } else if(data.access_token) {
+                      if (this.usuarioL['rol'] !== 'Usuario') {
+                      this.loading = false;
+                      this.router.navigate([this.return2Url]);
+                      } else {
+                      this.loading = false;
+                      this.router.navigate([this.returnUrl]);
+                    }
+                }
+              }  else if (data === 'U') {
+                this.loading = false;
+                this.errorT = 'Error en el servidor. Intentalo mas tarde';
+                this.alert.textError = this.errorT;
+                this.alert.showError();
+              } else if(this.f.username.value === '' || this.f.password.value === '') {
+                this.loading = false;
+                this.errorT = 'No se aceptan campos vacios';
+                this.alert.textError = this.errorT;
+                this.alert.showError();
+              } else{
+                this.loading = false;
+                this.errorT = 'El usuario no existe';
+                this.alert.textError = this.errorT;
+                this.alert.showError();
+              }
+            },
+            error => {
+              this.loading = false;
+              const errorText = 'Error del servidor login. Intente de nuevo más tarde';
+              this.alert.textError = errorText;
+              this.alert.showError();
+            });
+   }
 
-      }
+  limpiar() {
+    this.loginForm.reset();
+  }
+}
