@@ -22,9 +22,7 @@ export class InvGastosGeneralesComponent implements OnInit {
                 this._gstS.cargarGastos().subscribe((gastos: Gasto[]) => {
                   this.elements = gastos;
                   this.elements.filter(registro => {
-                    console.log('Proyecto ->', registro.motivo);                    
                     registro.arrComprobantes = registro.comprobantes.split(',');
-                    console.log('Imagenes ->', registro.arrComprobantes);
                   });
                 });
                 }

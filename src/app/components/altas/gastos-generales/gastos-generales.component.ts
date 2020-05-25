@@ -42,7 +42,7 @@ export class GastosGeneralesComponent implements OnInit {
   comprobantes: any;
   file: FileItem;
   headTitle = ['Nombre', 'Progreso'];
-  comprobante : string;
+  comprobante: string;
   arrayUrl: string[] = [];
 
   // tslint:disable-next-line: variable-name
@@ -113,11 +113,9 @@ export class GastosGeneralesComponent implements OnInit {
       this.comprobantes = '';
     } else {
       this.comprobantes = this.arrayUrl.join(',');
-      console.log(this.arrayUrl);
     }
     this.gastosForm.value.comprobantes = this.comprobantes;
     if (!this.gastosForm.valid) {
-      console.log(this.gastosForm.controls);
       this.textError = '¡Faltan campos por llenar!';
       this.alert.textError = this.textError;
       this.alert.showError();
@@ -127,6 +125,7 @@ export class GastosGeneralesComponent implements OnInit {
     if (this.id_gasto && this.gastosForm.valid) {
       this.submitted = false;
       this.gasto = this.gastosForm.value;
+      this.gasto['comprobantes'] = this.updateG.comprobantes;
       this.__gastoS.cudGastos().doc(this.id_gasto).update(this.gasto);
       this.alert.showSuccess();
       this.loading = false;
@@ -136,7 +135,6 @@ export class GastosGeneralesComponent implements OnInit {
       this.loading = true;
       this.gasto = this.gastosForm.value;
       this.fecha = this.gastosForm.value.fecha;
-      console.log(this.gasto)
       this.submitted = false;
       this.__gastoS.cudGastos().add(this.gasto);
       this.alert.showSuccess();

@@ -111,14 +111,14 @@
             <br>
             <br>
             <div *ngIf="actualizar" class="center">
-                <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class="fas fa-times"></i>
+                <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class="mr-3 fas fa-times"></i>
                     Cancelar</button>
-                <button type="submit" id="eliminar" class="btn btn-outline-warning"><i class="fas fa-sync-alt"></i>
+                <button type="submit" id="eliminar" class="btn btn-outline-warning"><i class="mr-3 fas fa-sync-alt"></i>
                         Actualizar</button>
             </div>
 
             <div class="center">
-                <button #guardar *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="fas fa-cloud-download-alt"></i>
+                <button #guardar *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="mr-3 fas fa-cloud-download-alt"></i>
                     {{boton}}</button>
             </div>
         </form>

@@ -39,7 +39,6 @@ export class ArchivosService {
                       item.url = downloadURL;
                       item.estaSubiendo = false;
                       item.completo = true;
-                      console.log(item.archivo.name)
                       this.guardarArchivos({
                           nombre: item.nombreArchivo,
                           url: item.url

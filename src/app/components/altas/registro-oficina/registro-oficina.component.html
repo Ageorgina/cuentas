@@ -55,13 +55,44 @@ Actualizar</button>
                 <input class="form-control" id="motivo" placeholder="Motivo" formControlName="motivo" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkCaracteres($event)" [ngClass]="{ 'is-invalid': submitted && fval.motivo.errors }">
                 <br/>
             </div>
+            <div *ngIf="!id_of" class="mt-5 between">
+                <div *ngIf="(archivos.length <=  2 )" class="drop-img mt-3 col-md-5">
+                    <div appNgDropFiles [archivos]="archivos" (mouseSobre)="estaSobreElemento = $event; cargarArchivos();" [ngClass]="{ 'file-over': estaSobreElemento }" class="well drop-zone">
+                        <h4>Arrastrar archivos</h4>
+                        <img src="../../../assets/img/drop-images.png" alt="drop-images">
+                    </div>
+                    <br>
+                </div>
+                <br>
+                <div id="tabla">
+                    <table class="table mt-3" *ngIf="archivos.length > 0">
+                        <thead>
+                            <tr>
+                                <th *ngFor="let ht of headTitle"> {{ht}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let archivo of archivos">
+                                <td>{{archivo.nombreArchivo}}
+                                </td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" [ngStyle]="{'width': archivo.progreso + '%', 'background-color':  archivo.completo?'green':'blue' }" aria-valuenow="{{ archivo.progreso }}" aria-valuemin="0" aria-valuemax="100">{{archivo.progreso}} </div>
+                                    </div>
+                                    <i class="fas fa-times btn-outline-danger" (click)="limpiarArchivos(archivo)"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
             <div *ngIf="actualizar" class="center">
-                <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class="fas fa-times"></i>
+                <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class="mr-3 fas fa-times"></i>
                             Cancelar</button>
-                <button type="submit" id="eliminar" class="btn btn-outline-warning"><i class="fas fa-sync-alt"></i>
+                <button type="submit" id="eliminar" class="btn btn-outline-warning"><i class="mr-3 fas fa-sync-alt"></i>
                             Actualizar</button>
             </div>
-            <button *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="fas fa-cloud-download-alt"></i>
+            <button *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="mr-3 fas fa-cloud-download-alt"></i>
                             {{boton}}</button>
         </form>
     </div>

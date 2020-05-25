@@ -10,6 +10,8 @@ export class Oficina {
     id_partidafb: string;
     // tslint:disable-next-line:variable-name
     id_partida: Date;
+    comprobantes: string;
+    arrComprobantes: string[];
 }
 export class Partida {
     fecha: Date;

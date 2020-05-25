@@ -19,9 +19,6 @@ export class AuthService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
   public loading: boolean;
-  public admin: string;
-  public usuario: string;
-  public tesorero: string;
 
   constructor( private http: HttpClient,
                private store: Store<AppState>,
@@ -57,22 +54,6 @@ export class AuthService {
         }));
     }
 
-  usuariofb() {
-    this.userS.cargarUsuarios().subscribe((usuarios: Usuario[]) => {
-      usuarios.filter(responsable => {
-        if (responsable.correo === this.currentUserValue.usuario.username) {
-          if (responsable.rol === 'Administrador') {
-            return this.admin = responsable.rol;
-          } else if (responsable.rol === 'Usuario') {
-            return this.usuario = responsable.rol;
-          } else if (responsable.rol === 'Tesorero') {
-            return this.tesorero = responsable.rol;
-          }
-        }
-      });
-    });
-  }
-
   logout() {
     window.onload = function (){
       window.localStorage.clear();
@@ -82,6 +63,5 @@ export class AuthService {
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
-    console.log('refresco')
   }
 }

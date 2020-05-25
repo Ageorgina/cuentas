@@ -6,7 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertasService } from '../../../services/srv_shared/alertas.service';
 import { Utils } from '../../../general/utils/utils';
 import Swal from 'sweetalert2';
-import { GastosService } from '../../../services/gastos.service';
+import { FileItem } from '../../../general/model/file-item';
+import { ArchivosService } from '../../../services/archivos.service';
 
 @Component({
   selector: 'app-registro-oficina',
@@ -36,10 +37,22 @@ export class RegistroOficinaComponent implements OnInit {
   gastos = [];
   usuario: string;
   modificado: any;
+  id_of: string;
+  gastoU: any;
+  nameFile: string;
+  ruta = 'gs://gastos-asg.appspot.com/comprobantes/';
+  estaSobreElemento = false;
+  archivos: FileItem[] = [];
+  comprobantes: any;
+  file: FileItem;
+  headTitle = ['Nombre', 'Progreso'];
+  comprobante: string;
+  arrayUrl: string[] = [];
 
   constructor( private formBuilder: FormBuilder, private alert: AlertasService,
                private router: Router, private gstS: OficinaService,
-               private utils: Utils ) {
+               private utils: Utils, private active: ActivatedRoute,
+               private _fileS: ArchivosService ) {
                  this.loading = true;
                  this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
                  this.gstS.cargarPartidas().subscribe( partidas => {
@@ -68,30 +81,7 @@ export class RegistroOficinaComponent implements OnInit {
                 }
               });
             });
-                 /*  this.saldoDisp = this.partidaActual['sobrante'];
-                   this.id_gasto = gasto['id_of'];
-                   if (gasto['id_partida'] === this.partidaActual['id_partida']) {
-                   this.egresoT += Number(gasto['cantidad']);
-                   this.saldo().finally(() => {
-                   this.egresoT = 0;
                 });
-                } else {
-                   // this.nuevaP = true;
-                  this.loading = false;
-                }
-                });
-                }
-                }, error => {
-                   console.log('error gastos', error);
-                }
-                 );
-                }
-                });
-                }, error => {
-                   console.log('error partidas', error);*/
-                });
-
-
                 // FORMULARIOS
                  this.partidaForm = this.formBuilder.group({
                    fecha: ['', Validators.required],
@@ -102,9 +92,29 @@ export class RegistroOficinaComponent implements OnInit {
                   fecha: ['', Validators.required],
                   cantidad: ['', Validators.required],
                   motivo: ['', Validators.required],
-                  id_partida: ['']
+                  id_partida: [''],
+                  comprobantes: ['']
                 });
-  }
+                this.id_of = this.active.snapshot.paramMap.get('id_of');
+                if (this.id_of) {
+                  this.loading = false;
+                  this.titulo = 'Modificar Gasto';
+                  this.actualizar = true;
+                  this.gstS.cargarGastosOF().subscribe((upGasto) => {
+                    upGasto.filter( gasto => {
+                      if(this.id_of === gasto.id_of){
+                    this.gastoU = gasto;
+                    this.ofForm.get(['fecha']).setValue(this.gastoU['fecha']);
+                    this.ofForm.get(['cantidad']).setValue(this.gastoU['cantidad']);
+                    this.ofForm.get(['motivo']).setValue(this.gastoU['motivo']);
+                    this.ofForm.get(['comprobantes']).setValue(this.gastoU.comprobantes);
+                      }
+                });    
+            });
+          }
+
+        }
+
   ngOnInit() {
 
   }
@@ -147,6 +157,19 @@ get f() { return this.partidaForm.controls; }
       this.submitted = true;
       this.loading = true;
       this.gasto = this.ofForm.value;
+
+      this.arrayUrl = [];
+      this.archivos.filter( data => {
+        if (data.url !== 'NO TIENE URL') {
+          this.arrayUrl.push(data.url);
+        }
+      });
+      if (this.archivos.length === 0) {
+        this.comprobantes = '';
+      } else {
+        this.comprobantes = this.arrayUrl.join(',');
+      }
+      this.ofForm.value.comprobantes = this.comprobantes;
       this.gVacio();
       if (this.ofForm.invalid) {
         this.submitted = false;
@@ -160,9 +183,9 @@ get f() { return this.partidaForm.controls; }
         this.textError = 'No cuentas con el saldo suficiente para registrar este gasto';
         this.entroError();
         }
-      if ( this.gastos.length >= 1) {
+        
+      if (!this.id_of && this.gastos.length >= 1) {
         this.submitted = false;
-          console.log('entro aqui 161');
           this.usuario = this.usuarioLocal.usuario.username;
           this.gasto.id_partida = this.partidaActual.id_partida;
           this.gasto.resp_asg = this.usuario;
@@ -170,6 +193,19 @@ get f() { return this.partidaForm.controls; }
           this.partidaActual.sobrante = this.saldoDisp - this.gasto.cantidad;
           this.gstS.cudGastosOF().add(this.gasto);
           this.gstS.cudPartida().doc(this.partidaActual.id_partidafb).update(this.partidaActual);
+          this.exitoso();
+          this.limpiar();
+        }
+        if(this.id_of){
+          this.submitted = false;
+          this.usuario = this.gastoU['resp_asg'];
+          this.gasto['id_partida'] = this.gastoU['id_partida'];
+          this.gasto['resp_asg'] = this.usuario;
+          this.gasto['comprobantes'] = this.gastoU.comprobantes; 
+          this.partidaActual['sobrante'] = (Number(this.saldoDisp) + Number(this.gastoU['cantidad']) ) - Number(this.gasto.cantidad);
+          this.gstS.cudGastosOF().doc(this.id_of).update(this.gasto);
+          this.gstS.cudPartida().doc(this.partidaActual.id_partidafb).update(this.partidaActual);
+          this.regresar();
           this.exitoso();
           this.limpiar();
         }
@@ -189,6 +225,7 @@ get f() { return this.partidaForm.controls; }
       return;
     }
     limpiar() {
+      this.archivos = [];
       this.loading = false;
       this.ofForm.reset();
       this.submitted = false;
@@ -238,7 +275,6 @@ get f() { return this.partidaForm.controls; }
         this.limpiar();
         return;
       }  else {
-        console.log('entra a else 229');
         return;
     }
   }
@@ -277,5 +313,19 @@ get f() { return this.partidaForm.controls; }
       }
       });
   }
+
+  async cargarArchivos() {
+    let algo: FileItem[] = await new Promise((resolve, reject) => {
+      this._fileS.cargarArchivosFb( this.archivos).finally(() => { resolve(this.archivos); })
+      .catch(() => reject([]));
+    });
+  }
+  
+  
+  limpiarArchivos(archivo) {
+    this.archivos.splice(archivo, 1);
+  //  this.storage.storage.refFromURL(this.ruta + archivo.nombreArchivo).delete();
+  }
+
 }
 

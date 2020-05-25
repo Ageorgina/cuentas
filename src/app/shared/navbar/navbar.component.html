@@ -9,25 +9,25 @@
                     <input type="radio" name="acordeon" id="item1">
                     <label for="item1" class="acordeon__titulo">Registrar</label>
                     <div class="btn-group-vertical acordeon__contenido">
-                        <button type="button" class="btn btn-default" routerLink="/registro-clientes">Clientes</button>
-                        <button *ngIf="!admin" type="button" class="btn btn-default" routerLink="/registro-gastos">Gastos Generales</button >
-                        <button *ngIf="!admin" type="button" class="btn btn-default" routerLink="/registro-proyectos">Proyectos</button>
-                        <button type="button" class="btn btn-default" routerLink="/registro-reembolso">Reembolso</button >
-                        <button type="button" class="btn btn-default" routerLink="/registro-usuarios">Usuarios ASG</button>
+                        <button *ngIf="admin || aprobador" type="button" class="btn btn-default" routerLink="/registro-clientes">Clientes</button>
+                        <button *ngIf="admin || tesorero" type="button" class="btn btn-default" routerLink="/registro-gastos">Gastos Generales</button >
+                        <button *ngIf="admin || aprobador" type="button" class="btn btn-default" routerLink="/registro-proyectos">Proyectos</button>
+                        <button *ngIf="!admin" type="button" class="btn btn-default" routerLink="/registro-reembolso">Reembolso</button >
+                        <button  *ngIf="!usuario" type="button" class="btn btn-default" routerLink="/registro-usuarios">Usuarios ASG</button>
                     </div>
                 </div>
                 <div class="acordeon__item">
                     <input type="radio" name="acordeon" id="item2">
                     <label for="item2" class="acordeon__titulo">Registros</label>
                     <div class="btn-group-vertical acordeon__contenido">
-                        <button type="button" class="btn btn-default" routerLink="/clientes">Clientes</button>
-                        <button type="button" class="btn btn-default" routerLink="/gastos">Gastos Generales</button >
-                        <button type="button" class="btn btn-default" routerLink="/proyectos">Proyectos</button>
+                        <button *ngIf="admin || aprobador" type="button" class="btn btn-default" routerLink="/clientes">Clientes</button>
+                        <button *ngIf="admin || tesorero" type="button" class="btn btn-default" routerLink="/gastos">Gastos Generales</button >
+                        <button *ngIf="admin || aprobador" type="button" class="btn btn-default" routerLink="/proyectos">Proyectos</button>
                         <button type="button" class="btn btn-default" routerLink="/reembolsos">Reembolso</button >
                         <button type="button" class="btn btn-default" routerLink="/usuarios">Usuarios ASG</button>
                     </div>
                 </div>
-                <div class="acordeon__item">
+                <div *ngIf="tesorero || admin" class="acordeon__item">
                     <input type="radio" name="acordeon" id="item3">
                     <label data-toggle="tooltip" data-placement="right" title="Caja" for="item3" class="acordeon__titulo">Oficina</label>
                     <div class="btn-group-vertical acordeon__contenido">

@@ -13,6 +13,7 @@ export class Reembolso {
     solicitante: string;
     aprobo: string;
     comprobantes: string;
+    arrComprobantes: string[];
     status: string;
 
 }

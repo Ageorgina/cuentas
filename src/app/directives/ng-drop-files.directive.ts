@@ -40,7 +40,6 @@ export class NgDropFilesDirective {
     for ( const propiedad in Object.getOwnPropertyNames( archivosLista ) ) {
       const archivoTemporal = archivosLista[propiedad];
       if (this._archivoPuedeSerCargado( archivoTemporal ) && this.archivos.length <= 3) {
-        console.log(archivoTemporal)
         const nuevoArchivo = new FileItem( archivoTemporal );
         if (!this.archivos.includes(nuevoArchivo)) {
           this.archivos.push(nuevoArchivo);

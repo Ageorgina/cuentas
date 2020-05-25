@@ -19,7 +19,7 @@ export class UsuariosComponent implements OnInit {
   // tslint:disable-next-line:new-parens
   userSrv = new UserBase();
   titulo = 'Registrar Usuarios ASG';
-  usuario: Usuario;
+  usuario: Usuario = new Usuario();
   usuarios: Usuario[];
   area: Area;
   areas: Area[];
@@ -40,9 +40,11 @@ export class UsuariosComponent implements OnInit {
   resp: any;
   sameU: boolean;
   admin: boolean;
+  tesorero: boolean;
   regresa: string = '';
   creador: string;
   activado: boolean;
+  aprobador: boolean;
   // tslint:disable-next-line: variable-name
   constructor( private _userS: UsuariosService ,
                // tslint:disable-next-line:variable-name
@@ -51,6 +53,7 @@ export class UsuariosComponent implements OnInit {
                private active: ActivatedRoute,
                private router: Router,
                private utils: Utils,
+               private auth: AuthService,
                public alert: AlertasService, 
                public logout: AuthService) {
                 this.userForm = this.formBuilder.group({
@@ -62,20 +65,20 @@ export class UsuariosComponent implements OnInit {
                   area: ['', Validators.required],
                   resp_asg: ['', Validators.required],
                   puesto: ['', Validators.required],
-                  rol: ['', Validators.required],
+                  rol: [''],
                   activo: [''],
                   resp_area: ['']
                 });
                 this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
-                console.log(this.usuarioLocal); 
                 this._areaS.cargarAreas().subscribe((areas: Area[]) => { this.areas = areas;  });
                 this._userS.cargarUsuarios().subscribe((usuarios: Usuario[]) => {
                   this.usuarios = [];
-                  console.log(usuarios)
                   usuarios.filter(responsable => {
                     if (responsable.correo === this.usuarioLocal.usuario.username) {
                       this.resp = responsable;
                       this.admin = this.resp['rol'] === 'Administrador';
+                      this.aprobador = responsable['rol'] === 'Aprobador';
+                      this.tesorero = responsable['rol'] === 'Tesorero';
                     }
                     if (responsable.resp_area === true) {
                         this.usuarios.push(responsable);
@@ -110,9 +113,7 @@ export class UsuariosComponent implements OnInit {
 
   ngOnInit() {
 
-    this._userS.consultaUsuarios().subscribe( usuarios => {
-      this.usuariosConsulta = usuarios['resultado'].usuarios;
-    });
+
     this.loading = false;
   }
 
@@ -133,7 +134,7 @@ export class UsuariosComponent implements OnInit {
     if (this.id_user && this.userForm.valid) {
       this.loading = false;
       this.usuario = this.userForm.value;
-      if (this.sameU || this.admin) {
+      if (this.sameU || this.admin  || this.tesorero || this.aprobador) {
         this.actualizarDatos();
       }
   }
@@ -145,52 +146,91 @@ export class UsuariosComponent implements OnInit {
     this.userSrv.usuario.email = this.usuario.correo;
     this.userSrv.usuario.correoPrincipal = this.usuario.correo;
     this.userSrv.usuario.santo = this.usuario.password;
+    if(this.aprobador) {
+      this.usuario.rol = 'Usuario';
+    }
     this.usuario['activo'] = true;
-    this._userS.crearUsuarioS(this.userSrv).finally(() => {
-      this.userForm.value.idUsuario = this.usuarioLocal.usuario.id;
-      this._userS.cudUsuarios().add(this.usuario);
-    });
-    this.alert.showSuccess();
-    this.loading = false;
-    this.limpiar();
+    this._userS.crearUsuarioS(this.userSrv).subscribe( () => {
+      this._userS.consultaUsuarios().subscribe( usuarios => {
+        const users: any[] = usuarios['resultado'].usuarios;
+        users.filter(usuario => {
+          if (usuario['username'] === this.usuario['correo']) {
+            this.usuario['idUsuario'] = usuario['id'];
+            console.log('usuario que crearia en fb', this.usuario);
+            this._userS.cudUsuarios().add({
+              idUsuario: usuario['id'],
+              nombre: this.usuario['nombre'],
+              ap_p: this.usuario['ap_p'],
+              ap_m: this.usuario['ap_m'],
+              correo: this.usuario['correo'],
+              password: this.usuario['password'],
+              puesto: this.usuario['puesto'],
+              resp_asg: this.usuario['resp_asg'],
+              area: this.usuario['area'],
+              id_user: '',
+              resp_area: this.usuario['resp_area'],
+              rol: this.usuario['rol'],
+              activo: this.usuario['activo']
+            });
+            this.alert.showSuccess();
+            this.loading = false;
+            this.limpiar();
+          }
+        });
+      });
+    }, error => {
+      this.loading = false;
+      console.log('error 180', error);
+      const errorText = 'Error del servidor. Intente de nuevo más tarde';
+      this.alert.textError = errorText;
+      this.alert.showError();
+    } );
 }
 }
 
  actualizarDatos() {
-   this.loading = true;
-   if (this.userForm.valid) {
-   this._userS.actualizar(this.uCargar()).subscribe(data => {
-     this.usuario.idUsuario = this.userU.usuario.idUsuario;
-     this._userS.cudUsuarios().doc(this.id_user).update(this.usuario).finally(() => {
-     this.loading = false;
-     });
-     if ( this.sameU && (this.userForm.value.password !== this.userU['passOld'] )) {
-      const tittle = 'Su cambio de contraseña fue exitoso, se reiniciara su sesion';
-      const timer = 2000;
-      this.alert.tittleS = tittle;
-      this.alert.timer = timer;
-      this.alert.showSuccess();
-      this.regresa = 'exito';
-      this.router.navigate(['login']).finally(() => {this._userS.regresa(this.regresa);
+  this.loading = true;
+  if ( this.sameU && this.fval['password'].touched) {
+    this._userS.actualizar(this.uCargar()).subscribe(() => {
+    this.usuario['id_user'] = this.id_user;
+    this._userS.cudUsuarios().doc(this.id_user).update(this.usuario);
+    const tittle = 'Su cambio contraseña fue exitoso, se reinicio su sesion';
+    const timer = 2000;
+    this.alert.tittleS = tittle;
+    this.alert.timer = timer;
+    this.alert.showSuccess();
+    this.regresa = 'exito';
+    this.loading = true;
+    this.auth.logout();
+    this.submitted = false;
+    }, () => {
+      this.loading = false;
+      const errorText = 'Error del servidor. Intente de nuevo más tarde';
+      this.alert.textError = errorText;
+      this.alert.showError();
     });
-    } else {
-      if (this.usuarioLocal === undefined || '') {
-        return this.router.navigate(['login']).finally(() => {this._userS.regresa(this.regresa);
-      });
-    } else {
+  }
+  if (this.userForm.valid && this.fval['password'].untouched) {
+     this._userS.actualizar(this.uCargar()).subscribe(() => {
+     this.usuario['id_user'] = this.id_user;
+     this._userS.cudUsuarios().doc(this.id_user).update(this.usuario);
       this.submitted = false;
-      this.router.navigate(['usuarios']);
       this.alert.showSuccess();
       this.loading = false;
-      }
-    }
-  }, error => {
+      return ;
+    }, () => {
     this.loading = false;
     const errorText = 'Error del servidor. Intente de nuevo más tarde';
     this.alert.textError = errorText;
     this.alert.showError();
-  });
-} else {
+  }, () => {
+      this.submitted = false;
+      this.alert.showSuccess();
+      this.loading = false;
+      }
+    );
+} 
+if(!this.userForm.valid) {
  const errorText = 'Los datos ingresados no son válidos';
  this.alert.textError = errorText;
  this.alert.showError();
@@ -226,4 +266,5 @@ export class UsuariosComponent implements OnInit {
   };
     return this.userU;
 }
+
 }

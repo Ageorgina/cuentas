@@ -90,14 +90,14 @@ export class LoginComponent implements OnInit {
                     } else if ( !this._userS.newPass) {
                     this.submitted = false;
                     this.loading = false;
-                    const errorT = 'Contraseña invalida';
+                    const errorT = 'Contraseña inválida';
                     this.alert.textError = errorT;
                     this.alert.showError();
                   }
                   }
                   if (data === 'U') {
                     this.loading = false;
-                    this.errorT = 'Error en el servidor. Intentalo mas tarde';
+                    this.errorT = 'Error en el servidor. Inténtalo más tarde';
                     this.alert.textError = this.errorT;
                     this.alert.showError();
                   } else if (data === 'I') {
@@ -106,17 +106,17 @@ export class LoginComponent implements OnInit {
                     this.alert.textError = this.errorT;
                     this.alert.showError();
                   } else if(data.access_token) {
-                      if (this.usuarioL['rol'] !== 'Usuario') {
-                      this.loading = false;
-                      this.router.navigate([this.return2Url]);
-                      } else {
+                      if (this.usuarioL['rol'] === 'Usuario' || this.usuarioL['rol'] === 'Aprobador' ) {
                       this.loading = false;
                       this.router.navigate([this.returnUrl]);
+                      } else {
+                      this.loading = false;
+                      this.router.navigate([this.return2Url]);
                     }
                 }
               }  else if (data === 'U') {
                 this.loading = false;
-                this.errorT = 'Error en el servidor. Intentalo mas tarde';
+                this.errorT = 'Error en el servidor. Inténtalo más tarde';
                 this.alert.textError = this.errorT;
                 this.alert.showError();
               } else if(this.f.username.value === '' || this.f.password.value === '') {
@@ -133,7 +133,7 @@ export class LoginComponent implements OnInit {
             },
             error => {
               this.loading = false;
-              const errorText = 'Error del servidor login. Intente de nuevo más tarde';
+              const errorText = 'Error del servidor. Intente de nuevo más tarde';
               this.alert.textError = errorText;
               this.alert.showError();
             });

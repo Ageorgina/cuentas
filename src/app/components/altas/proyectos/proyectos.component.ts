@@ -105,14 +105,6 @@ export class ProyectosComponent implements OnInit {
   onSubmit() {
     this.loading = true;
     this.submitted = true;
-    if (!this.id_proyecto && this.proyectosForm.invalid) {
-
-      this.textError = '¡Faltan campos por llenar!';
-      this.alert.textError = this.textError;
-      this.alert.showError();
-      this.loading = false;
-      return ;
-    }
     if (!this.proyectosForm.valid) {
       this.textError = '¡Faltan campos por llenar!';
       this.alert.textError = this.textError;

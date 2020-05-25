@@ -26,9 +26,8 @@ export class UsuariosService {
   cudUsuarios() {
     return this.db.collection('usuarios');
   }
-
-  async crearUsuarioS(usuario: UserBase) {
-    return this.http.post<any>(`${environment.gtosUrl}/usuario/crearUsuario`, usuario).subscribe();
+  crearUsuarioS(usuario: UserBase) {
+    return this.http.post<any>(`${environment.gtosUrl}/usuario/crearUsuario`, usuario);
   }
   consultaUsuarios() {
     return this.http.get(`${environment.gtosUrl}/usuario/obtenerTodosUsuarios`);

@@ -111,8 +111,19 @@ export class ReembolsoComponent implements OnInit {
   onSubmit() {
     this.loading = true;
     this.submitted = true;
-    if ((!this.id_reembolso && this.reembolsoForm.invalid) || !this.reembolsoForm.valid ) {
-      console.log('this.reembolsoForm', this.reembolso);
+    this.arrayUrl = [];
+    this.archivos.filter( data => {
+      if (data.url !== 'NO TIENE URL') {
+        this.arrayUrl.push(data.url);
+      }
+    });
+    if (this.archivos.length === 0) {
+      this.comprobantes = '';
+    } else {
+      this.comprobantes = this.arrayUrl.join(',');
+    }
+    this.reembolsoForm.value.comprobantes = this.comprobantes;
+    if (!this.reembolsoForm.valid ) {
       this.textError = '¡Faltan campos por llenar!';
       this.alert.textError = this.textError;
       this.alert.showError();
@@ -126,13 +137,13 @@ export class ReembolsoComponent implements OnInit {
       if (this.reembolso.estatus !== 'Aprobar' ) {
       this.reembolso.aprobo = this.usuarioLocal.usuario.username;
       }
+      this.reembolso['comprobantes'] = this.updateR.comprobantes; 
       this.__gastoS.cudReembolsos().doc(this.id_reembolso).update(this.reembolso);
       this.alert.showSuccess();
       this.loading = false;
       this.router.navigate(['reembolsos']);
       }
     if (!this.id_reembolso && this.reembolsoForm.valid) {
-
       this.submitted = false;
       this.reembolso = this.reembolsoForm.value;
       this.fecha = this.reembolsoForm.value.fecha;
@@ -166,25 +177,18 @@ regresar() {
   this.router.navigate(['reembolsos']);
 }
 
-cargarArchivos() {
- /*this._fileS.cargarArchivosFb( this.archivos).then(() => {
-    this.archivos.filter(file => {
-        if (this.arrayUrl.includes(file.url) || file.completo === false) {
-          return ;
-        } else {
-          this.arrayUrl.push(file.url);
-          console.log('arrayUrl', this.arrayUrl);
-          this.comprobante = this.arrayUrl.join();
-        }
-    });
-  });*/
-
+async cargarArchivos() {
+  let algo: FileItem[] = await new Promise((resolve, reject) => {
+    this._fileS.cargarArchivosFb( this.archivos).finally(() => { resolve(this.archivos); })
+    .catch(() => reject([]));
+  });
 }
 
 
 limpiarArchivos(archivo) {
   this.archivos.splice(archivo, 1);
-  this.storage.storage.refFromURL(this.ruta + archivo.nombreArchivo).delete();
+//  this.storage.storage.refFromURL(this.ruta + archivo.nombreArchivo).delete();
 }
+
 
 }

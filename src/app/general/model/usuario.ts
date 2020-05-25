@@ -21,7 +21,11 @@ export class Usuario {
     rol: string;
     idUsuario: number;
     activo: boolean;
+    constructor( ){
+      this.idUsuario = 0;
+    }
   }
+
 
 // tslint:disable-next-line:class-name
 export class usuarioU {

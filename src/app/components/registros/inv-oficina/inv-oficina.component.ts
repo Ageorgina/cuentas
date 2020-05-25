@@ -12,106 +12,98 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 })
 export class InvOficinaComponent implements OnInit {
   titulo = 'Oficina';
-  headTitle = ['Responsable ASG', 'Fecha', 'Partida', 'Monto', 'Motivo', 'Modificar / Eliminar'];
+  headTitle = ['Responsable ASG', 'Fecha', 'Partida', 'Monto', 'Motivo', 'Comprobantes', 'Modificar / Eliminar'];
   elements = [];
   saldoDisp = 0;
-  ingresos: any;
-  egresos: any;
-  ingresoT = 0;
-  egresoT  = 0;
+  submitted = false;
   loading = true;
   partida: Partida;
-  textError = 'Error con el servidor, intentelo mas tarde';
+  textError = 'Error con el servidor, intentelo más tarde';
   usuarioLocal: any;
-  nuevaP= true;
   partidaActual = {};
-  id_partidafb: string;
-  modificada : {};
-  par = {};
-  id_partida: Date;
-  // tslint:disable-next-line: variable-name
-  constructor( private gstS: OficinaService,
-               private  router: Router,
-               private alert: AlertasService) {
-                this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
-                this.gstS.cargarPartidas().subscribe( partidas => {
-                  this.nuevaP = false;
-                  if (partidas.length === 0) {
-                    this.nuevaP = true;
-                    this.loading = false;
-                    return ;
-                  }
-                  this.par = partidas;
-                  partidas.filter(dato => {
-                    this.nuevaP = false;
-                    if (dato['sobrante'] > 0) {
-                      this.partidaActual = dato;
-                      console.log(this.partidaActual)
-                      this.id_partida = this.partidaActual['id_partida'];
-                      this.gstS.cargarGastosOF().subscribe( gastos => {
-                        if (gastos.length === 0 ) {
-                          this.saldoDisp = this.partidaActual['sobrante'];
-                        } else {
-                          gastos.filter( gasto => {
-                            console.log('gasto[id_partida]',gasto['id_partida'])
-                            console.log('this.partidaActual[id_partida]', this.partidaActual['id_partida'])
-                            console.log('entro 56', gasto['id_partida'] === this.partidaActual['id_partida']);
-                            if (gasto['id_partida'] === this.partidaActual['id_partida']) {
-                              console.log('entro');
-                              this.elements.push(gasto);
-                              this.egresoT  += Number(gasto['cantidad']);
-                              this.saldo().finally(() => {
-                                this.egresoT = 0;
-                              });
-                            }  else {
-                              this.nuevaP = true;
-                              this.loading = false;
-                            }
-                          });
-                        }
+  modificada: {};
+  par = [];
+  id_partida: any;
+  constructor( private alert: AlertasService,
+               private router: Router, private gstS: OficinaService) {
+      this.loading = true;
+      this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
+      this.gstS.cargarPartidas().subscribe( partidas => {
+        if (partidas.length === 0 && this.partidaActual === undefined) {
+          this.loading = false;
+          return ;
+        }
+        this.submitted = false;
+        this.par = partidas;
+        this.partidaUnica();
+        this.loading = false;
+        this.id_partida = this.partidaActual['id_partida'];
+        this.saldoDisp = Number(this.partidaActual['sobrante']);
+     this.gstS.cargarGastosOF().subscribe( gastos => {
+        if (gastos.length === 0) {
+          this.loading = false;
+          return ;
+     }  this.submitted = false;
+        gastos.filter( gasto => {
+        if(gasto['id_partidafb'] === this.partidaActual['id_partidafb']){
+          this.elements.push(gasto)
+          this.saldoDisp = this.partidaActual['sobrante'];
+          this.elements.filter(registro => {
+            registro.arrComprobantes = registro.comprobantes.split(',');
+          });
+     }
+   })
+ });
+     });
 
-                      }, error => {
-                        console.log('error gastos', error);
-                      }
-
-                      );
-                    }
-      });
-    }, error => {
-      console.log('error partidas', error);
     }
-    );
 
-
-
-               }
-  ngOnInit() {
-    this.loading = false;
-  }
-  async saldo() {
-    this.saldoDisp =  this.partidaActual['cantidad'] - this.egresoT;
-    return this.saldoDisp;
+      ngOnInit() {
+        this.loading = false;
   }
 
-  borrar( value ) {
-    this.egresoT = 0;
+
+    borrar( value ) {
     this.partidaActual['sobrante'] = (this.partidaActual['sobrante'] + Number(value['cantidad']));
-    this.gstS.cudPartida().doc(this.partidaActual['id_partidafb']).update(this.partidaActual).finally(()=> {
-      this.gstS.cudGastosOF().doc(value.id_of).delete();
-      this.alert.showSuccess();
+    this.gstS.cudPartida().doc(this.partidaActual['id_partidafb']).update(this.partidaActual).finally(() => {
+    this.gstS.cudGastosOF().doc(value.id_of).delete();
+    this.alert.showSuccess();
+    this.router.navigate(['/registro-oficina']);
     });
     this.loading = false;
   }
 
-  actualizar(value) {
+      actualizar(value) {
     this.loading = true;
     this.router.navigate(['registro-oficina', `${value.id_of}`]);
   }
 
-  entroError() {
+      entroError() {
+    this.loading = false;
     this.alert.textError = this.textError;
     this.alert.showError();
+    this.submitted = false;
+    return;
+  }
+      exitoso() {
     this.loading = false;
+    this.alert.showSuccess();
+    this.submitted = false;
+    return;
+  }
+
+      regresar() {
+    this.router.navigate(['oficina']);
+}
+partidaUnica() {
+  this.par.filter( dato => {
+      if (dato.sobrante === 0) {
+        return;
+      } else {
+        this.partidaActual = dato;
+        return  ;
+      }
+  });
   }
 
 }
