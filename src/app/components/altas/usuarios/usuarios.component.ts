@@ -9,6 +9,10 @@ import { Area } from '../../../general/model/area';
 import { AreasService } from '../../../services/areas.service';
 import { UserBase } from '../../../security/model/UserBase';
 import { AuthService } from '../../../security/services/auth.service';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { Observable } from 'rxjs';
+import { ArchivosService } from '../../../services/archivos.service';
+import { FileItem } from '../../../general/model/file-item';
 
 @Component({
   selector: 'app-usuarios',
@@ -45,17 +49,15 @@ export class UsuariosComponent implements OnInit {
   creador: string;
   activado: boolean;
   aprobador: boolean;
+  uploadPercent: Observable<number>;
+  urlImg: Observable<string>;
+  archivos: FileItem[] = [];
+  imgUser: any;
   // tslint:disable-next-line: variable-name
-  constructor( private _userS: UsuariosService ,
-               // tslint:disable-next-line:variable-name
-               private _areaS: AreasService,
-               private formBuilder: FormBuilder,
-               private active: ActivatedRoute,
-               private router: Router,
-               private utils: Utils,
-               private auth: AuthService,
-               public alert: AlertasService, 
-               public logout: AuthService) {
+  constructor( private _userS: UsuariosService , private _areaS: AreasService, private formBuilder: FormBuilder,
+               private active: ActivatedRoute, private router: Router, private utils: Utils,
+               private auth: AuthService, public alert: AlertasService, private storage: AngularFireStorage , 
+               private files: ArchivosService) {
                 this.userForm = this.formBuilder.group({
                   nombre: ['', Validators.required],
                   ap_p: ['', Validators.required],
@@ -75,14 +77,16 @@ export class UsuariosComponent implements OnInit {
                   this.usuarios = [];
                   usuarios.filter(responsable => {
                     if (responsable.correo === this.usuarioLocal.usuario.username) {
+                      this.loading = false;
                       this.resp = responsable;
                       this.admin = this.resp['rol'] === 'Administrador';
                       this.aprobador = responsable['rol'] === 'Aprobador';
                       this.tesorero = responsable['rol'] === 'Tesorero';
                     }
                     if (responsable.resp_area === true) {
-                        this.usuarios.push(responsable);
-                       };
+                      this.loading = false;
+                      this.usuarios.push(responsable);
+                       }
                   });
                 });
                 this.id_user = this.active.snapshot.paramMap.get('id_user');
@@ -112,9 +116,6 @@ export class UsuariosComponent implements OnInit {
       }
 
   ngOnInit() {
-
-
-    this.loading = false;
   }
 
   get fval() {
@@ -125,18 +126,14 @@ export class UsuariosComponent implements OnInit {
     this.loading = true;
     // ERROR
     if (!this.userForm.valid) {
-      this.textError = '¡Faltan campos por llenar!';
-      this.alert.textError = this.textError;
-      this.alert.showError();
+      this.alert.formInvalid();
       this.loading = false;
       return ;
   }  // Actualizar correcto
     if (this.id_user && this.userForm.valid) {
       this.loading = false;
       this.usuario = this.userForm.value;
-      if (this.sameU || this.admin  || this.tesorero || this.aprobador) {
-        this.actualizarDatos();
-      }
+      this.actualizarDatos();
   }
   // Crear correcto
     if (!this.id_user && this.userForm.valid) {
@@ -146,7 +143,7 @@ export class UsuariosComponent implements OnInit {
     this.userSrv.usuario.email = this.usuario.correo;
     this.userSrv.usuario.correoPrincipal = this.usuario.correo;
     this.userSrv.usuario.santo = this.usuario.password;
-    if(this.aprobador) {
+    if (this.aprobador) {
       this.usuario.rol = 'Usuario';
     }
     this.usuario['activo'] = true;
@@ -156,7 +153,6 @@ export class UsuariosComponent implements OnInit {
         users.filter(usuario => {
           if (usuario['username'] === this.usuario['correo']) {
             this.usuario['idUsuario'] = usuario['id'];
-            console.log('usuario que crearia en fb', this.usuario);
             this._userS.cudUsuarios().add({
               idUsuario: usuario['id'],
               nombre: this.usuario['nombre'],
@@ -170,7 +166,8 @@ export class UsuariosComponent implements OnInit {
               id_user: '',
               resp_area: this.usuario['resp_area'],
               rol: this.usuario['rol'],
-              activo: this.usuario['activo']
+              activo: this.usuario['activo'],
+              imagen: 'https://firebasestorage.googleapis.com/v0/b/gastos-asg.appspot.com/o/usuarios%2Fusuario.png?alt=media&token=4749c4e5-9da8-42ef-ae5e-ddef8fefe95f'
             });
             this.alert.showSuccess();
             this.loading = false;
@@ -180,21 +177,27 @@ export class UsuariosComponent implements OnInit {
       });
     }, error => {
       this.loading = false;
-      console.log('error 180', error);
-      const errorText = 'Error del servidor. Intente de nuevo más tarde';
-      this.alert.textError = errorText;
-      this.alert.showError();
+      this.alert.serverError();
     } );
 }
 }
 
  actualizarDatos() {
-  this.loading = true;
-  if ( this.sameU && this.fval['password'].touched) {
+   this.loading = true;
+   if ( this.sameU && this.fval['password'].touched) {
     this._userS.actualizar(this.uCargar()).subscribe(() => {
     this.usuario['id_user'] = this.id_user;
+    if (this.archivos.length >= 1) {
+      this.archivos.filter( data => {
+        if (data.url !== 'NO TIENE URL') {
+          this.usuario.imagen = this.archivos[0].url;
+        }
+        });
+    } else {
+      this.usuario.imagen = this.updateU.imagen;
+    }
     this._userS.cudUsuarios().doc(this.id_user).update(this.usuario);
-    const tittle = 'Su cambio contraseña fue exitoso, se reinicio su sesion';
+    const tittle = 'Su cambio contraseña fue exitoso, se reinicio su sesión';
     const timer = 2000;
     this.alert.tittleS = tittle;
     this.alert.timer = timer;
@@ -205,35 +208,41 @@ export class UsuariosComponent implements OnInit {
     this.submitted = false;
     }, () => {
       this.loading = false;
-      const errorText = 'Error del servidor. Intente de nuevo más tarde';
-      this.alert.textError = errorText;
-      this.alert.showError();
+      this.alert.serverError();
     });
   }
-  if (this.userForm.valid && this.fval['password'].untouched) {
+   if (this.userForm.valid && this.fval['password'].untouched) {
+
      this._userS.actualizar(this.uCargar()).subscribe(() => {
      this.usuario['id_user'] = this.id_user;
+     this.usuario['id_user'] = this.id_user;
+     if (this.archivos.length >= 1) {
+       this.archivos.filter( data => {
+         if (data.url !== 'NO TIENE URL') {
+           this.usuario.imagen = this.archivos[0].url;
+         }
+         });
+     } else {
+       this.usuario.imagen = this.updateU.imagen;
+     }
      this._userS.cudUsuarios().doc(this.id_user).update(this.usuario);
-      this.submitted = false;
-      this.alert.showSuccess();
-      this.loading = false;
-      return ;
+     this.alert.showSuccess();
+     this.loading = false;
+     this.regresar();
+     return ;
     }, () => {
     this.loading = false;
-    const errorText = 'Error del servidor. Intente de nuevo más tarde';
-    this.alert.textError = errorText;
-    this.alert.showError();
+    this.alert.serverError();
   }, () => {
       this.submitted = false;
       this.alert.showSuccess();
       this.loading = false;
       }
     );
-} 
-if(!this.userForm.valid) {
- const errorText = 'Los datos ingresados no son válidos';
- this.alert.textError = errorText;
- this.alert.showError();
+}
+   if (!this.userForm.valid) {
+  this.loading = false;
+  this.alert.formInvalid();
 }
 }
 
@@ -265,6 +274,18 @@ if(!this.userForm.valid) {
       passNew: this.usuario.password
   };
     return this.userU;
+}
+async avatar(event) {
+  this.imgUser = new FileItem(event.target.files[0]);
+  this.archivos.push(this.imgUser);
+  const id = this.usuarioLocal['usuario'].username;
+  let algo: any = await new Promise((resolve, reject) => {
+    this.files.CARPETA_FILES = 'usuarios';
+    this.archivos[0].id = this.usuarioLocal['usuario'].username;
+    this.files.cargarArchivosFb( this.archivos).finally(() => { resolve(
+       this.archivos); })
+     .catch(() => reject([]));
+   });
 }
 
 }

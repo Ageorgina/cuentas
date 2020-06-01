@@ -18,7 +18,7 @@ export class InvProyectosComponent implements OnInit {
   subTh = ['ID Actividad', 'Proceso', 'Cliente', 'Responsable Cliente', 'Responsable ASG', 'Estatus'];
   elements: Proyecto[] = [];
   boton = 'Guardar';
-  gastos: Gasto[];
+  gastos: Gasto[] ;
   montoT: any ;
   // tslint:disable-next-line: variable-name
   mont_disp = 0 ;
@@ -36,11 +36,7 @@ export class InvProyectosComponent implements OnInit {
                 // tslint:disable-next-line: deprecation
                 this._proyS.cargarProyectos().subscribe( (proyectos: Proyecto[]) => {
                   this.elements = proyectos;
-                  // tslint:disable-next-line: forin
-                  for (const item in this.elements) {
-                    this.elements[item].gastos = 0;
-                  }
-                  this.restarAlgo();
+                  this.loading = false;
               });
             }
 
@@ -59,23 +55,6 @@ actualizar(value) {
   this.router.navigate(['registro-proyectos', `${value.id_proyecto}`]);
   }
 
-  private restarAlgo() {
-    this._gastos.cargarGastos().subscribe( (gastos: Gasto[]) => {
-       this.gastos = gastos;
-       this.gastos.filter( data => {
-          // tslint:disable-next-line: forin
-          for (const item in this.elements) {
-             this.proyectoName = this.elements[item].tipo_proyecto;
-             if (data.proyecto === this.proyectoName) {
-               this.elements[item].gastos +=  Number(data.cantidad);
-             }
-             this.elements[item].monto_d = this.elements[item].monto_p - this.elements[item].gastos;
-             this.loading = false;
-          }
-    });
-   });
-
-  }
   elementoSelected(value) {
     this.loading = true;
     if (value === undefined) {

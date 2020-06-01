@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../security/services/auth.service';
 import { UsuariosService } from '../../services/usuarios.service';
@@ -16,13 +16,22 @@ export class NavbarComponent implements OnInit {
   tesorero: string;
   rol: string;
   aprobador: string;
-
+  user: string;
+  imagen: string;
   constructor( private router: Router, private auth: AuthService, private userS: UsuariosService) {
     this.userS.cargarUsuarios().subscribe((usuarios: Usuario[]) => {
       usuarios.filter(responsable => {
         if (this.auth.currentUserValue === null) {
           return;
         }
+        this.user = this.auth.currentUserValue['usuario'].username;
+        this.userS.cargarUsuarios().subscribe(users => {
+          users.filter(usuarioSv => {
+            if (this.user === usuarioSv['correo']) {
+              this.imagen = usuarioSv['imagen'];
+            }
+          });
+        });
         if (responsable.correo === this.auth.currentUserValue['usuario'].username
         ) {
           if ( responsable.rol === 'Administrador') {

@@ -12,6 +12,7 @@ import { async } from '@angular/core/testing';
 })
 export class ArchivosService {
   CARPETA_FILES = 'comprobantes';
+  id: any;
 
   constructor(private db: AngularFirestore, public alerta: AlertasService ) { }
 
@@ -24,7 +25,7 @@ export class ArchivosService {
         continue ;
       }
 
-      const uploadTask: firebase.storage.UploadTask = storageRef.child(`${ this.CARPETA_FILES}/${ item.archivo.lastModified }`)
+      const uploadTask: firebase.storage.UploadTask = storageRef.child(`${ this.CARPETA_FILES}/${item.id}`)
       .put( item.archivo );
 
       uploadTask.on( firebase.storage.TaskEvent.STATE_CHANGED,
@@ -39,6 +40,7 @@ export class ArchivosService {
                       item.url = downloadURL;
                       item.estaSubiendo = false;
                       item.completo = true;
+
                       this.guardarArchivos({
                           nombre: item.nombreArchivo,
                           url: item.url

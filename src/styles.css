@@ -20,10 +20,14 @@ th {
     color: #4E936F;
     text-align: center;
     background-color: white;
+    border: .5px solid #EBEBEE;
+    border-bottom: transparent;
 }
 
 td {
     text-align: center;
+    border-TOP: transparent;
+    border: .5px solid #dedee2;
 }
 
 p#error,
@@ -34,7 +38,8 @@ p#error2 {
 
 div#tabla {
     overflow: auto !important;
-    width: 100%;
+    width: 98%;
+    margin-left: 1%;
 }
 
 

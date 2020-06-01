@@ -21,8 +21,11 @@ export class Usuario {
     rol: string;
     idUsuario: number;
     activo: boolean;
-    constructor( ){
+    imagen: string;
+    constructor( ) {
       this.idUsuario = 0;
+      // tslint:disable-next-line:max-line-length
+      this.imagen = 'https://firebasestorage.googleapis.com/v0/b/gastos-asg.appspot.com/o/usuarios%2Fusuario.png?alt=media&token=4749c4e5-9da8-42ef-ae5e-ddef8fefe95f';
     }
   }
 

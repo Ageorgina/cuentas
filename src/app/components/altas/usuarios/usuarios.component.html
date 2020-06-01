@@ -29,7 +29,7 @@
                     <label class="control-label" for="password">Contraseña: </label>
                     <input class="form-control" minlength="6" id="password" placeholder="Contraseña" formControlName="password" type="text" data-toggle="tooltip " title="*Min 6 caracteres " [ngClass]="{ 'is-invalid': submitted && fval.password.errors }">
                 </div>
-                <div class="col-md-3 mt-3">
+                <div *ngIf="admin || aprobador" class="col-md-3 mt-3">
                     <label class="control-label" for="resp_area">Personal a su cargo: </label><br>
                     <label class="switch">
                         <input type="checkbox" formControlName="resp_area">
@@ -37,7 +37,7 @@
                       </label>
                 </div>
             </div>
-            <div class="around">
+            <div *ngIf="admin || aprobador" class="around">
                 <div class="col-md-3 mt-3">
                     <label class="control-label" for="resp_asg">Jefe Inmediato: </label><br>
                     <select id="resp_asg" formControlName="resp_asg" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio ">
@@ -55,11 +55,11 @@
                     <p id="error" *ngIf="submitted && fval.area.invalid">*Este campo no puede ir vacío</p>
                 </div>
             </div>
-            <div class="around">
-                <div *ngIf="admin" class="col-md-3 mt-3">
+            <div *ngIf="admin || aprobador" class="around">
+                <div class="col-md-3 mt-3">
                     <label class="control-label" for="rol">Rol: </label><br>
                     <select id="rol" formControlName="rol" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio ">
-                        <option value='Usuario'>Rol</option>
+                        <option value='' disabled>Rol</option>
                         <option value="Usuario">USUARIO</option>
                         <option value="Administrador">ADMINISTRADOR</option>
                         <option value="Tesorero">TESORERO</option>
@@ -79,6 +79,17 @@
                       </label>
                 </div>
             </div>
+
+            <div *ngIf="sameU" class="col-md-5 mt-3">
+                <h6>Selecciona una imagen de usuario [Obligatoria]</h6>
+                <div id="imagen">
+                    <input id="fichero" type="file" type="file" accept="image/*" (change)="avatar($event)">
+                    <label for="fichero" class="circle"></label>
+                </div>
+                <div>
+                    <input *ngIf="archivos.length >= 1" value="{{imgUser.nombreArchivo}}">
+                </div>
+            </div>
             <br>
             <div *ngIf="actualizar" class="center">
                 <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class="  mr-3  fas fa-times"></i>
@@ -88,7 +99,7 @@
             </div>
 
 
-            <div class="center">
+            <div class="center ">
                 <button #guardar *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class=" mr-3 fas fa-cloud-download-alt"></i>
                     {{boton}}</button>
             </div>

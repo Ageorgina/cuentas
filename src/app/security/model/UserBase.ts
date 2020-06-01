@@ -16,6 +16,7 @@ export class UserBase {
       passOld: string;
       passNew?: string;
       id_Usuario?: number;
+      id_cuenta: number;
     };
 
     constructor( ) {
@@ -33,7 +34,8 @@ export class UserBase {
             respuestaRescate : 'this.respuestaRescate',
             admin : false,
             rol : 0,
-            rolNombre : 'Administrador'
+            rolNombre : 'Administrador',
+            id_cuenta: 1
         };
 }
 }

@@ -11,6 +11,7 @@ import { Gasto } from '../../../general/model/gasto';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Utils } from '../../../general/utils/utils';
 import { AlertasService } from '../../../services/srv_shared/alertas.service';
+import { AreasService } from '../../../services/areas.service';
 
 @Component({
   selector: 'app-proyectos',
@@ -34,41 +35,33 @@ export class ProyectosComponent implements OnInit {
   submitted = false;
   loading = true;
   actualizar = false;
-
-  constructor( private formBuilder: FormBuilder,
+  areas: any;
                // tslint:disable-next-line: variable-name
-               private _user: UsuariosService,
+  constructor( private formBuilder: FormBuilder, private _user: UsuariosService, private _proyectoS: ProyectosService,
                // tslint:disable-next-line: variable-name
-               private _proyectoS: ProyectosService,
-               // tslint:disable-next-line: variable-name
-               private _gst: GastosService,
-               // tslint:disable-next-line: variable-name
-               private _cte: ClientesService,
-               private active: ActivatedRoute,
-               private router: Router,
-               public alert: AlertasService,
-               private utils: Utils
+               private _gst: GastosService, private _cte: ClientesService, private _areas: AreasService,
+               private active: ActivatedRoute, private router: Router, public alert: AlertasService, private utils: Utils,
                ) {
     this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => { this.usuarios = usuarios; });
     this._cte.cargarClientes().subscribe((cts: Cliente[]) => { this.clientes = cts; } );
     this._gst.cargarGastos().subscribe((gastos: Gasto[]) => { this.gastos = gastos; });
-    this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => { this.usuarios = usuarios; });
+    this._areas.cargarAreas().subscribe((areas: any[]) => { this.areas = areas; });
 
     this.proyectosForm = this.formBuilder.group({
-      nombre: ['', Validators.required],
-      cliente: ['', Validators.required],
-      descripcion: ['', Validators.required],
       fechaini: ['', Validators.required],
       fechafin: [''],
       monto_p: ['', Validators.required],
       monto_d: [''],
-      resp_asg: ['', Validators.required],
-      resp_cte: ['', Validators.required],
       tipo_proyecto: ['', Validators.required],
+      nombre: ['', Validators.required],
+      descripcion: ['', Validators.required],
       estatus: ['', Validators.required],
-      proceso: ['', Validators.required],
-      id_act: ['', Validators.required],
-      desc_act: ['', Validators.required]
+      empresa: ['', Validators.required],
+      resp_cte: ['', Validators.required],
+      resp_asg: ['',Validators.required],
+      proceso: [''],
+      id_act: [''],
+      desc_act: [''],
   });
     this.id_proyecto = this.active.snapshot.paramMap.get('id_proyecto');
     if (this.id_proyecto) {
@@ -78,7 +71,7 @@ export class ProyectosComponent implements OnInit {
         this.updateP = upP;
         this.proyectosForm.get(['resp_asg']).setValue(this.updateP.resp_asg);
         this.proyectosForm.get(['nombre']).setValue(this.updateP.nombre);
-        this.proyectosForm.get(['cliente']).setValue(this.updateP.cliente);
+        this.proyectosForm.get(['empresa']).setValue(this.updateP.empresa);
         this.proyectosForm.get(['descripcion']).setValue(this.updateP.descripcion);
         this.proyectosForm.get(['tipo_proyecto']).setValue(this.updateP.tipo_proyecto);
         this.proyectosForm.get(['fechaini']).setValue(this.updateP.fechaini);
@@ -106,9 +99,7 @@ export class ProyectosComponent implements OnInit {
     this.loading = true;
     this.submitted = true;
     if (!this.proyectosForm.valid) {
-      this.textError = '¡Faltan campos por llenar!';
-      this.alert.textError = this.textError;
-      this.alert.showError();
+      this.alert.formInvalid();
       this.loading = false;
       return ;
     }
@@ -136,27 +127,8 @@ export class ProyectosComponent implements OnInit {
   }
 }
 limpiar() {
-  // tslint:disable-next-line: no-unused-expression
-  this.submitted;
   this.loading = false;
-  this.proyectosForm.get(['resp_asg']).setValue('');
-  this.proyectosForm.get(['nombre']).setValue('');
-  this.proyectosForm.get(['cliente']).setValue('');
-  this.proyectosForm.get(['descripcion']).setValue('');
-  this.proyectosForm.get(['tipo_proyecto']).setValue('');
-  this.proyectosForm.get(['fechaini']).setValue('');
-  this.proyectosForm.get(['fechafin']).setValue('');
-  this.proyectosForm.get(['monto_p']).setValue('');
-  this.proyectosForm.get(['resp_cte']).setValue('');
-  this.proyectosForm.get(['estatus']).setValue('');
-  this.proyectosForm.get(['proceso']).setValue('');
-  this.proyectosForm.get(['resp_cte']).setValue('');
-  this.proyectosForm.get(['id_act']).setValue('');
-  this.proyectosForm.get(['desc_act']).setValue('');
-  this.proyectosForm.get(['monto_d']).setValue('');
-}
-checkLetras($event: KeyboardEvent) {
-  this.utils.letras($event);
+  this.proyectosForm.reset();
 }
 
 checkNumeros($event: KeyboardEvent) {

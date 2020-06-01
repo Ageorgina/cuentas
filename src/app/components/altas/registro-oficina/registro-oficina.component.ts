@@ -128,8 +128,7 @@ get f() { return this.partidaForm.controls; }
     this.partida = this.partidaForm.value;
     this.pVacia();
     if (this.partidaForm.invalid) {
-      this.textError = '¡Faltan campos por llenar!';
-      this.entroError();
+      this.alert.formInvalid();
       return ;
     }
     if (this.pFecha === this.partida.fecha ) {
@@ -173,8 +172,8 @@ get f() { return this.partidaForm.controls; }
       this.gVacio();
       if (this.ofForm.invalid) {
         this.submitted = false;
-        this.textError = '¡Faltan campos por llenar!';
-        this.entroError();
+        this.loading = false;
+        this.alert.formInvalid();
         return ;
       }
 
@@ -315,16 +314,15 @@ get f() { return this.partidaForm.controls; }
   }
 
   async cargarArchivos() {
+    this._fileS.CARPETA_FILES = 'comprobantes';
     let algo: FileItem[] = await new Promise((resolve, reject) => {
       this._fileS.cargarArchivosFb( this.archivos).finally(() => { resolve(this.archivos); })
       .catch(() => reject([]));
     });
   }
-  
-  
+
   limpiarArchivos(archivo) {
     this.archivos.splice(archivo, 1);
-  //  this.storage.storage.refFromURL(this.ruta + archivo.nombreArchivo).delete();
   }
 
 }

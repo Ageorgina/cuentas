@@ -8,3 +8,31 @@ select {
     background-color: transparent;
     outline: none;
 }
+
+h6 {
+    color: #202C4C;
+    font-weight: bold;
+}
+
+#fichero {
+    display: none;
+}
+
+.circle {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    /* background-color: red; */
+    cursor: pointer;
+    /* background-image: url('https://mdn.mozillademos.org/files/6457/mdn_logo_only_color.png'); */
+}
+
+div#imagen {
+    background-image: url('../../../../assets/img/upload.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 50px;
+    height: 50px;
+    border: 1px, solid;
+    border-color: black;
+}

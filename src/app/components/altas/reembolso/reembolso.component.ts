@@ -47,60 +47,83 @@ export class ReembolsoComponent implements OnInit {
   arrayUrl: any[] = [];
   aprobar: any;
   usuarioLocal: any;
+  usuarioActual: any;
+  sameU: boolean;
+  admin: boolean;
+  tesorero: boolean;
+  aprobador: boolean;
+  uaprobo: string;
+  proyecto: any;
 
   // tslint:disable-next-line: variable-name
-  constructor( private _fileS: ArchivosService,
-               private storage: AngularFireStorage,
-               private formBuilder: FormBuilder,
+  constructor( private _fileS: ArchivosService, private storage: AngularFireStorage, private formBuilder: FormBuilder,
                // tslint:disable-next-line: variable-name
-               private _user: UsuariosService,
-               // tslint:disable-next-line: variable-name
-               private _pyt: ProyectosService,
-               // tslint:disable-next-line: variable-name
-               private __gastoS: GastosService,
-               private active: ActivatedRoute,
-               private router: Router,
-               private utils: Utils,
+               private _user: UsuariosService, private _pyt: ProyectosService, private __gastoS: GastosService,
+               private active: ActivatedRoute, private router: Router, private utils: Utils,
                public alert: AlertasService
                ) {
-    this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => { this.usuarios = usuarios;  });
-    this._pyt.cargarProyectos().subscribe((proyectos: Proyecto[]) => { this.proyectos = proyectos; });
-    this.__gastoS.cargarTipoGtos().subscribe((tipoGtos: any[]) => { this.tipoGto = tipoGtos; });
+                this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
+                this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => {
+                  this.usuarios = usuarios;
+                  usuarios.filter( usuario => {
+                    if ( usuario.correo === this.usuarioLocal['usuario'].username) {
+                    this.usuarioActual = usuario;
+                    if (usuario['rol'] === 'Administrador'){
+                      this.admin = true;
+                    } else if (usuario['rol']=== 'Aprobador'){
+                      this.aprobador = true;
+                    } else if (usuario['rol'] === 'Tesorero'){
+                      this.tesorero = true;
+                    }
+                  }
+                });
+              });
+                this._pyt.cargarProyectos().subscribe((proyectos: Proyecto[]) => { this.proyectos = proyectos; });
+                this.__gastoS.cargarTipoGtos().subscribe((tipoGtos: any[]) => { this.tipoGto = tipoGtos; });
 
-    this.reembolsoForm = this.formBuilder.group({
+                this.reembolsoForm = this.formBuilder.group({
       fecha: ['', Validators.required],
       cantidad: ['', Validators.required],
       motivo: ['', Validators.required],
       estatus: [''],
       comprobantes: [''],
       solicitante: [''],
-      aprobo: ['']
+      proyecto: ['', Validators.required]
   });
+                this.id_reembolso = this.active.snapshot.paramMap.get('id_reembolso');
+                if ( this.id_reembolso ) {
+                  this.titulo = 'Modificar Reembolso';
+                  this.actualizar = true;
+                  this.__gastoS.cudReembolsos().doc(this.id_reembolso).valueChanges().subscribe((upR: Reembolso) => {
+                    this.updateR = upR;
+                    this.reembolsoForm.get(['fecha']).setValue(this.updateR.fecha);
+                    this.reembolsoForm.get(['cantidad']).setValue(this.updateR.cantidad);
+                    this.reembolsoForm.get(['motivo']).setValue(this.updateR.motivo);
+                    this.reembolsoForm.get(['comprobantes']).setValue(this.updateR.comprobantes);
+                    this.reembolsoForm.get(['solicitante']).setValue(this.updateR.solicitante);
+                    this.reembolsoForm.get(['estatus']).setValue(this.updateR.estatus);
+                    this.reembolsoForm.get(['proyecto']).setValue(this.updateR.proyecto);
+                    this.sameU = this.usuarioActual['correo'] === this.updateR.solicitante;
+                    if (this.sameU) {
+                      this.reembolsoForm.controls['estatus'].disable();
+                    }
+                    if (this.updateR.estatus !== 'Solicitar') {
+                      this.reembolsoForm.controls['cantidad'].disable();
+                      this.reembolsoForm.controls['proyecto'].disable();
+                    }
+                    if (this.updateR.estatus === 'Pagado') {
+                      this.reembolsoForm.get(['estatus']).setValue('Pagado');
+                      this.reembolsoForm.disable();
+                    }
+                  });
+                } else {
+                this.reembolsoForm.get(['estatus']).setValue('Solicitar');
+                this.reembolsoForm.controls['estatus'].disable();
+                }
 
-    this.id_reembolso = this.active.snapshot.paramMap.get('id_reembolso');
-    if ( this.id_reembolso ) {
-      this.nuevoR = false;
-      this.titulo = 'Modificar Reembolso';
-      this.actualizar = true;
-      this.__gastoS.cudReembolsos().doc(this.id_reembolso).valueChanges().subscribe((upR: Reembolso) => {
-        this.updateR = upR;
-        this.reembolsoForm.get(['fecha']).setValue(this.updateR.fecha);
-        this.reembolsoForm.get(['cantidad']).setValue(this.updateR.cantidad);
-        this.reembolsoForm.get(['motivo']).setValue(this.updateR.motivo);
-        this.reembolsoForm.get(['estatus']).setValue(this.updateR.estatus);
-        this.reembolsoForm.get(['comprobantes']).setValue(this.updateR.comprobantes);
-        this.reembolsoForm.get(['solicitante']).setValue(this.updateR.solicitante);
-      });
-      } else {
-        this.nuevoR = true;
-        this.reembolsoForm.value.status = 'Aprobar';
-        this.aprobar = this.reembolsoForm.value.estatus;
-        this.reembolsoForm.controls['estatus'].disable();
-      }
   }
 
   ngOnInit() {
-    this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
     this.loading = false;
   }
 
@@ -124,9 +147,7 @@ export class ReembolsoComponent implements OnInit {
     }
     this.reembolsoForm.value.comprobantes = this.comprobantes;
     if (!this.reembolsoForm.valid ) {
-      this.textError = '¡Faltan campos por llenar!';
-      this.alert.textError = this.textError;
-      this.alert.showError();
+      this.alert.formInvalid();
       this.loading = false;
       return ;
     }
@@ -134,10 +155,15 @@ export class ReembolsoComponent implements OnInit {
       this.reembolso = this.reembolsoForm.value;
       this.reembolso.solicitante = this.updateR.solicitante;
       this.submitted = false;
-      if (this.reembolso.estatus !== 'Aprobar' ) {
+      if (this.reembolso.estatus === ('Aprobado')  ) {
       this.reembolso.aprobo = this.usuarioLocal.usuario.username;
       }
-      this.reembolso['comprobantes'] = this.updateR.comprobantes; 
+      if (this.reembolso.estatus !== ('Aprobado') ) {
+        this.reembolso.aprobo = this.updateR.aprobo;
+        this.reembolso.pago = this.usuarioLocal.usuario.username;
+        }
+      this.reembolso['comprobantes'] = this.updateR.comprobantes;
+
       this.__gastoS.cudReembolsos().doc(this.id_reembolso).update(this.reembolso);
       this.alert.showSuccess();
       this.loading = false;
@@ -147,9 +173,10 @@ export class ReembolsoComponent implements OnInit {
       this.submitted = false;
       this.reembolso = this.reembolsoForm.value;
       this.fecha = this.reembolsoForm.value.fecha;
-      this.reembolsoForm.value.estatus = 'Aprobar';
+      this.reembolso.estatus = 'Solicitar';
       const solicitante = this.usuarioLocal.usuario.username;
       this.reembolso.solicitante = solicitante;
+      console.log('solicitar', this.reembolso);
       this.__gastoS.cudReembolsos().add(this.reembolso);
       this.alert.showSuccess();
       this.loading = false;
@@ -171,6 +198,7 @@ limpiar() {
   this.submitted = false;
   this.loading = false;
   this.reembolsoForm.reset();
+  this.reembolsoForm.get(['estatus']).setValue('Solicitar');
   this.archivos = [];
 }
 regresar() {
@@ -178,6 +206,7 @@ regresar() {
 }
 
 async cargarArchivos() {
+  this._fileS.CARPETA_FILES = 'comprobantes';
   let algo: FileItem[] = await new Promise((resolve, reject) => {
     this._fileS.cargarArchivosFb( this.archivos).finally(() => { resolve(this.archivos); })
     .catch(() => reject([]));
@@ -187,8 +216,13 @@ async cargarArchivos() {
 
 limpiarArchivos(archivo) {
   this.archivos.splice(archivo, 1);
-//  this.storage.storage.refFromURL(this.ruta + archivo.nombreArchivo).delete();
 }
-
+valor(nombre) {
+  this.proyectos.filter(proyecto => {
+    if (nombre === proyecto.nombre) {
+      this.proyecto = proyecto;
+    }
+  });
+}
 
 }

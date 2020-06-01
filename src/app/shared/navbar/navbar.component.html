@@ -7,41 +7,50 @@
                 <img id="logo" src="../../../assets/img/logo.png">
                 <div class="acordeon__item">
                     <input type="radio" name="acordeon" id="item1">
-                    <label for="item1" class="acordeon__titulo">Registrar</label>
+                    <label for="item1" class="acordeon__titulo">REGISTRAR</label>
                     <div class="btn-group-vertical acordeon__contenido">
-                        <button *ngIf="admin || aprobador" type="button" class="btn btn-default" routerLink="/registro-clientes">Clientes</button>
-                        <button *ngIf="admin || tesorero" type="button" class="btn btn-default" routerLink="/registro-gastos">Gastos Generales</button >
-                        <button *ngIf="admin || aprobador" type="button" class="btn btn-default" routerLink="/registro-proyectos">Proyectos</button>
-                        <button *ngIf="!admin" type="button" class="btn btn-default" routerLink="/registro-reembolso">Reembolso</button >
-                        <button  *ngIf="!usuario" type="button" class="btn btn-default" routerLink="/registro-usuarios">Usuarios ASG</button>
+                        <button *ngIf="admin || aprobador" type="button" class="btn btn-default ml-2" routerLink="/registro-clientes"><i class="fab fa-cloudsmith"></i>Clientes</button>
+                        <button *ngIf="admin || tesorero || aprobador" type="button" class="btn btn-default ml-2" routerLink="/registro-gastos"><i class="fab fa-cloudsmith"></i>Gastos Generales</button >
+                        <button *ngIf="admin || aprobador" type="button" class="btn btn-default ml-2" routerLink="/registro-proyectos"><i class="fab fa-cloudsmith"></i>Proyectos</button>
+                        <button *ngIf="usuario || tesorero" type="button" class="btn btn-default ml-2" routerLink="/registro-reembolso"><i class="fab fa-cloudsmith"></i>Reembolso</button >
+                        <button *ngIf="!usuario" type="button" class="btn btn-default ml-2" routerLink="/registro-usuarios"><i class="fab fa-cloudsmith"></i> Usuarios ASG</button>
                     </div>
                 </div>
                 <div class="acordeon__item">
                     <input type="radio" name="acordeon" id="item2">
-                    <label for="item2" class="acordeon__titulo">Registros</label>
+                    <label for="item2" class="acordeon__titulo">GESTIÓN</label>
                     <div class="btn-group-vertical acordeon__contenido">
-                        <button *ngIf="admin || aprobador" type="button" class="btn btn-default" routerLink="/clientes">Clientes</button>
-                        <button *ngIf="admin || tesorero" type="button" class="btn btn-default" routerLink="/gastos">Gastos Generales</button >
-                        <button *ngIf="admin || aprobador" type="button" class="btn btn-default" routerLink="/proyectos">Proyectos</button>
-                        <button type="button" class="btn btn-default" routerLink="/reembolsos">Reembolso</button >
-                        <button type="button" class="btn btn-default" routerLink="/usuarios">Usuarios ASG</button>
+                        <button *ngIf="admin || aprobador" type="button" class="btn btn-default ml-2" routerLink="/clientes"><i class="fab fa-cloudsmith"></i>Clientes</button>
+                        <button *ngIf="admin || tesorero || aprobador" type="button" class="btn btn-default ml-2" routerLink="/gastos"><i class="fab fa-cloudsmith"></i>Gastos Generales</button >
+                        <button *ngIf="admin || aprobador" type="button" class="btn btn-default ml-2" routerLink="/proyectos"><i class="fab fa-cloudsmith"></i>Proyectos</button>
+                        <button type="button" class="btn btn-default ml-2" routerLink="/reembolsos"><i class="fab fa-cloudsmith"></i>Reembolso</button >
+                        <button type="button" class="btn btn-default ml-2" routerLink="/usuarios"><i class="fab fa-cloudsmith"></i>Usuarios ASG</button>
                     </div>
                 </div>
                 <div *ngIf="tesorero || admin" class="acordeon__item">
                     <input type="radio" name="acordeon" id="item3">
-                    <label data-toggle="tooltip" data-placement="right" title="Caja" for="item3" class="acordeon__titulo">Oficina</label>
+                    <label data-toggle="tooltip" data-placement="right" title="Caja" for="item3" class="acordeon__titulo">OFICINA</label>
                     <div class="btn-group-vertical acordeon__contenido">
-                        <button type="button" class="btn btn-default" routerLink="/registro-oficina">Registrar</button>
-                        <button type="button" class="btn btn-default" routerLink="/oficina">Registro</button>
+                        <button type="button" class="btn btn-default ml-2" routerLink="/registro-oficina"><i class="fab fa-cloudsmith"></i>Registrar</button>
+                        <button type="button" class="btn btn-default ml-2" routerLink="/oficina"><i class="fab fa-cloudsmith"></i>Gestión</button>
                     </div>
                 </div>
             </div>
         </div>
         <div> <span onclick="openNav()">&#9776;</span></div>
     </a>
-    <div style="text-align: end;">
+    <div class="user">
+        <div class="circular">
+            <img id="usuario" src="{{imagen}}">
+        </div>
+        <div>
+            <input id="usuario" value=" {{user}}">
+        </div>
+    </div>
+
+    <div class="f" style="text-align: end;">
         <a (click)="logout()"><i class="fas fa-sign-out-alt mr-1" clic></i>Salir</a>
-        <br> <a>©2020 Copyright ASG Advisory Services</a>
+        <br> <a class="text">©2020 Copyright ASG Advisory Services</a>
     </div>
 
 </nav>

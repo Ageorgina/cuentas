@@ -11,18 +11,18 @@ export class Proyecto {
     monto_d: number;
     // tslint:disable-next-line: variable-name
     tipo_proyecto: string;
-    cliente: string;
     // tslint:disable-next-line: variable-name
     resp_cte: string;
+    area: string;
     // tslint:disable-next-line: variable-name
     resp_asg: string;
     estatus: string;
-        // tslint:disable-next-line: variable-name
-        id_act: string;
+    // tslint:disable-next-line:variable-name
+    id_act: string;
             // tslint:disable-next-line: variable-name
     desc_act: string;
-        proceso: string;
-    gastos: number = 0;
+    proceso: string;
+    gastos: number;
     fechaini: string;
     fechafin: string;
 

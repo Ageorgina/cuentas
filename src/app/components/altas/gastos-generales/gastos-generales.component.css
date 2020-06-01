@@ -8,3 +8,7 @@ select {
     background-color: transparent;
     outline: none;
 }
+
+.form-control-sm {
+    background-color: #ebebee;
+}

@@ -1,45 +1,87 @@
 <navbar></navbar>
-<div class="column">
-    <h1 class="center">{{ titulo }}</h1>
-    <div class="m-3 card ">
-        <div class="loading" *ngIf="loading">Loading&#8230;</div>
-        <form class="m-3" [formGroup]="proyectosForm" (ngSubmit)="onSubmit()">
-            <div class="around">
-                <div class="mt-3 col-md-4">
-                    <label class="control-label" for="fechaini">Fecha Inicio: <span><i class="far fa-calendar-alt "></i></span> </label>
-                    <input class="form-control" id="fechaini" placeholder="Fecha" formControlName="fechaini" type="date" data-toggle="tooltip " title="*Campo obligatorio ">
-                    <p #error id="error" *ngIf="submitted && fval.fechaini.invalid" class="mt-2">*Este campo no puede ir vacío</p>
-                </div>
-                <br>
-                <div class="mt-3 col-md-4">
-                    <label class="control-label " for="fechafin">Fecha Cierre: <span><i class="far fa-calendar-alt "></i></span> </label>
-                    <input class="form-control " id="fechafin" placeholder="Fecha" formControlName="fechafin" type="date" data-toggle="tooltip " title="*Campo obligatorio ">
-                    <p #error id="error" *ngIf="submitted && fval.fechafin.invalid" class="mt-2">*Este campo no puede ir vacío</p>
+<h1 class="center">{{ titulo }}</h1>
+<div class="m-3 card ">
+    <div class="loading" *ngIf="loading">Loading&#8230;</div>
+    <form class="m-3" [formGroup]="proyectosForm" (ngSubmit)="onSubmit()">
+        <div class="around">
+            <div class="mt-3 col-md-4">
+                <label class="control-label" for="fechaini">Fecha Inicio: <span><i class="far fa-calendar-alt "></i></span> </label>
+                <input class="form-control" id="fechaini" placeholder="Fecha" formControlName="fechaini" type="date" data-toggle="tooltip " title="*Campo obligatorio ">
+                <p #error id="error" *ngIf="submitted && fval.fechaini.invalid" class="mt-2">*Este campo no puede ir vacío</p>
+            </div>
+            <br>
+            <div class="mt-3 col-md-4">
+                <label class="control-label " for="fechafin">Fecha Cierre: <span><i class="far fa-calendar-alt "></i></span> </label>
+                <input class="form-control " min="{{proyectosForm.value.fechaini}}" id="fechafin" placeholder="Fecha" formControlName="fechafin" type="date" data-toggle="tooltip " title="*Campo obligatorio ">
+                <p #error id="error" *ngIf="submitted && fval.fechafin.invalid" class="mt-2">*Este campo no puede ir vacío</p>
+            </div>
+        </div>
+        <div class="around">
+            <div class="col-md-4 mt-3">
+                <label class="control-label" for="monto_p">Monto Presupuestado: </label>
+                <input class="form-control " id="monto_p" placeholder="Monto Presupuestado" formControlName="monto_p" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkNumeros($event)" [ngClass]="{ 'is-invalid': submitted && fval.monto_p.errors }">
+            </div>
+            <br>
+            <div class="col-md-4 mt-3">
+                <label class="control-label" for="tipo_proyecto">Tipo de proyecto: </label>
+                <input class="form-control" id="tipo_proyecto" placeholder="Tipo de proyecto" formControlName="tipo_proyecto" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkCaracteres($event)" [ngClass]="{ 'is-invalid': submitted && fval.tipo_proyecto.errors }">
+            </div>
+        </div>
+        <div class="around">
+            <div class="col-md-4 mt-3">
+                <label class="control-label" for="nombre">Nombre: </label>
+                <input class="form-control" id="nombre" placeholder="Nombre" formControlName="nombre" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkCaracteres($event)" [ngClass]="{ 'is-invalid': submitted && fval.nombre.errors }">
+            </div>
+            <br>
+            <div class="col-md-4 mt-3">
+                <label class="control-label" for="descripcion">Descripción: </label>
+                <input class="form-control " id="descripcion" placeholder="Descripción" formControlName="descripcion" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkCaracteres($event)" [ngClass]="{ 'is-invalid': submitted && fval.descripcion.errors }">
+            </div>
+        </div>
+
+        <div class="around">
+            <div class="mt-3 col-md-5">
+                <label class="control-label" for="resp_asg">Responsable ASG:</label> <br>
+                <select id="resp_asg" formControlName="resp_asg">
+                                <option disabled value=''>ASG</option>
+                                <option *ngFor="let resp of usuarios">{{resp.nombre}}</option>
+                </select>
+                <p #error id="error" *ngIf="submitted && fval.estatus.invalid" class="mt-2">*Este campo no puede ir vacío</p>
+            </div>
+            <div class="mt-3 col-md-4">
+                <label class="control-label mr-3 mt-3">Cliente: </label>
+                <label class="switch mt-3 mr-3">
+                        <input type="checkbox" name="check" id="check" value="true" checked onchange="javascript:showContent()" >
+                        <span class="slider round"></span>
+                    </label>
+
+                <div class="around">
+                    <div>
+                        <select id="empresa" formControlName="empresa" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
+                            <option disabled value=''>Empresa</option>
+                            <option  id="op2_true"  style="display: none;" value='ASG'>ASG</option>
+                            <option  id="op1_true"  *ngFor="let cte of clientes">{{cte.empresa}}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="op4_true" formControlName="resp_cte" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
+                                        <option disabled value=''>Responsable</option>
+                                        <option  *ngFor="let cte of clientes">{{cte.nombre}}</option>
+                                </select>
+                        <select id="op3_true" style="display: none;" formControlName="resp_cte" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
+                                    <option disabled value=''>Responsable</option>
+                                    <option *ngFor="let area of areas">{{area.nombre_area}}</option>
+                            </select>
+                    </div>
+                    <p #error id="error" *ngIf="submitted && fval.empresa.invalid" class="mt-2">*Este campo no puede ir vacío</p>
+                    <p #error id="error" *ngIf="submitted && fval.resp_cte.invalid" class="mt-2">*Este campo no puede ir vacío</p>
                 </div>
             </div>
-            <div class="around">
-                <div class="col-md-4 mt-3">
-                    <label class="control-label" for="monto_p">Monto Presupuestado: </label>
-                    <input class="form-control " id="monto_p" placeholder="Monto Presupuestado" formControlName="monto_p" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkNumeros($event)" [ngClass]="{ 'is-invalid': submitted && fval.monto_p.errors }">
-                </div>
-                <br>
-                <div class="col-md-4 mt-3">
-                    <label class="control-label" for="tipo_proyecto">Tipo de proyecto: </label>
-                    <input class="form-control" id="tipo_proyecto" placeholder="Tipo de proyecto" formControlName="tipo_proyecto" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.tipo_proyecto.errors }">
-                </div>
-            </div>
-            <div class="around">
-                <div class="col-md-3 mt-3">
-                    <label class="control-label" for="nombre">Nombre: </label>
-                    <input class="form-control" id="nombre" placeholder="Nombre" formControlName="nombre" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.nombre.errors }">
-                </div>
-                <div class="col-md-3 mt-3">
-                    <label class="control-label" for="descripcion">Descripción: </label>
-                    <input class="form-control " id="descripcion" placeholder="Descripción" formControlName="descripcion" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.descripcion.errors }">
-                </div>
-                <div class=" mt-3 col-md-3">
-                    <label class="control-label mr-3 mt-3" for="estatus">Estatus:</label> <br>
-                    <select id="estatus" class="seleccionador" formControlName="estatus">
+        </div>
+        <div class="around">
+            <div class="mt-3 col-md-5">
+                <label class="control-label" for="estatus">Estatus:</label> <br>
+                <select id="estatus" class="seleccionador" formControlName="estatus">
                                 <option disabled value=''>Estatus</option>
                                 <option value="activo">Activo</option>
                                 <option value="cancelado">Cancelado</option>
@@ -47,80 +89,37 @@
                                 <option value="pausado">Pausado</option>
                                 <option value="pendiente">Pentiente</option>
                 </select>
-                    <p #error id="error" *ngIf="submitted && fval.estatus.invalid" class="mt-2">*Este campo no puede ir vacío</p>
-                </div>
+                <p #error id="error" *ngIf="submitted && fval.estatus.invalid" class="mt-2">*Este campo no puede ir vacío</p>
             </div>
-
-            <div class="around">
-                <div class="mt-3 col-md-3">
-                    <div class="">
-                        <div>
-                            <label class="control-label mr-3 mt-3">Cliente: </label>
-                            <label class="switch mt-3 mr-5">
-                                    <input type="checkbox" name="check" id="check" value="true" checked onchange="javascript:showContent()" >
-                                    <span class="slider round"></span>
-                                  </label>
-                        </div>
-                        <div>
-                            <div id="op1_true">
-                                <select id="cliente" formControlName="cliente">
-                                <option disabled value=''>Externo</option>
-                                <option *ngFor="let cte of clientes">{{cte.nombre}}</option>
-                             </select>
-                            </div>
-                            <div id="op2_true" style="display: none;">
-                                <select id="cliente" formControlName="cliente">
-                                <option disabled value=''>Interno</option>
-                                <option *ngFor="let cte of clientes">{{cte.nombre}}</option>
-                             </select>
-                            </div>
-                        </div>
-                    </div>
-                    <p #error id="error" *ngIf="submitted && fval.cliente.invalid" class="mt-2">*Este campo no puede ir vacío</p>
-                </div>
-
-                <div class="mt-3 col-md-3">
-                    <label class="control-label" for="resp_cte">Responsable Cliente:</label>
-                    <input class="form-control" id="resp_cte" placeholder="Responsable Cliente" formControlName="resp_cte" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.resp_cte.errors }">
-                </div>
-                <br>
-                <div class="mt-3 col-md-3">
-                    <label class="control-label" for="resp_asg">Responsable ASG:</label><br>
-                    <select id="resp_asg" class="seleccionador mt-2" formControlName="resp_asg">
-                        <option disabled value=''>Responsable ASG</option>
-                        <option *ngFor="let usuario of usuarios">{{usuario.nombre}}</option>
-                </select>
-                    <p #error id="error" *ngIf="submitted && fval.resp_asg.invalid" class="mt-2">*Este campo no puede ir vacío</p>
-                </div>
+            <div class="mt-3 col-md-4">
+                <label class="control-label" for="proceso">Proceso: </label>
+                <input class="form-control " id="proceso" placeholder="Proceso" formControlName="proceso" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkCaracteres($event)" [ngClass]="{ 'is-invalid': submitted && fval.proceso.errors }">
             </div>
-            <div class="around">
-                <div class="mt-3 col-md-3">
-                    <label class="control-label" for="id_act">ID Actividad: </label>
-                    <input class="form-control " id="id_act" placeholder="ID Actividad" formControlName="id_act" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkCaracteres($event)" [ngClass]="{ 'is-invalid': submitted && fval.id_act.errors }">
-                </div>
-                <div class="mt-3 col-md-3">
-                    <label class="control-label" for="proceso">Proceso: </label>
-                    <input class="form-control " id="proceso" placeholder="Proceso" formControlName="proceso" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkCaracteres($event)" [ngClass]="{ 'is-invalid': submitted && fval.proceso.errors }">
-                </div>
-                <div class="mt-3 col-md-3">
-                    <label class="control-label" for="desc_act">Descripción Actividad: </label>
-                    <input class="form-control " id="desc_act" placeholder="Descripción Actividad" formControlName="desc_act" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkCaracteres($event)" [ngClass]="{ 'is-invalid': submitted && fval.desc_act.errors }">
-                </div>
-            </div>
+        </div>
 
-            <br>
-            <br>
-            <div *ngIf="actualizar" class="center">
-                <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class="mr-3 fas fa-times"></i>
+        <div class="around">
+            <div class="mt-3 col-md-5">
+                <label class="control-label" for="id_act">ID Actividad: </label>
+                <input class="form-control " id="id_act" placeholder="ID Actividad" formControlName="id_act" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkCaracteres($event)" [ngClass]="{ 'is-invalid': submitted && fval.id_act.errors }">
+            </div>
+            <div class="mt-3 col-md-4">
+                <label class="control-label" for="desc_act">Descripción Actividad: </label>
+                <input class="form-control " id="desc_act" placeholder="Descripción Actividad" formControlName="desc_act" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkCaracteres($event)" [ngClass]="{ 'is-invalid': submitted && fval.desc_act.errors }">
+            </div>
+        </div>
+
+        <br>
+        <br>
+        <div *ngIf="actualizar" class="center">
+            <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class="mr-3 fas fa-times"></i>
                     Cancelar</button>
-                <button type="submit" id="eliminar" class="btn btn-outline-warning"><i class="mr-3 fas fa-sync-alt"></i>
+            <button type="submit" id="eliminar" class="btn btn-outline-warning"><i class="mr-3 fas fa-sync-alt"></i>
                         Actualizar</button>
-            </div>
+        </div>
 
-            <div class="center">
-                <button #guardar *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="mr-3 fas fa-cloud-download-alt"></i>
+        <div class="center">
+            <button #guardar *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="mr-3 fas fa-cloud-download-alt"></i>
                     {{boton}}</button>
-            </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>

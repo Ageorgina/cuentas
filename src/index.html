@@ -33,7 +33,7 @@
         });
 
         function openNav() {
-            document.getElementById("sidenav").style.width = "160px";
+            document.getElementById("sidenav").style.width = "175px";
         }
 
         function closeNav() {
@@ -47,13 +47,19 @@
         function showContent() {
             op1 = document.getElementById("op1_true");
             op2 = document.getElementById('op2_true');
+            op3 = document.getElementById('op3_true');
+            op4 = document.getElementById('op4_true');
             check = document.getElementById("check");
             if (check.checked) {
                 op1.style.display = 'block';
+                op4.style.display = 'block';
                 op2.style.display = 'none';
+                op3.style.display = 'none';
             } else {
                 op1.style.display = 'none';
+                op4.style.display = 'none';
                 op2.style.display = 'block';
+                op3.style.display = 'block';
             }
         }
     </script>

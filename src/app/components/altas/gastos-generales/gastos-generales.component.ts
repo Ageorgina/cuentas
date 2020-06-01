@@ -44,6 +44,11 @@ export class GastosGeneralesComponent implements OnInit {
   headTitle = ['Nombre', 'Progreso'];
   comprobante: string;
   arrayUrl: string[] = [];
+  saldoDisp = 0;
+  // tslint:disable-next-line:variable-name
+  id_proyecto: string;
+  proyecto: any;
+  
 
   // tslint:disable-next-line: variable-name
   constructor( private _fileS: ArchivosService,
@@ -61,8 +66,9 @@ export class GastosGeneralesComponent implements OnInit {
                public alert: AlertasService
                ) {
     this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => { this.usuarios = usuarios;  });
-    this._pyt.cargarProyectos().subscribe((proyectos: Proyecto[]) => { this.proyectos = proyectos; });
     this.__gastoS.cargarTipoGtos().subscribe((tipoGtos: any[]) => { this.tipoGto = tipoGtos; });
+    this._pyt.cargarProyectos().subscribe((proyectos: Proyecto[]) => {this.proyectos = proyectos;
+     });
 
     this.gastosForm = this.formBuilder.group({
       fecha: ['', Validators.required],
@@ -88,6 +94,12 @@ export class GastosGeneralesComponent implements OnInit {
         this.gastosForm.get(['proyecto']).setValue(this.updateG.proyecto);
         this.gastosForm.get(['estatus']).setValue(this.updateG.estatus);
         this.gastosForm.get(['comprobantes']).setValue(this.updateG.comprobantes);
+        this.proyectos.filter(proyecto => {
+          if (proyecto.nombre === this.updateG.proyecto) {
+            this.saldoDisp = proyecto.monto_d;
+            this.proyecto = proyecto;
+          }
+        });
       });
       }
   }
@@ -126,6 +138,8 @@ export class GastosGeneralesComponent implements OnInit {
       this.submitted = false;
       this.gasto = this.gastosForm.value;
       this.gasto['comprobantes'] = this.updateG.comprobantes;
+      this.proyecto['monto_d'] = (Number(this.saldoDisp) + Number(this.updateG['cantidad'])) - Number(this.gasto['cantidad']);
+      this._pyt.cudProyectos().doc(this.proyecto.id_proyecto).update(this.proyecto);
       this.__gastoS.cudGastos().doc(this.id_gasto).update(this.gasto);
       this.alert.showSuccess();
       this.loading = false;
@@ -136,6 +150,8 @@ export class GastosGeneralesComponent implements OnInit {
       this.gasto = this.gastosForm.value;
       this.fecha = this.gastosForm.value.fecha;
       this.submitted = false;
+      this.proyecto['monto_d'] = this.proyecto['monto_d'] - this.gasto['cantidad'];
+      this._pyt.cudProyectos().doc(this.proyecto.id_proyecto).update(this.proyecto);
       this.__gastoS.cudGastos().add(this.gasto);
       this.alert.showSuccess();
       this.loading = false;
@@ -159,12 +175,14 @@ limpiar() {
   this.loading = false;
   this.gastosForm.reset();
   this.archivos = [];
+  this.saldoDisp = 0;
 }
 regresar() {
   this.router.navigate(['gastos']);
 }
 
 async cargarArchivos() {
+  this._fileS.CARPETA_FILES = 'comprobantes';
   let algo: FileItem[] = await new Promise((resolve, reject) => {
     this._fileS.cargarArchivosFb( this.archivos).finally(() => { resolve(this.archivos); })
     .catch(() => reject([]));
@@ -176,7 +194,15 @@ limpiarArchivos(archivo) {
   this.archivos.splice(archivo, 1);
 //  this.storage.storage.refFromURL(this.ruta + archivo.nombreArchivo).delete();
 }
+valor(nombre){
+  this.proyectos.filter(proyecto => {
+    if (nombre === proyecto.nombre) {
+      this.saldoDisp = proyecto.monto_d;
+      this.proyecto = proyecto;
+    }
+  });
 
+}
 
 }
 

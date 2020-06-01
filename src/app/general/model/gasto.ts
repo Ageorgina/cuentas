@@ -13,5 +13,7 @@ export class Gasto {
     reembolso: boolean;
     comprobantes: string;
     arrComprobantes: string[];
+    // tslint:disable-next-line:variable-name
+    id_proyecto: string;
 }
 

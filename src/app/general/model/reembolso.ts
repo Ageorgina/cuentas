@@ -14,6 +14,8 @@ export class Reembolso {
     aprobo: string;
     comprobantes: string;
     arrComprobantes: string[];
-    status: string;
-
+    pago: string;
+    constructor() {
+        this.estatus = 'Solicitar';
+    }
 }

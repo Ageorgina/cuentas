@@ -65,4 +65,24 @@ export class AlertasService {
     });
   }
 
+
+  formInvalid() {
+    Swal.fire({
+      icon: 'error',
+      title: '¡Ocurrio un error!',
+      text: '¡Faltan campos por llenar!',
+      showConfirmButton: false,
+      timer: 1500
+  });
+  }
+  serverError() {
+    Swal.fire({
+      icon: 'error',
+      title: '¡Error en el servidor!',
+      text: 'Inténtalo más tarde',
+      showConfirmButton: false,
+      timer: 1500
+  });
+  }
+
 }
