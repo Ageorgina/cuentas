@@ -49,23 +49,21 @@ export class NgDropFilesDirective {
          this.alert.textInfo = excedeCapacidad;
          this.alert.showInfo();
        }
-       if (this.archivos.length < 1) {
-        const minimo = 'Requiere minimo un comprobante';
-        this.alert.textInfo = minimo;
-        this.alert.showInfo();
-      }
       }
 
     }
   }
 
   private _archivoPuedeSerCargado( archivo: File ): boolean {
-    if ((!this._archivoDroppeado(archivo.name) && this._esImagen( archivo.type ))) {
+    const imagen = this._esImagen( archivo.type );
+    const pdf = this._esPdf( archivo.type );
+    const excel = this._esExcel( archivo.type );
+    if (!this._archivoDroppeado(archivo.name) && ( imagen || pdf || excel )) {
       return true;
     }
-    if ((!this._archivoDroppeado(archivo.name) && !this._esImagen( archivo.type ))) {
-      const formatovalido = 'No se admite este formato';
-      this.alert.textInfo = formatovalido;
+    if (!this._archivoDroppeado(archivo.name) && (!imagen || !pdf || !excel )) {
+      const formatoinvalido = 'No se admite este formato';
+      this.alert.textInfo = formatoinvalido;
       this.alert.showInfo();
       return false;
   }
@@ -91,7 +89,12 @@ export class NgDropFilesDirective {
    private _esImagen(tipoArchivo: string): boolean {
      return (tipoArchivo === '' || tipoArchivo === undefined ) ? false : tipoArchivo.startsWith('image');
    }
-   private _esPdf(tipoArchivo: string): boolean {
+  private _esPdf(tipoArchivo: string): boolean {
     return (tipoArchivo === '' || tipoArchivo === undefined ) ? false : tipoArchivo.startsWith('application/pdf');
+  }
+  private _esExcel(tipoArchivo: string): boolean {
+    const xls = tipoArchivo.startsWith('application/vnd.ms-excel');
+    const xlsx = tipoArchivo.startsWith('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    return (tipoArchivo === '' || tipoArchivo === undefined ) ? false : ( xls || xlsx );
   }
 }

@@ -1,23 +1,21 @@
 
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
 import { FileItem } from '../general/model/file-item';
 import { AlertasService } from './srv_shared/alertas.service';
-import { async } from '@angular/core/testing';
-
-
+import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
 export class ArchivosService {
   CARPETA_FILES = 'comprobantes';
   id: any;
+  storageRef = firebase.storage().ref();
 
-  constructor(private db: AngularFirestore, public alerta: AlertasService ) { }
+  constructor(private db: AngularFirestore, public alerta: AlertasService, private http: HttpClient ) { }
 
  async cargarArchivosFb(archivos: FileItem[]) {
-    const storageRef = firebase.storage().ref();
     for ( const item of archivos ) {
       item.estaSubiendo = true;
       if ( item.completo === true ) {
@@ -25,7 +23,7 @@ export class ArchivosService {
         continue ;
       }
 
-      const uploadTask: firebase.storage.UploadTask = storageRef.child(`${ this.CARPETA_FILES}/${item.id}`)
+      const uploadTask: firebase.storage.UploadTask = this.storageRef.child(`${ this.CARPETA_FILES}/${item.id}`)
       .put( item.archivo );
 
       uploadTask.on( firebase.storage.TaskEvent.STATE_CHANGED,
@@ -51,9 +49,7 @@ export class ArchivosService {
       }
 
   private guardarArchivos( file: { nombre: string, url: string } ) {
-
     return ;
-    // this.db.collection( `/${ this.CARPETA_FILES }` )
-    // .add( file );
   }
+
 }

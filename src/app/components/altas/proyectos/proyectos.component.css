@@ -1,14 +1,16 @@
-input,
-select {
-    border-bottom: 1px solid #ebebee;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    box-shadow: transparent;
-    background-color: transparent;
-    outline: none;
-}
-
-.seleccionador {
-    width: 150px;
-}
+    input,
+    select {
+        border-bottom: 1px solid #ebebee;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        box-shadow: transparent;
+        background-color: transparent;
+        width: 100%;
+        outline: none;
+    }
+    
+    .divcte {
+        /* background-color: rosybrown; */
+        width: 100% !important;
+    }

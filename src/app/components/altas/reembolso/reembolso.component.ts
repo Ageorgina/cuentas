@@ -1,17 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { UsuariosService } from 'src/app/services/usuarios.service';
-import { ArchivosService } from 'src/app/services/archivos.service';
+import { UsuariosService, ArchivosService, ProyectosService, GastosService, AlertasService  } from 'src/app/services';
+import { Usuario, Proyecto, FileItem, Reembolso } from '../../../general/model';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { ProyectosService } from 'src/app/services/proyectos.service';
-import { GastosService } from 'src/app/services/gastos.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Utils } from 'src/app/general/utils/utils';
-import { AlertasService } from 'src/app/services/srv_shared/alertas.service';
-import { Usuario } from '../../../general/model/usuario';
-import { Proyecto } from '../../../general/model/proyecto';
-import { Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { FileItem } from '../../../general/model/file-item';
-import { Reembolso } from '../../../general/model/reembolso';
 
 @Component({
   selector: 'app-reembolso',
@@ -52,46 +45,38 @@ export class ReembolsoComponent implements OnInit {
   admin: boolean;
   tesorero: boolean;
   aprobador: boolean;
+  financiero: boolean;
   uaprobo: string;
   proyecto: any;
-
+  project: {} = {};
   // tslint:disable-next-line: variable-name
-  constructor( private _fileS: ArchivosService, private storage: AngularFireStorage, private formBuilder: FormBuilder,
-               // tslint:disable-next-line: variable-name
-               private _user: UsuariosService, private _pyt: ProyectosService, private __gastoS: GastosService,
-               private active: ActivatedRoute, private router: Router, private utils: Utils,
-               public alert: AlertasService
-               ) {
-                this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
-                this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => {
+  constructor( private _fileS: ArchivosService, private _pyt: ProyectosService, private __gastoS: GastosService,
+               private user: UsuariosService, private formBuilder: FormBuilder, private router: Router,
+               private active: ActivatedRoute,  private utils: Utils, public alert: AlertasService ) {
+                 this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
+                 this.user.cargarUsuarios().subscribe((usuarios: Usuario[]) => {
                   this.usuarios = usuarios;
                   usuarios.filter( usuario => {
                     if ( usuario.correo === this.usuarioLocal['usuario'].username) {
-                    this.usuarioActual = usuario;
-                    if (usuario['rol'] === 'Administrador'){
-                      this.admin = true;
-                    } else if (usuario['rol']=== 'Aprobador'){
-                      this.aprobador = true;
-                    } else if (usuario['rol'] === 'Tesorero'){
-                      this.tesorero = true;
-                    }
+                      this.usuarioActual = usuario;
+                      if (usuario['rol'] === 'Administrador') { this.admin = true; } else
+                      if (usuario['rol'] === 'Aprobador') { this.aprobador = true; } else
+                      if (usuario['rol'] === 'Financiero') { this.financiero = true; } else
+                      if (usuario['rol'] === 'Tesorero') { this.tesorero = true; }
                   }
                 });
               });
-                this._pyt.cargarProyectos().subscribe((proyectos: Proyecto[]) => { this.proyectos = proyectos; });
-                this.__gastoS.cargarTipoGtos().subscribe((tipoGtos: any[]) => { this.tipoGto = tipoGtos; });
-
-                this.reembolsoForm = this.formBuilder.group({
-      fecha: ['', Validators.required],
-      cantidad: ['', Validators.required],
-      motivo: ['', Validators.required],
-      estatus: [''],
-      comprobantes: [''],
-      solicitante: [''],
-      proyecto: ['', Validators.required]
-  });
-                this.id_reembolso = this.active.snapshot.paramMap.get('id_reembolso');
-                if ( this.id_reembolso ) {
+                 this.reembolsoForm = this.formBuilder.group({
+                   fecha: ['', Validators.required],
+                   cantidad: ['', Validators.required],
+                   motivo: ['', Validators.required],
+                   estatus: [''],
+                   comprobantes: [''],
+                   solicitante: [''],
+                   proyecto: ['', Validators.required]
+                  });
+                 this.id_reembolso = this.active.snapshot.paramMap.get('id_reembolso');
+                 if ( this.id_reembolso ) {
                   this.titulo = 'Modificar Reembolso';
                   this.actualizar = true;
                   this.__gastoS.cudReembolsos().doc(this.id_reembolso).valueChanges().subscribe((upR: Reembolso) => {
@@ -108,19 +93,25 @@ export class ReembolsoComponent implements OnInit {
                       this.reembolsoForm.controls['estatus'].disable();
                     }
                     if (this.updateR.estatus !== 'Solicitar') {
-                      this.reembolsoForm.controls['cantidad'].disable();
-                      this.reembolsoForm.controls['proyecto'].disable();
+                      this.reembolsoForm.disable();
+                      this.reembolsoForm.controls['estatus'].enable();
                     }
                     if (this.updateR.estatus === 'Pagado') {
                       this.reembolsoForm.get(['estatus']).setValue('Pagado');
                       this.reembolsoForm.disable();
+                    }
+                    if ((this.aprobador  || this.tesorero) && !this.sameU) {
+                      this.reembolsoForm.disable();
+                      this.reembolsoForm.controls['estatus'].enable();
                     }
                   });
                 } else {
                 this.reembolsoForm.get(['estatus']).setValue('Solicitar');
                 this.reembolsoForm.controls['estatus'].disable();
                 }
-
+                 this._pyt.cargarProyectos().subscribe((proyectos: Proyecto[]) => {
+                  this.proyectos = proyectos; });
+                 this.__gastoS.cargarTipoGtos().subscribe((tipoGtos: any[]) => { this.tipoGto = tipoGtos; });
   }
 
   ngOnInit() {
@@ -158,12 +149,15 @@ export class ReembolsoComponent implements OnInit {
       if (this.reembolso.estatus === ('Aprobado')  ) {
       this.reembolso.aprobo = this.usuarioLocal.usuario.username;
       }
-      if (this.reembolso.estatus !== ('Aprobado') ) {
+      if (this.reembolso.estatus === ('Pagado') ) {
         this.reembolso.aprobo = this.updateR.aprobo;
         this.reembolso.pago = this.usuarioLocal.usuario.username;
-        }
+      }
+      if (this.reembolso.estatus === ('Solicitar') ) {
+        this.reembolso.aprobo = '';
+        this.reembolso.pago = '';
+      }
       this.reembolso['comprobantes'] = this.updateR.comprobantes;
-
       this.__gastoS.cudReembolsos().doc(this.id_reembolso).update(this.reembolso);
       this.alert.showSuccess();
       this.loading = false;
@@ -176,53 +170,46 @@ export class ReembolsoComponent implements OnInit {
       this.reembolso.estatus = 'Solicitar';
       const solicitante = this.usuarioLocal.usuario.username;
       this.reembolso.solicitante = solicitante;
-      console.log('solicitar', this.reembolso);
       this.__gastoS.cudReembolsos().add(this.reembolso);
       this.alert.showSuccess();
       this.loading = false;
       this.limpiar();
+    }
   }
-}
-checkLetras($event: KeyboardEvent) {
-  this.utils.letras($event);
-}
 
-checkNumeros($event: KeyboardEvent) {
-  this.utils.numerosp($event);
-}
-checkL_N($event: KeyboardEvent) {
-  this.utils.letrasNumeros($event);
-}
-limpiar() {
-  // tslint:disable-next-line: no-unused-expression
+  checkLetras($event: KeyboardEvent) { this.utils.letras($event); }
+  checkNumeros($event: KeyboardEvent) { this.utils.numerosp($event); }
+  checkL_N($event: KeyboardEvent) { this.utils.letrasNumeros($event); }
+
+  limpiar() {
   this.submitted = false;
   this.loading = false;
   this.reembolsoForm.reset();
   this.reembolsoForm.get(['estatus']).setValue('Solicitar');
   this.archivos = [];
-}
-regresar() {
-  this.router.navigate(['reembolsos']);
-}
+  }
 
-async cargarArchivos() {
+  regresar() { this.router.navigate(['reembolsos']); }
+
+  async cargarArchivos() {
   this._fileS.CARPETA_FILES = 'comprobantes';
   let algo: FileItem[] = await new Promise((resolve, reject) => {
-    this._fileS.cargarArchivosFb( this.archivos).finally(() => { resolve(this.archivos); })
-    .catch(() => reject([]));
-  });
-}
+    this._fileS.cargarArchivosFb( this.archivos).finally(() => { resolve( this.archivos); }).catch(() => reject([])); 
+    });
+  }
 
+  async botonFiles(event) {
+  const file = new FileItem(event.target.files[0]);
+  this.archivos.push(file);
+  this.cargarArchivos();
+  }
 
-limpiarArchivos(archivo) {
-  this.archivos.splice(archivo, 1);
-}
-valor(nombre) {
+  limpiarArchivos(arr, i) {
+  const archivo = arr.indexOf(i);
+  this.archivos.splice( archivo, 1);
+  }
+  valor(nombre) {
   this.proyectos.filter(proyecto => {
-    if (nombre === proyecto.nombre) {
-      this.proyecto = proyecto;
-    }
-  });
-}
-
-}
+    if (nombre === proyecto.nombre) { this.proyecto = proyecto; } });
+  }
+  }

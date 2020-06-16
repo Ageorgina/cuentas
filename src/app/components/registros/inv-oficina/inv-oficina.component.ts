@@ -4,6 +4,7 @@ import { Oficina, Partida } from '../../../general/model/oficina';
 import { Router } from '@angular/router';
 import { AlertasService } from '../../../services/srv_shared/alertas.service';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { DescargasService } from 'src/app/services';
 
 @Component({
   selector: 'app-inv-oficina',
@@ -23,9 +24,9 @@ export class InvOficinaComponent implements OnInit {
   partidaActual = {};
   modificada: {};
   par = [];
+  // tslint:disable-next-line:variable-name
   id_partida: any;
-  constructor( private alert: AlertasService,
-               private router: Router, private gstS: OficinaService) {
+  constructor( private alert: AlertasService, private router: Router, private gstS: OficinaService, private descargas: DescargasService) {
       this.loading = true;
       this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
       this.gstS.cargarPartidas().subscribe( partidas => {
@@ -55,7 +56,6 @@ export class InvOficinaComponent implements OnInit {
    })
  });
      });
-
     }
 
       ngOnInit() {
@@ -103,6 +103,30 @@ partidaUnica() {
         this.partidaActual = dato;
         return  ;
       }
+  });
+  }
+
+  descargar( file ) {
+    const fecha = Date.now();
+    this.descargas.descargar(file).subscribe(data => {
+      const dataP = window.URL.createObjectURL(data);
+      const a = document.createElement('a');
+      a.href = dataP;
+      if (data.type === 'application/vnd.ms-excel') {
+      a.download = String(fecha) + '.xls';
+    } else if (data.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      a.download = String(fecha) + '.xlsx';
+    } else {
+      a.download = String(fecha);
+    }
+      document.body.appendChild(a);
+      this.loading = false;
+      a.click();
+      this.alert.showSuccess();
+  },
+  error => {
+      this.loading = false;
+      this.alert.showError();
   });
   }
 

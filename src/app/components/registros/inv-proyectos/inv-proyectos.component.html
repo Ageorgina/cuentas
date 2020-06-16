@@ -19,37 +19,6 @@
                 <td>{{el.monto_d | currency }}</td>
                 <td>{{el.tipo_proyecto}}
                     <p><button type="button" class="btn btn-outline-info btn-sm" (click)="elementoSelected(i)" data-toggle="modal" data-target="#more"> Más Información...</button>
-                        <!-- Modal -->
-                        <div #more id="more" class="modal fade">
-                            <div class="modal-dialog modal-lg">
-                                <!-- Modal content-->
-                                <div class="modal-content">
-                                    <div class="modal-body">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th *ngFor="let head of subTh">{{head}}</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>{{el['id_act']}}</td>
-                                                    <td>{{el.proceso}}</td>
-                                                    <td>{{el.empresa}}</td>
-                                                    <td>{{el.resp_cte}}</td>
-                                                    <td>{{el.resp_asg}}</td>
-                                                    <td>{{el.estatus}}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
                 </td>
                 <td>
                     <button type="button" class="btn btn-outline-success btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>

@@ -1,31 +1,3 @@
-.flex-container {
-    display: flex;
-    justify-content: space-between;
-}
-
-.footer {
-    margin-top: 52%;
-}
-
-.card {
-    margin-left: 10% !important;
-    padding-top: 2%;
-    padding-bottom: 2%;
-}
-
-label {
-    font-weight: bold;
-    color: #202C4C;
-}
-
-button#guardar {
-    background-color: #4E936F;
-    color: white;
-    font-weight: bold;
-    border-radius: 5%;
-    margin-left: 25%;
-}
-
 input,
 select {
     border-bottom: 1px solid #ebebee;
@@ -35,6 +7,7 @@ select {
     box-shadow: transparent;
     background-color: transparent;
     outline: none;
+    width: 100%;
 }
 
 [data-tooltip]:before {
@@ -54,4 +27,10 @@ select {
 
 [data-tooltip]:not([data-tooltip-persistent]):before {
     pointer-events: none;
+}
+
+input#vacio {
+    background-color: transparent;
+    border-color: transparent;
+    color: transparent;
 }

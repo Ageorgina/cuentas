@@ -1,0 +1,34 @@
+.form-control-sm {
+    /* background-color: transparent; */
+    border-color: transparent;
+    width: 100% !important;
+}
+
+select {
+    border-bottom: 1px solid #ebebee;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    box-shadow: transparent;
+    background-color: transparent;
+    outline: none;
+    width: 100% !important;
+    color: slategray;
+}
+
+div#tabla_p {
+    overflow: auto !important;
+    width: 95%;
+}
+
+input#vacio {
+    background-color: transparent;
+    border-color: transparent;
+    color: transparent;
+}
+
+td {
+    /* background-color: green; */
+    font-size: 14px;
+    min-height: min-content;
+}

@@ -6,5 +6,6 @@ select {
     border-right: none;
     box-shadow: transparent;
     background-color: transparent;
+    width: 100%;
     outline: none;
 }

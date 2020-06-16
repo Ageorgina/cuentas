@@ -1,6 +1,7 @@
 <navbar></navbar>
 <h1>Registro {{titulo}}</h1>
 <div class="loading" *ngIf="loading">Loading&#8230;</div>
+
 <div id="tabla">
     <table class="table">
         <thead>
@@ -16,16 +17,16 @@
                 <td>{{el.motivo}}</td>
                 <td>{{el.estatus}}</td>
                 <td>
-                    <button class="btn btn-outline-info btn-sm" data-toggle="modal" [attr.data-target]="'#'+el.id_reembolso"> Ver comprobantes ...
+                    <button class="btn btn-outline-info btn-sm" data-toggle="modal" [attr.data-target]="'#'+el.id_reembolso" (click)="verMas(el)"> Ver comprobantes ...
                     <div [attr.id]="el.id_reembolso" class="modal fade">
                         <div class="modal-dialog modal-lg">
                             <!-- Modal content-->
                             <div class="modal-content">
-                                <div class="modal-body" >
-                                       <img class="zoom m-2" *ngFor="let imagen of el.arrComprobantes" [src]="imagen">
+                                <div id="imagenes" class="modal-body" >
+                                    <img class="zoom m-2" *ngFor="let file of el.arrComprobantes" [src]="file" (click)="descargar(file)">
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" (click)="limpiar(el)">Cerrar</button>
 </div>
 </div>
 </div>
@@ -34,7 +35,7 @@
 </td>
 <td>
     <button type="button" class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
-    <button type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
+    <button *ngIf="el.estatus === 'Solicitar' && usuarioActual.rol==='Administrador'" type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
 </td>
 </tr>
 

@@ -8,11 +8,13 @@ import { UsuariosComponent } from './components/altas/usuarios/usuarios.componen
 import { ClientesComponent } from './components/altas/clientes/clientes.component';
 import { ProyectosComponent } from './components/altas/proyectos/proyectos.component';
 import { GastosGeneralesComponent } from './components/altas/gastos-generales/gastos-generales.component';
+import { NominaComponent } from './components/altas/nomina/nomina.component';
 import { InvGastosGeneralesComponent } from './components/registros/inv-gastos-generales/inv-gastos-generales.component';
 import { InvUsuariosComponent } from './components/registros/inv-usuarios/inv-usuarios.component';
 import { InvProyectosComponent } from './components/registros/inv-proyectos/inv-proyectos.component';
 import { InvClientesComponent } from './components/registros/inv-clientes/inv-clientes.component';
 import { InvOficinaComponent } from './components/registros/inv-oficina/inv-oficina.component';
+import { InvNominaComponent } from './components/registros/inv-nomina/inv-nomina.component';
 
 // Formularios
 import { ReactiveFormsModule } from '@angular/forms';
@@ -42,6 +44,7 @@ import { HttpClientModule} from '@angular/common/http';
 // ngrx
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { StoreModule } from '@ngrx/store';
+import { ProyectoInfoComponent } from './components/registros/proyecto-info/proyecto-info.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +65,9 @@ import { StoreModule } from '@ngrx/store';
     LogoutComponent,
     ReembolsoComponent,
     InvReembolsoComponent,
+    NominaComponent,
+    InvNominaComponent,
+    ProyectoInfoComponent,
   ],
   imports: [
     BrowserModule,

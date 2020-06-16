@@ -359,3 +359,37 @@ img {
 img#logo {
     width: 100%;
 }
+
+
+/*  ****************dropButton************************* */
+
+#fichero {
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+
+.circle {
+    /* border-radius: 50%; */
+    width: 100%;
+    height: 100%;
+    /* background-color: red; */
+    cursor: pointer;
+}
+
+div#filesButton {
+    background-image: url('./assets/img/drop-images.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 100%;
+    height: 150px;
+    border: 1px, solid black;
+}
+
+
+/*  ************************************************************** */
+
+.class {
+    width: 90%;
+}

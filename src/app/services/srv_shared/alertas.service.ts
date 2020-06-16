@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
   providedIn: 'root'
 })
 export class AlertasService {
-  textError = 'Error';
+  textError = 'Ocurrio un error, Inténtalo más tarde';
   textWarning = 'Alerta!';
   textWarningSuccess = 'Alerta!';
   textInfo = 'Alerta!';
@@ -51,7 +51,7 @@ export class AlertasService {
   title: 'Ocurrio un error!',
   text: this.textError,
   showConfirmButton: false,
-  timer: 1500
+  timer: this.timer
 });
 
   }
@@ -72,7 +72,7 @@ export class AlertasService {
       title: '¡Ocurrio un error!',
       text: '¡Faltan campos por llenar!',
       showConfirmButton: false,
-      timer: 1500
+      timer: this.timer
   });
   }
   serverError() {
@@ -81,7 +81,55 @@ export class AlertasService {
       title: '¡Error en el servidor!',
       text: 'Inténtalo más tarde',
       showConfirmButton: false,
-      timer: 1500
+      timer: this.timer
+  });
+  }
+  invalidPass() {
+    Swal.fire({
+      icon: 'error',
+      title: '¡Contraseña inválida!',
+      showConfirmButton: false,
+      timer: this.timer
+  });
+  }
+  userDoesntExist() {
+    Swal.fire({
+      icon: 'error',
+      title: '¡El correo no existe!',
+      showConfirmButton: false,
+      timer: this.timer
+  });
+  }
+  vaciosError() {
+    Swal.fire({
+      icon: 'error',
+      title: '¡Los campos no pueden ir vacios!',
+      showConfirmButton: false,
+      timer: this.timer
+  });
+  }
+  invalidUser() {
+    Swal.fire({
+      icon: 'error',
+      title: 'Correo Inválido',
+      showConfirmButton: false,
+      timer: this.timer
+  });
+  }
+  dontMatch() {
+    Swal.fire({
+      icon: 'error',
+      title: 'El correo y la contraseña no coinciden',
+      showConfirmButton: false,
+      timer: this.timer
+  });
+  }
+  validError() {
+    Swal.fire({
+      icon: 'error',
+      title: '¡Datos inválidos!',
+      showConfirmButton: false,
+      timer: this.timer
   });
   }
 

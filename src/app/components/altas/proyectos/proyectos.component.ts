@@ -35,6 +35,7 @@ export class ProyectosComponent implements OnInit {
   submitted = false;
   loading = true;
   actualizar = false;
+  checked = true;
   areas: any;
                // tslint:disable-next-line: variable-name
   constructor( private formBuilder: FormBuilder, private _user: UsuariosService, private _proyectoS: ProyectosService,
@@ -46,6 +47,7 @@ export class ProyectosComponent implements OnInit {
     this._cte.cargarClientes().subscribe((cts: Cliente[]) => { this.clientes = cts; } );
     this._gst.cargarGastos().subscribe((gastos: Gasto[]) => { this.gastos = gastos; });
     this._areas.cargarAreas().subscribe((areas: any[]) => { this.areas = areas; });
+
 
     this.proyectosForm = this.formBuilder.group({
       fechaini: ['', Validators.required],
@@ -139,6 +141,14 @@ checkCaracteres($event: KeyboardEvent) {
 }
 regresar() {
   this.router.navigate(['proyectos']);
+}
+cambiocte(event) {
+  console.log('cambio', event.target.checked);
+  if(event.target.checked === true ) {
+    this.checked = true;
+  } else {
+    this.checked = false;
+  }
 }
 
 }

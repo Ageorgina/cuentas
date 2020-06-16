@@ -1,18 +1,16 @@
 
-﻿import {Injectable} from '@angular/core';
- import {HttpClient} from '@angular/common/http';
- import {BehaviorSubject, Observable, Subscription} from 'rxjs';
- import {map} from 'rxjs/operators';
-
- import {environment} from '../../../environments/environment';
- import {User} from '../model/User';
- import {catchError} from 'rxjs/operators';
- import {Store} from '@ngrx/store';
- import {AppState} from '../../security/store/reducers/app.reducers';
- import {LoginAction, LogoutAction, DesactivarLoadingAction} from '../../security/store/actions';
+﻿import { Injectable } from '@angular/core';
+ import { HttpClient } from '@angular/common/http';
+ import { BehaviorSubject, Observable } from 'rxjs';
+ import { map } from 'rxjs/operators';
+ import { environment } from '../../../environments/environment';
+ import { User} from '../model/User';
+ import { catchError } from 'rxjs/operators';
+ import { Store } from '@ngrx/store';
+ import { AppState } from '../../security/store/reducers/app.reducers';
+ import { LoginAction, LogoutAction, DesactivarLoadingAction } from '../../security/store/actions';
  import { UsuariosService } from '../../services/usuarios.service';
- import { Usuario } from '../../general/model/usuario';
-import { Router } from '@angular/router';
+ import { Router } from '@angular/router';
 
  @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -46,7 +44,7 @@ export class AuthService {
         }), catchError(err => {
           if ( err.statusText === 'Internal Server Error') {
             return 'I';
-          } else if (err.statusText === 'Unauthorized') {
+          } else if (err.statusText === 'Unauthorized'  ) {
             return 'F';
           } else {
             return 'U';
@@ -55,9 +53,6 @@ export class AuthService {
     }
 
   logout() {
-    window.onload = function (){
-      window.localStorage.clear();
-    }
     this.store.dispatch(new DesactivarLoadingAction());
     this.store.dispatch(new LogoutAction());
     localStorage.removeItem('currentUser');

@@ -1,10 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-
 import {AuthService} from '../security/services/auth.service';
-import { AlertasService } from '../services/srv_shared/alertas.service';
-import { UsuariosService } from '../services/usuarios.service';
+import { AlertasService,  UsuariosService } from '../services';
+import { Usuario } from '../general/model';
 
 @Component({
   selector: 'app-login',
@@ -20,33 +19,32 @@ export class LoginComponent implements OnInit {
   returnUrl: string;
   return1Url: string;
   return2Url: string;
+  return3Url: string;
   errorText: string;
   search: any;
   stringSearch: string;
   errorT: string;
   correo: string;
   usuarioL: any;
+  userC: any;
+  passC: any;
+  usuario: any;
+  user = new Usuario();
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    // tslint:disable-next-line:variable-name
-    private _authS: AuthService,
-    private alert: AlertasService,
-    private _userS: UsuariosService
-  ) {
+  constructor( private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
+               // tslint:disable-next-line:variable-name
+               private _authS: AuthService, private alert: AlertasService, private _userS: UsuariosService ) {
     this.loading = false;
-    this.usuarioL = JSON.parse(localStorage.getItem('currentUser'));
-
-  }
-
-  ngOnInit() {
     this.submitted = false;
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required , Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+  }
+
+  ngOnInit() {
+    this.submitted = false;
+    this.loading = false;
 
     this.route.queryParams.subscribe( data => {
       this.returnUrl = decodeURI (data.returnUrl || '/');
@@ -55,16 +53,24 @@ export class LoginComponent implements OnInit {
     });
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/registro-reembolso';
     this.return2Url = this.route.snapshot.queryParams.return2Url || '/registro-gastos';
+    this.return3Url = this.route.snapshot.queryParams.return3Url || '/reembolsos';
   }
+
 
   get f() {
     return this.loginForm.controls;
   }
 
   onSubmit() {
+    this.submitted = true;
     this.loading = true;
     this.submitted = true;
-    this._userS.cargarUsuarios().subscribe(usuarios => {
+    if (!this.passC || !this.userC) {
+      this.loading = false;
+      this.alert.vaciosError();
+    }
+    if ( this.f.username.value !== null   && this.f.username.value !== '' ) {
+    this._userS.cargarUsuarios().subscribe( usuarios => {
     usuarios.filter(usuario => {
         if ( (usuario['correo'] === this.f.username.value) && (usuario['activo'] === true)) {
           this.correo = usuario['correo'];
@@ -74,72 +80,64 @@ export class LoginComponent implements OnInit {
     this.validar();
     }
     );
-
+  } else{
+    this.loading = false;
+    this.alert.vaciosError();
   }
-   validar() {
-           if (this.correo === undefined) {
-            this.correo = '';
-          }
+  }
 
-           this._authS.login(this.f.username.value, this.f.password.value)
+  validar() {
+    if (this.correo === undefined && !this.f.password.value) {
+      this.correo = '';
+      this.loading = false;
+      this.alert.vaciosError();
+    }
+    this._authS.login(this.f.username.value, this.f.password.value)
               .subscribe(data => {
-                if ((this.f.username.value !== '') && this.correo === this.f.username.value ) {
-                  if ( data === 'F') {
-                    if (this._userS.newPass === 'exito') {
-                      return ;
-                    } else if ( !this._userS.newPass) {
-                    this.submitted = false;
-                    this.loading = false;
-                    const errorT = 'Contraseña inválida';
-                    this.alert.textError = errorT;
-                    this.alert.showError();
+                if (data === 'U'  && !this._userS.newPass) {
+                  this.loading = false;
+                  this.alert.serverError();
+                  return ;
+                } else if (data === 'I') {
+                  this.loading = false;
+                  if (this.f.username.errors && this.f.password.errors) {
+                    this.alert.validError();
                   }
-                  }
-                  if (data === 'U') {
-                    this.loading = false;
-                    this.errorT = 'Error en el servidor. Inténtalo más tarde';
-                    this.alert.textError = this.errorT;
-                    this.alert.showError();
-                  } else if (data === 'I') {
-                    this.loading = false;
-                    this.errorT = 'Datos inválidos';
-                    this.alert.textError = this.errorT;
-                    this.alert.showError();
-                  } else if(data.access_token) {
-                      if (this.usuarioL['rol'] === 'Usuario' || this.usuarioL['rol'] === 'Aprobador' ) {
-                      this.loading = false;
-                      this.router.navigate([this.returnUrl]);
-                      } else {
-                      this.loading = false;
-                      this.router.navigate([this.return2Url]);
+                  if (this.f.username.errors && !this.f.password.errors) {
+                    this.alert.invalidUser();
+                  } else {
+                    if (this.correo !== this.f.username.value && !this.f.password.errors) {
+                      this.alert.userDoesntExist();
                     }
+                  }
+                  this.alert.serverError();
+                  } else if (data === 'F' && !this._userS.newPass) {
+                    this.loading = false;
+                    if (this.correo === this.f.username.value && this.loginForm.get( 'password').hasError( 'minlength')) {
+                    this.alert.invalidPass();
+                } else {
+                    this.alert.dontMatch();
+                  }
+                } else if ( data.access_token) {
+                  this.loading = false;
+                  if (this.usuarioL['rol'] === 'Usuario') {
+                  this.router.navigate([this.returnUrl]);
+                  } else {
+                    if (this.usuarioL['rol'] === 'Financiero') {
+                      this.router.navigate([this.return3Url]);
+                    } else {
+                  this.router.navigate([this.return2Url]);
                 }
-              }  else if (data === 'U') {
-                this.loading = false;
-                this.errorT = 'Error en el servidor. Inténtalo más tarde';
-                this.alert.textError = this.errorT;
-                this.alert.showError();
-              } else if(this.f.username.value === '' || this.f.password.value === '') {
-                this.loading = false;
-                this.errorT = 'No se aceptan campos vacios';
-                this.alert.textError = this.errorT;
-                this.alert.showError();
-              } else{
-                this.loading = false;
-                this.errorT = 'El usuario no existe';
-                this.alert.textError = this.errorT;
-                this.alert.showError();
               }
-            },
-            error => {
-              this.loading = false;
-              const errorText = 'Error del servidor. Intente de nuevo más tarde';
-              this.alert.textError = errorText;
-              this.alert.showError();
-            });
-   }
-
-  limpiar() {
-    this.loginForm.reset();
+            }
+          });
   }
+
+  cambioUser(event){
+    this.userC = event;
+  }
+  cambioPass(event){
+    this.passC = event;
+  }
+
 }

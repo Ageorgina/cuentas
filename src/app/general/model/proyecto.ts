@@ -25,5 +25,7 @@ export class Proyecto {
     gastos: number;
     fechaini: string;
     fechafin: string;
+    // tslint:disable-next-line: variable-name
+    monto_r: number;
 
   }

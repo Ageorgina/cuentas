@@ -1,8 +1,8 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../security/services/auth.service';
-import { UsuariosService } from '../../services/usuarios.service';
-import { Usuario } from '../../general/model/usuario';
+import { UsuariosService } from '../../services';
+import { Usuario } from '../../general/model';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -10,12 +10,13 @@ import { Usuario } from '../../general/model/usuario';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
   admin: string;
   usuario: string;
   tesorero: string;
   rol: string;
   aprobador: string;
+  financiero: string;
   user: string;
   imagen: string;
   constructor( private router: Router, private auth: AuthService, private userS: UsuariosService) {
@@ -36,23 +37,20 @@ export class NavbarComponent implements OnInit {
         ) {
           if ( responsable.rol === 'Administrador') {
             this.admin = responsable.rol;
-          }
-          if (responsable.rol === 'Usuario') {
+          } else if (responsable.rol === 'Usuario') {
             this.usuario = responsable.rol;
-          }
-          if ( responsable.rol === 'Tesorero') {
+          } else if ( responsable.rol === 'Tesorero') {
             this.tesorero = responsable.rol;
-          }
-          if ( responsable.rol === 'Aprobador') {
+          } else if ( responsable.rol === 'Aprobador') {
             this.aprobador = responsable.rol;
+          } else if ( responsable.rol === 'Financiero') {
+            this.financiero = responsable.rol;
           }
         }
       });
     });
    }
-  ngOnInit() {
 
-  }
 
   logout() {
     this.auth.logout();

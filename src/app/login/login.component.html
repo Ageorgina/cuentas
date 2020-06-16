@@ -9,15 +9,15 @@
                     <form [formGroup]="loginForm " (ngSubmit)="onSubmit() ">
                         <div id="formulario" class="md-form ">
                             <mdb-icon fas icon="user" class="dark-grey-text mr-2 "></mdb-icon> <label for="username">Correo</label>
-                            <input type="email" id="username" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors } ">
+                            <input type="email" id="username" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors } " (change)="cambioUser($event)">
                             <p id="error " class="mt-2 " *ngIf="loginForm.get( 'username').hasError( 'required') && submitted ">* Este campo no puede ir vacío</p>
                             <p id="error2 " class="mt-2 " *ngIf="loginForm.get( 'username').hasError( 'email') && submitted ">*Correo Invalido</p>
                         </div>
                         <div id="formulario1" class="md-form ">
                             <mdb-icon fas icon="lock " class="dark-grey-text mr-2 "></mdb-icon> <label for="pass ">Contraseña</label>
-                            <input type="password" id="pass" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors } ">
+                            <input type="password" id="pass" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors } " autocomplete="on" (change)="cambioPass($event)">
                             <p id="error " class="mt-2 " *ngIf="loginForm.get( 'password').hasError( 'required') && submitted ">* Este campo no puede ir vacío</p>
-                            <p id="error2 " class="mt-2 " *ngIf="loginForm.get( 'password').hasError( 'minLength') ">* Min. 6 caracteres</p>
+                            <p id="error2 " class="mt-2 " *ngIf="loginForm.get( 'password').hasError( 'minlength')">* Min. 6 caracteres</p>
                         </div>
                         <div class="text-center">
                             <br>
@@ -29,5 +29,6 @@
         </div>
         <br> <strong id="footer" class="text-center ">©2020 Copyright ASG Advisory Services</strong>
     </div>
+    <!-- <input (change)="recuperar(id_usuario)" value='{{id_usuario}}'> -->
 
 </section>

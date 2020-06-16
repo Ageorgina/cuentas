@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ProyectosService } from '../../../services/proyectos.service';
-import { Proyecto } from '../../../general/model/proyecto';
+import { Proyecto, Gasto } from '../../../general/model';
 import { Router } from '@angular/router';
 import { AlertasService } from '../../../services/srv_shared/alertas.service';
-import { GastosService } from '../../../services/gastos.service';
-import { Gasto } from '../../../general/model/gasto';
+import { GastosService, ProyectosService } from '../../../services';
 
 @Component({
   selector: 'app-inv-proyectos',
@@ -28,12 +26,7 @@ export class InvProyectosComponent implements OnInit {
   info: Proyecto;
 
   // tslint:disable-next-line: variable-name
-  constructor( private _proyS: ProyectosService,
-               private router: Router,
-               private alert: AlertasService,
-               // tslint:disable-next-line: variable-name
-               private _gastos: GastosService) {
-                // tslint:disable-next-line: deprecation
+  constructor( private _proyS: ProyectosService, private router: Router, private alert: AlertasService, private _gastos: GastosService) {
                 this._proyS.cargarProyectos().subscribe( (proyectos: Proyecto[]) => {
                   this.elements = proyectos;
                   this.loading = false;
@@ -56,13 +49,9 @@ actualizar(value) {
   }
 
   elementoSelected(value) {
-    this.loading = true;
-    if (value === undefined) {
       this.loading = false;
-      return;
-    } else {
-      this.loading = false;
-      this.info = value;
+      this.router.navigate(['descripcion-proyecto', `${value.id_proyecto}`]);
   }
-    }
+
+  
   }

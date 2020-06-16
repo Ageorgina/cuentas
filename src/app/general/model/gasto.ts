@@ -15,5 +15,8 @@ export class Gasto {
     arrComprobantes: string[];
     // tslint:disable-next-line:variable-name
     id_proyecto: string;
+    solicitante: string;
+    aprobo: string;
+    pago: string;
 }
 

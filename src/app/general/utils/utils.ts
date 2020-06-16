@@ -28,8 +28,8 @@ export class Utils {
     if ($event.target) {
       ($event.target as HTMLInputElement).value = value.replace(/[^0-9]+/g, '');
     }
-}
-numerosp($event: KeyboardEvent) {
+  }
+  numerosp($event: KeyboardEvent) {
   const value = ($event.target as HTMLInputElement).value;
   if ($event.target) {
     ($event.target as HTMLInputElement).value = value.replace(/[^-.0-9\s]+/g, '');

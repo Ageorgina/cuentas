@@ -17,6 +17,9 @@ export class UserBase {
       passNew?: string;
       id_Usuario?: number;
       id_cuenta: number;
+      nombreEntidad: string;
+      numeroFiscal: string;
+
     };
 
     constructor( ) {
@@ -35,7 +38,9 @@ export class UserBase {
             admin : false,
             rol : 0,
             rolNombre : 'Administrador',
-            id_cuenta: 1
-        };
-}
+            id_cuenta: 1,
+            nombreEntidad: "Temporal",
+            numeroFiscal: "Temporal"
+        }
+    }
 }

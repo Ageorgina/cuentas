@@ -1,3 +1,4 @@
+
 export const environment = {
   production: true,
   gtosUrl: 'http://localhost:11200',

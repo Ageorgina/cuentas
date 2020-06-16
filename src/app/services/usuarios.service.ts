@@ -7,9 +7,6 @@ import { environment } from '../../environments/environment';
 import { UserBase } from '../security/model/UserBase';
 import { AlertasService } from '../services/srv_shared/alertas.service';
 import { usuarioU } from '../general/model/usuario';
-import { catchError } from 'rxjs/operators';
-import {map} from 'rxjs/operators';
-import { DesactivarLoadingAction } from '../security/store/actions';
 
 @Injectable({
   providedIn: 'root'
@@ -33,10 +30,11 @@ export class UsuariosService {
     return this.http.get(`${environment.gtosUrl}/usuario/obtenerTodosUsuarios`);
   }
   actualizar(usuario: usuarioU) {
-    return this.http.post<any>(`${environment.gtosUrl}/usuario/actualizarPerfilUsuario`, usuario );
+   this.newPass = usuario.usuario.passNew;
+   return this.http.post<any>(`${environment.gtosUrl}/usuario/actualizarPerfilUsuario`, usuario );
   }
-  regresa(exito) {
-    this.newPass = exito;
+  cambioPass() {
     return this.newPass;
   }
+
 }

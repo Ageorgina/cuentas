@@ -7,4 +7,5 @@ select {
     box-shadow: transparent;
     background-color: transparent;
     outline: none;
+    width: 100%;
 }
