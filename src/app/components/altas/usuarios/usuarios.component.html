@@ -41,7 +41,7 @@
                 <div class="col-md-3 mt-3">
                     <label class="control-label" for="resp_asg">Jefe Inmediato: </label><br>
                     <select id="resp_asg" formControlName="resp_asg" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
-                     <option disabled value=''>Jefe inmediato</option> 
+                     <option disabled value='Jefe inmediato'>Jefe inmediato</option> 
                      <option *ngFor="let resp of usuarios">{{resp.nombre}}</option> 
                      </select>
                     <p id="error" *ngIf="submitted && fval.resp_asg.invalid">*Este campo no puede ir vacío</p>
@@ -52,7 +52,7 @@
                 <div class="col-md-3 mt-3">
                     <label class="control-label" for="area">Área: </label><br>
                     <select id="area" formControlName="area" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
-                        <option disabled value=''>Área</option>
+                        <option disabled value='Área'>Área</option>
                         <option *ngFor="let area of areas">{{area.nombre_area}}</option>
                     </select>
                     <p id="error" *ngIf="submitted && fval.area.invalid">*Este campo no puede ir vacío</p>
@@ -64,7 +64,7 @@
                 <div class=" col-md-3 mt-3">
                     <label class="control-label" for="rol">Rol: </label><br>
                     <select id="rol" formControlName="rol" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
-                        <option  disabled value=''>Rol</option>
+                        <option  disabled value='Rol'>Rol</option>
                         <option value="Administrador">ADMINISTRADOR</option>
                         <option value="Aprobador">APROBADOR</option>
                         <option value="Financiero">FINANCIERO</option>

@@ -101,7 +101,7 @@
                                         <div class="progress">
                                             <div class="progress-bar" role="progressbar" [ngStyle]="{'width': archivo.progreso + '%', 'background-color':  archivo.completo?'green':'blue' }" aria-valuenow="{{ archivo.progreso }}" aria-valuemin="0" aria-valuemax="100">{{archivo.progreso}} </div>
                                         </div>
-                                        <i class="fas fa-times btn-outline-danger" (click)="limpiarArchivos(archivo)"></i>
+                                        <i class="fas fa-times btn-outline-danger" (click)="limpiarArchivos(archivos, archivo)"></i>
                                     </td>
                                 </tr>
                             </tbody>

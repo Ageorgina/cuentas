@@ -8,4 +8,6 @@ export class Nomina {
     estatus: string;
     salario: number;
     salarioReal: number;
+    costoProyecto: number;
+    aumento: number;
 }

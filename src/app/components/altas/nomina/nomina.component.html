@@ -7,7 +7,7 @@
             <div class="mt-3 col-md-3">
                 <label class="control-label" for="nombre">Usuarios:</label> <br>
                 <select id="nombre" formControlName="nombre">
-                                <option disabled value=''>ASG</option>
+                                <option disabled value='ASG'>ASG</option>
                                 <option *ngFor="let resp of usuarios">{{resp.nombre}}</option>
                 </select>
                 <p #error id="error" *ngIf="submitted && fval.estatus.invalid" class="mt-2">*Este campo no puede ir vacío</p>
@@ -27,7 +27,7 @@
             <div class="mt-3 col-md-3">
                 <label class="control-label mr-2 " for="proyecto">Proyecto:</label><br>
                 <select id="proyecto" formControlName="proyecto" (change)="valor(nominaForm.value.proyecto)">
-                    <option disabled value=''>Proyecto</option>
+                    <option disabled value='Proyecto'>Proyecto</option>
                     <option *ngFor="let proyecto of proyectos" >{{proyecto.nombre}} </option>
                   </select>
                 <p id="error" *ngIf="submitted && fval.proyecto.invalid">*Este campo no puede ir vacío</p>
@@ -55,10 +55,18 @@
             </div>
         </div>
         <div class="around">
-            <div class="mt-3 class">
-                <label class="control-label" for="salario">Salario: </label>
+            <div class="mt-3 col-md-3">
+                <label class="control-label" for="salario">Salario: </label><br>
                 <input class="form-control" id="salario" placeholder="Salario" formControlName="salario" type="text" data-toggle="tooltip" title="*Campo obligatorio" (keyup)="checkNumeros($event)" [ngClass]="{ 'is-invalid': submitted && fval.salario.errors } ">
+            </div> <br>
+            <div class="mt-3 col-md-2"><input type="text" id="vacio" disabled></div>
+            <br>
+            <div class="mt-3 col-md-3 ">
+                <label class="control-labe" for="aumento">Factor Costo: </label><br>
+                <input class="form-control" id="aumento" formControlName="aumento" type="text" data-toggle="tooltip" title="*Campo obligatorio" (keyup)="checkNumeros($event)" [ngClass]="{ 'is-invalid': submitted && fval.aumento.errors } ">
+                <p #error id="error" *ngIf="submitted && fval.aumento.invalid " class="mt-2">*Este campo no puede ir vacío</p>
             </div>
+
         </div>
 
         <br>

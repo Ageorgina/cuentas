@@ -30,9 +30,8 @@ export class NominaComponent implements OnInit {
   saldoProyecto: number;
 
   // tslint:disable-next-line:variable-name
-  constructor( private formBuilder: FormBuilder, private _user: UsuariosService, private _pyt: ProyectosService,
-               private active: ActivatedRoute, private router: Router, private utils: Utils,
-               public alert: AlertasService, private nominaS: NominaService) {
+  constructor( private formBuilder: FormBuilder, private _user: UsuariosService, private _pyt: ProyectosService, private utils: Utils,
+               private active: ActivatedRoute, private router: Router, public alert: AlertasService, private nominaS: NominaService) {
                 this.loading = false;
                 this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => { this.usuarios = usuarios;  });
                  this._pyt.cargarProyectos().subscribe((proyectos: Proyecto[]) => {this.proyectos = proyectos; });
@@ -42,6 +41,7 @@ export class NominaComponent implements OnInit {
                    fechaini: ['', Validators.required],
                    fechafin: ['', Validators.required],
                    proyecto: ['', Validators.required],
+                   aumento: ['', Validators.required],
                    estatus: [''],
                    salarioReal: ['']
                   });
@@ -71,6 +71,10 @@ export class NominaComponent implements OnInit {
                      });
                    });
                    }
+                   this.nominaForm.get(['nombre']).setValue('ASG');
+                   this.nominaForm.get(['proyecto']).setValue('Proyecto');
+                   this.nominaForm.get(['estatus']).setValue('Activo');
+                   this.nominaForm.get(['aumento']).setValue(1.0);
                   }
 
 
@@ -115,7 +119,7 @@ export class NominaComponent implements OnInit {
   }
 
   get fval() { return this.nominaForm.controls; }
-  checkNumeros($event: KeyboardEvent) { this.utils.numeros($event); }
+  checkNumeros($event: KeyboardEvent) { this.utils.numerosp($event); }
 
 
   limpiar() {
@@ -123,6 +127,10 @@ export class NominaComponent implements OnInit {
   this.loading = false;
   this.nominaForm.reset();
   this.saldoDisp = 0;
+  this.nominaForm.get(['nombre']).setValue('ASG');
+  this.nominaForm.get(['proyecto']).setValue('Proyecto');
+  this.nominaForm.get(['estatus']).setValue('Activo');
+  this.nominaForm.get(['aumento']).setValue(1.0);
   }
   regresar() {
   this.router.navigate(['proyectos']);
@@ -139,13 +147,14 @@ valor(nombre) {
 }
 
 sueldoP() {
-  const saldoDia = (this.nomina.salario * 1.7) / 30;
+  this.nomina.salarioReal = this.nomina.salario * this.nomina.aumento;
+  const saldoDia = Number(this.nomina.salarioReal) / 30;
   const dateIni = new Date(this.nomina.fechaini);
   const dateEnd = new Date(this.nomina.fechafin);
   const diferencia = dateEnd.getTime() - dateIni.getTime();
   const days = diferencia / (60 * 60 * 24 * 1000);
   this.saldoProyecto = saldoDia * (days + 1);
-  this.nomina.salarioReal = this.nomina.salario * 1.7;
+  this.nomina.costoProyecto = this.saldoProyecto;
 }
 
 }

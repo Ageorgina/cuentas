@@ -291,8 +291,7 @@ export class RegistroOficinaComponent {
       this.gstS.cudPartida().doc(this.partidaActual.id_partidafb).update(this.modificado);
       this.regresar();
       Swal.fire(
-      'Exitoso',
-      'success'
+      'Exitoso'
       );
       }
       });

@@ -72,6 +72,8 @@ export class GastosGeneralesComponent {
           if (usuario['rol'] === 'Financiero') { this.financiero = true; } else
           if (usuario['rol'] === 'Tesorero') { this.tesorero = true; }
             this.gastosForm.get(['estatus']).setValue('Aprobado');
+            this.gastosForm.get(['proyecto']).setValue('Proyecto');
+            this.gastosForm.get(['tipo_gasto']).setValue('Tipo gasto');
             this.gastosForm.controls['estatus'].disable();
 
       }
@@ -181,6 +183,9 @@ export class GastosGeneralesComponent {
     this.gastosForm.reset();
     this.archivos = [];
     this.saldoDisp = 0;
+    this.gastosForm.get(['estatus']).setValue('Aprobado');
+    this.gastosForm.get(['proyecto']).setValue('Proyecto');
+    this.gastosForm.get(['tipo_gasto']).setValue('Tipo gasto');
   }
 
   async cargarArchivos() {

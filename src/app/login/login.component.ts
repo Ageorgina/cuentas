@@ -36,6 +36,7 @@ export class LoginComponent implements OnInit {
                private _authS: AuthService, private alert: AlertasService, private _userS: UsuariosService ) {
     this.loading = false;
     this.submitted = false;
+    this._authS.logout();
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required , Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
@@ -106,11 +107,11 @@ export class LoginComponent implements OnInit {
                   if (this.f.username.errors && !this.f.password.errors) {
                     this.alert.invalidUser();
                   } else {
+                    console.log('entro I no existe')
                     if (this.correo !== this.f.username.value && !this.f.password.errors) {
                       this.alert.userDoesntExist();
                     }
                   }
-                  this.alert.serverError();
                   } else if (data === 'F' && !this._userS.newPass) {
                     this.loading = false;
                     if (this.correo === this.f.username.value && this.loginForm.get( 'password').hasError( 'minlength')) {

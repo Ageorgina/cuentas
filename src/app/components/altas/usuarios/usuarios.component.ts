@@ -108,7 +108,9 @@ export class UsuariosComponent {
                     this.activado = this.updateU.activo;
                   });
                   }
-
+                  this.userForm.get(['rol']).setValue('Rol');
+                  this.userForm.get(['resp_asg']).setValue('Jefe inmediato');
+                  this.userForm.get(['area']).setValue('Área');
       }
 
 
@@ -206,6 +208,7 @@ export class UsuariosComponent {
     this.submitted = false;
     this.router.navigate(['usuarios']);
     this.pass = undefined;
+    return;
     }, () => {
       this.loading = false;
       this.alert.serverError();
@@ -254,9 +257,9 @@ export class UsuariosComponent {
   limpiar() {
     this.loading = false;
     this.userForm.reset();
-    this.userForm.get(['resp_area']).reset('');
-    this.userForm.get(['resp_asg']).setValue('');
-    this.userForm.get(['area']).setValue('');
+    this.userForm.get(['rol']).setValue('Rol');
+    this.userForm.get(['resp_asg']).setValue('Jefe inmediato');
+    this.userForm.get(['area']).setValue('Área');
   }
 
 

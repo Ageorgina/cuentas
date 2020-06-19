@@ -84,6 +84,10 @@ export class ProyectosComponent implements OnInit {
         this.proyectosForm.get(['monto_d']).setValue(this.updateP.monto_d);
       });
       }
+      this.proyectosForm.get(['empresa']).setValue('Empresa');
+      this.proyectosForm.get(['resp_asg']).setValue('ASG');
+      this.proyectosForm.get(['estatus']).setValue('Estatus');
+      this.proyectosForm.get(['resp_cte']).setValue('Responsable');
 
   }
 
@@ -134,6 +138,10 @@ export class ProyectosComponent implements OnInit {
 limpiar() {
   this.loading = false;
   this.proyectosForm.reset();
+  this.proyectosForm.get(['empresa']).setValue('Empresa');
+  this.proyectosForm.get(['resp_asg']).setValue('ASG');
+  this.proyectosForm.get(['estatus']).setValue('Estatus');
+  this.proyectosForm.get(['resp_cte']).setValue('Responsable');
 }
 
 checkNumeros($event: KeyboardEvent) {
