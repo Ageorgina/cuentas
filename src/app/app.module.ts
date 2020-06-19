@@ -14,7 +14,6 @@ import { InvUsuariosComponent } from './components/registros/inv-usuarios/inv-us
 import { InvProyectosComponent } from './components/registros/inv-proyectos/inv-proyectos.component';
 import { InvClientesComponent } from './components/registros/inv-clientes/inv-clientes.component';
 import { InvOficinaComponent } from './components/registros/inv-oficina/inv-oficina.component';
-import { InvNominaComponent } from './components/registros/inv-nomina/inv-nomina.component';
 
 // Formularios
 import { ReactiveFormsModule } from '@angular/forms';
@@ -66,7 +65,6 @@ import { ProyectoInfoComponent } from './components/registros/proyecto-info/proy
     ReembolsoComponent,
     InvReembolsoComponent,
     NominaComponent,
-    InvNominaComponent,
     ProyectoInfoComponent,
   ],
   imports: [

@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { OficinaService } from '../../../services/oficina.service';
-import { Oficina, Partida } from '../../../general/model/oficina';
+import { Partida } from '../../../general/model';
 import { Router } from '@angular/router';
-import { AlertasService } from '../../../services/srv_shared/alertas.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { DescargasService } from 'src/app/services';
+import { AlertasService, DescargasService, OficinaService  } from '../../../services';
 
 @Component({
   selector: 'app-inv-oficina',
@@ -13,7 +10,7 @@ import { DescargasService } from 'src/app/services';
 })
 export class InvOficinaComponent implements OnInit {
   titulo = 'Oficina';
-  headTitle = ['Responsable ASG', 'Fecha', 'Partida', 'Monto', 'Motivo', 'Comprobantes', 'Modificar / Eliminar'];
+  headTitle = ['Responsable ASG', 'Fecha', 'Partida', 'Monto', 'Motivo', 'Comprobantes', 'Modificar'];
   elements = [];
   saldoDisp = 0;
   submitted = false;

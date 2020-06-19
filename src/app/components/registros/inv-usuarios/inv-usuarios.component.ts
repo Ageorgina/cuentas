@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { UsuariosService } from '../../../services/usuarios.service';
-import { Usuario, usuarioU } from '../../../general/model/usuario';
+import { Usuario, usuarioU } from '../../../general/model';
 import { Router } from '@angular/router';
-import { AlertasService } from '../../../services/srv_shared/alertas.service';
+import { AlertasService, UsuariosService } from '../../../services';
 @Component({
   selector: 'app-inv-usuarios',
   templateUrl: './inv-usuarios.component.html',
   styleUrls: ['./inv-usuarios.component.css']
 })
+
 export class InvUsuariosComponent implements OnInit {
   titulo = 'Usuarios ASG';
   headTitle = ['Nombre', 'Rol', 'Área', 'Jefe Inmediato', 'Correo', 'Puesto','Modificar'];
@@ -28,6 +28,7 @@ export class InvUsuariosComponent implements OnInit {
   constructor( private _user: UsuariosService,
                private router: Router,
                private alert: AlertasService) {
+                this.loading = false;
                 this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
                 this._user.cargarUsuarios().subscribe( (usuarios: Usuario[]) => {
                   usuarios.filter(usuario => {

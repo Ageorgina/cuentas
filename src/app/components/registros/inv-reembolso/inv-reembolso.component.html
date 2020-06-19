@@ -1,12 +1,18 @@
 <navbar></navbar>
 <h1>Registro {{titulo}}</h1>
 <div class="loading" *ngIf="loading">Loading&#8230;</div>
-
 <div id="tabla">
     <table class="table">
         <thead>
             <tr>
-                <th *ngFor="let head of headTitle">{{head}}</th>
+                <th>Solicitante</th>
+                <th>Fecha</th>
+                <th>Monto</th>
+                <th>Motivo</th>
+                <th>Estatus</th>
+                <th *ngIf="(usuarioActual?.rol === 'Financiero') || (usuarioActual?.rol === 'Tesorero')">Aprobo</th>
+                <th>Comprobantes</th>
+                <th>Modificar</th>
             </tr>
         </thead>
         <tbody>
@@ -16,17 +22,18 @@
                 <td style="text-align: right;">{{el.cantidad | currency }}</td>
                 <td>{{el.motivo}}</td>
                 <td>{{el.estatus}}</td>
+                <td *ngIf="(usuarioActual?.rol === 'Financiero')|| (usuarioActual?.rol === 'Tesorero')">{{el.aprobo}}</td>
                 <td>
-                    <button class="btn btn-outline-info btn-sm" data-toggle="modal" [attr.data-target]="'#'+el.id_reembolso" (click)="verMas(el)"> Ver comprobantes ...
-                    <div [attr.id]="el.id_reembolso" class="modal fade">
-                        <div class="modal-dialog modal-lg">
+                    <button class="btn btn-outline-info btn-sm" data-toggle="modal" [attr.data-target]="'#'+el.id_reembolso"> Ver comprobantes ...
+                    <div [attr.id]="el.id_reembolso " class="modal fade ">
+                        <div class="modal-dialog modal-lg ">
                             <!-- Modal content-->
-                            <div class="modal-content">
-                                <div id="imagenes" class="modal-body" >
-                                    <img class="zoom m-2" *ngFor="let file of el.arrComprobantes" [src]="file" (click)="descargar(file)">
+                            <div class="modal-content ">
+                                <div id="imagenes " class="modal-body " >
+                                    <img class="zoom m-2 " *ngFor="let file of el.arrComprobantes " [src]="file " (click)="descargar(file) ">
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal" (click)="limpiar(el)">Cerrar</button>
+                                <div class="modal-footer ">
+                                    <button type="button " class="btn btn-default " data-dismiss="modal " (click)="limpiar(el) ">Cerrar</button>
 </div>
 </div>
 </div>
@@ -34,8 +41,8 @@
 </button>
 </td>
 <td>
-    <button type="button" class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
-    <button *ngIf="el.estatus === 'Solicitar' && usuarioActual.rol==='Administrador'" type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
+    <button type="button " class="btn btn-outline-success mr-2 btn-sm " (click)="actualizar(i) "><i class="fas fa-edit "></i> Modificar</button>
+    <button *ngIf="el.estatus==='Solicitar' && usuarioActual.rol==='Administrador' " type="button " class="btn btn-outline-danger btn-sm " (click)="borrar(i) "> <i class="fas fa-trash-alt "></i> Eliminar</button>
 </td>
 </tr>
 

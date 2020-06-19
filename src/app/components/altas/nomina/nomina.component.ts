@@ -27,12 +27,14 @@ export class NominaComponent implements OnInit {
   // tslint:disable-next-line: variable-name
   id_nomina: string;
   nominaUpdate: Nomina;
+  saldoProyecto: number;
 
   // tslint:disable-next-line:variable-name
   constructor( private formBuilder: FormBuilder, private _user: UsuariosService, private _pyt: ProyectosService,
                private active: ActivatedRoute, private router: Router, private utils: Utils,
                public alert: AlertasService, private nominaS: NominaService) {
-                 this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => { this.usuarios = usuarios;  });
+                this.loading = false;
+                this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => { this.usuarios = usuarios;  });
                  this._pyt.cargarProyectos().subscribe((proyectos: Proyecto[]) => {this.proyectos = proyectos; });
                  this.nominaForm = this.formBuilder.group({
                    nombre: ['', Validators.required],
@@ -84,11 +86,10 @@ export class NominaComponent implements OnInit {
       this.alert.formInvalid();
       return ;
     }
-
     if (!this.id_nomina && this.nominaForm.valid) {
       this.nomina.estatus = 'Activo';
-      this.nomina.salarioReal = Number(this.nomina.salario * 1.7);
-      this.proyecto.monto_d = Number(this.saldoDisp) - Number(this.nomina.salarioReal);
+      this.sueldoP();
+      this.proyecto.monto_d = Number(this.saldoDisp) - Number(this.saldoProyecto);
       this._pyt.cudProyectos().doc(this.proyecto.id_proyecto).update(this.proyecto);
       this.nominaS.cudNomina().add(this.nomina);
       this.submitted = false;
@@ -97,13 +98,19 @@ export class NominaComponent implements OnInit {
       this.limpiar();
       }
     if (this.id_nomina && this.nominaForm.valid) {
-        this.nomina.salarioReal = Number(this.nomina.salario * 1.7);
-        this.proyecto.monto_d = (Number(this.saldoDisp) + Number(this.nominaUpdate.salarioReal)) - Number(this.nomina.salarioReal);
-        this._pyt.cudProyectos().doc(this.proyecto.id_proyecto).update(this.proyecto);
-        this.nominaS.cudNomina().doc(this.id_nomina).update(this.nomina);
-        this.submitted = false;
-        this.loading = false;
-        this.router.navigate(['descripcion-proyecto', `${this.proyecto.id_proyecto}`]);
+      const saldoDiaPass = Number(this.nominaUpdate.salarioReal) / 30;
+      const dateIniPass = new Date(this.nominaUpdate.fechaini);
+      const dateEndPass = new Date(this.nominaUpdate.fechafin);
+      const diferencia = dateEndPass.getTime() - dateIniPass.getTime();
+      const daysPass = diferencia / (60 * 60 * 24 * 1000);
+      const saldoProyectoPass = saldoDiaPass *  (daysPass + 1);
+      this.sueldoP();
+      this.proyecto.monto_d = (Number(this.saldoDisp) + Number(saldoProyectoPass)) - Number(this.saldoProyecto);
+      this._pyt.cudProyectos().doc(this.proyecto.id_proyecto).update(this.proyecto);
+      this.nominaS.cudNomina().doc(this.id_nomina).update(this.nomina);
+      this.submitted = false;
+      this.loading = false;
+      this.router.navigate(['descripcion-proyecto', `${this.proyecto.id_proyecto}`]);
       }
   }
 
@@ -129,6 +136,16 @@ valor(nombre) {
       this.proyecto = proyecto;
     }
   });
+}
+
+sueldoP() {
+  const saldoDia = (this.nomina.salario * 1.7) / 30;
+  const dateIni = new Date(this.nomina.fechaini);
+  const dateEnd = new Date(this.nomina.fechafin);
+  const diferencia = dateEnd.getTime() - dateIni.getTime();
+  const days = diferencia / (60 * 60 * 24 * 1000);
+  this.saldoProyecto = saldoDia * (days + 1);
+  this.nomina.salarioReal = this.nomina.salario * 1.7;
 }
 
 }

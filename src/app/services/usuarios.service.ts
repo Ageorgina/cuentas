@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { HttpClient } from '@angular/common/http';
-import { AppState } from '../security/store/reducers/app.reducers';
-import { Store } from '@ngrx/store';
 import { environment } from '../../environments/environment';
 import { UserBase } from '../security/model/UserBase';
-import { AlertasService } from '../services/srv_shared/alertas.service';
-import { usuarioU } from '../general/model/usuario';
+import { usuarioU } from '../general/model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +11,7 @@ import { usuarioU } from '../general/model/usuario';
 export class UsuariosService {
   newPass = '';
 
-  constructor( private db: AngularFirestore, private http: HttpClient, private store: Store<AppState>, private alert: AlertasService  ) {
+  constructor( private db: AngularFirestore, private http: HttpClient) {
   }
 
    cargarUsuarios() {

@@ -57,9 +57,9 @@
                     </label>
                 <div class="between">
                     <div class="divcte ">
-                        <select *ngIf="checked" id="empresa" formControlName="empresa" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
+                        <select *ngIf="checked" id="empresa" formControlName="empresa" (click)="empresaSelected($event.target)" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
                                 <option disabled value=''>Empresa</option>
-                                <option *ngFor="let cte of clientes">{{cte.empresa}}</option>
+                                <option *ngFor="let cte of empresas" >{{cte.empresa}}</option>
                             </select>
                         <select *ngIf="!checked" id="empresa" formControlName="empresa" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
                                 <option disabled value=''>Empresa</option>
@@ -70,7 +70,7 @@
                     <div class="divcte">
                         <select *ngIf="checked" formControlName="resp_cte" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
                             <option disabled value=''>Responsable</option>
-                            <option *ngFor="let cte of clientes">{{cte.nombre}}</option>
+                            <option *ngFor="let cte of clientes" >{{cte.nombre}}</option>
                         </select>
                         <select *ngIf="!checked" formControlName="resp_cte" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
                             <option disabled value=''>Responsable</option>

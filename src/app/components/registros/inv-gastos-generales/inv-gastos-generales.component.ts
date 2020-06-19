@@ -57,7 +57,7 @@ export class InvGastosGeneralesComponent implements OnInit {
 
   ngOnInit() {
 
-
+    this.loading = false;
   }
   borrar( value ) {
     this.loading = true;

@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,7 +6,6 @@ import { Utils } from '../../../general/utils/utils';
 import { AlertasService, AreasService, ArchivosService, UsuariosService } from '../../../services';
 import { FileItem, Usuario, usuarioU, Area } from '../../../general/model';
 import { UserBase } from '../../../security/model/UserBase';
-import { LoginComponent } from '../../../login/login.component';
 import { AuthService } from '../../../security/services/auth.service';
 
 @Component({
@@ -15,7 +14,6 @@ import { AuthService } from '../../../security/services/auth.service';
   styleUrls: ['./usuarios.component.css']
 })
 export class UsuariosComponent {
-  @Output() propagar = new EventEmitter<string>();
   userSrv = new UserBase();
   titulo = 'Registrar Usuarios ASG';
   usuario: Usuario = new Usuario();

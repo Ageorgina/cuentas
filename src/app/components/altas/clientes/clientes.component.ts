@@ -3,8 +3,7 @@ import { FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Utils } from '../../../general/utils/utils';
 import { Area, Cliente, Usuario } from '../../../general/model';
-import { ClientesService, AreasService, AlertasService } from '../../../services';
-import { UsuariosService } from '../../../services/usuarios.service';
+import { ClientesService, AreasService, AlertasService, UsuariosService } from '../../../services';
 
 @Component({
   selector: 'app-clientes',
@@ -36,6 +35,7 @@ export class ClientesComponent {
   constructor( private _cteS: ClientesService, public _areaS: AreasService, private formBuilder: FormBuilder, private _user: UsuariosService,
                private active: ActivatedRoute, private router: Router, public alert: AlertasService, public utils: Utils ) {
                 this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => {
+                  this.loading = false;
                   this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
                   usuarios.filter( usuario => {
                     if ( usuario.correo === this.usuarioLocal['usuario'].username) {

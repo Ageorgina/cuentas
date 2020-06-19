@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { UsuariosService, ArchivosService, ProyectosService, GastosService, AlertasService  } from 'src/app/services';
+import { UsuariosService, ArchivosService, ProyectosService, GastosService, AlertasService  } from '../../../services';
 import { Usuario, Proyecto, FileItem, Reembolso } from '../../../general/model';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { AngularFireStorage } from '@angular/fire/storage';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Utils } from 'src/app/general/utils/utils';
+import { Utils } from '../../../general/utils/utils';
 
 @Component({
   selector: 'app-reembolso',

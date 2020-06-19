@@ -9,7 +9,7 @@
  import { Store } from '@ngrx/store';
  import { AppState } from '../../security/store/reducers/app.reducers';
  import { LoginAction, LogoutAction, DesactivarLoadingAction } from '../../security/store/actions';
- import { UsuariosService } from '../../services/usuarios.service';
+ import { UsuariosService } from '../../services';
  import { Router } from '@angular/router';
 
  @Injectable({providedIn: 'root'})

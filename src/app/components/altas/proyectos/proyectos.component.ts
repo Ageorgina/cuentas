@@ -1,17 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { UsuariosService } from '../../../services/usuarios.service';
-import { ProyectosService } from '../../../services/proyectos.service';
-import { GastosService } from '../../../services/gastos.service';
-import { ClientesService } from '../../../services/clientes.service';
-import { Proyecto } from '../../../general/model/proyecto';
-import { Usuario } from '../../../general/model/usuario';
-import { Cliente } from '../../../general/model/cliente';
-import { Gasto } from '../../../general/model/gasto';
+import { UsuariosService,  ProyectosService, GastosService , ClientesService, AreasService, AlertasService } from '../../../services';
+import { Proyecto, Usuario, Cliente, Gasto } from '../../../general/model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Utils } from '../../../general/utils/utils';
-import { AlertasService } from '../../../services/srv_shared/alertas.service';
-import { AreasService } from '../../../services/areas.service';
 
 @Component({
   selector: 'app-proyectos',
@@ -21,7 +13,7 @@ import { AreasService } from '../../../services/areas.service';
 export class ProyectosComponent implements OnInit {
   titulo = 'Registrar Proyecto';
   usuarios: Usuario[] =  [];
-  clientes: Cliente[] = [];
+  clientes = [];
   proyectosForm: FormGroup;
   proyecto: Proyecto;
   gastos: Gasto[] = [];
@@ -37,6 +29,7 @@ export class ProyectosComponent implements OnInit {
   actualizar = false;
   checked = true;
   areas: any;
+  empresas: Cliente[];
                // tslint:disable-next-line: variable-name
   constructor( private formBuilder: FormBuilder, private _user: UsuariosService, private _proyectoS: ProyectosService,
                // tslint:disable-next-line: variable-name
@@ -44,11 +37,14 @@ export class ProyectosComponent implements OnInit {
                private active: ActivatedRoute, private router: Router, public alert: AlertasService, private utils: Utils,
                ) {
     this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => { this.usuarios = usuarios; });
-    this._cte.cargarClientes().subscribe((cts: Cliente[]) => { this.clientes = cts; } );
+    this._cte.cargarClientes().subscribe((empresas: Cliente[]) => {
+      this.empresas =  empresas;
+
+      });
     this._gst.cargarGastos().subscribe((gastos: Gasto[]) => { this.gastos = gastos; });
     this._areas.cargarAreas().subscribe((areas: any[]) => { this.areas = areas; });
 
-
+    this.loading = false;
     this.proyectosForm = this.formBuilder.group({
       fechaini: ['', Validators.required],
       fechafin: [''],
@@ -93,6 +89,13 @@ export class ProyectosComponent implements OnInit {
 
   ngOnInit() {
     this.loading = false;
+  }
+  empresaSelected(event) {
+    this.empresas.filter( empresa => {
+      if ( event.value === empresa.empresa) {
+        this.clientes.push(empresa);
+      }
+    });
   }
   get fval() {
     return this.proyectosForm.controls;

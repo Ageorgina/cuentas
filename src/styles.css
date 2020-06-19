@@ -42,6 +42,42 @@ div#tabla {
     margin-left: 1%;
 }
 
+input#vacio {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: transparent !important;
+}
+
+input:disabled,
+select:disabled {
+    background-color: #ebebee !important;
+}
+
+input,
+select {
+    border-bottom: 1px solid #ebebee !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    box-shadow: transparent !important;
+    background-color: transparent !important;
+    width: 100% !important;
+    outline: none !important;
+}
+
+h6 {
+    color: #202C4C;
+    font-weight: bold;
+}
+
+#fichero {
+    display: none;
+}
+
+.divcte {
+    width: 100% !important;
+}
+
 
 /**** zoom img ****/
 

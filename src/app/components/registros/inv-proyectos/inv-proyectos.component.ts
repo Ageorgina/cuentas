@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Proyecto, Gasto } from '../../../general/model';
 import { Router } from '@angular/router';
-import { AlertasService } from '../../../services/srv_shared/alertas.service';
-import { GastosService, ProyectosService } from '../../../services';
+import { AlertasService, GastosService, ProyectosService } from '../../../services';
 
 @Component({
   selector: 'app-inv-proyectos',
@@ -12,7 +11,7 @@ import { GastosService, ProyectosService } from '../../../services';
 export class InvProyectosComponent implements OnInit {
   titulo = 'Proyectos';
   headTitle = ['Nombre', 'Descripción', 'Fecha Inicio', 'Fecha Fin', 'Monto Presupuestado',
-               'Monto Disponible', 'Tipo Proyecto', 'Modificar / Eliminar'];
+               'Monto Disponible', 'Tipo Proyecto', 'Modificar'];
   subTh = ['ID Actividad', 'Proceso', 'Cliente', 'Responsable Cliente', 'Responsable ASG', 'Estatus'];
   elements: Proyecto[] = [];
   boton = 'Guardar';

@@ -1,7 +1,7 @@
 
 import { Directive, EventEmitter, HostListener, Input, Output } from '@angular/core';
-import { FileItem } from '../general/model/file-item';
-import { AlertasService } from '../services/srv_shared/alertas.service';
+import { FileItem } from '../general/model';
+import { AlertasService } from '../services';
 
 @Directive({
   selector: '[appNgDropFiles]'

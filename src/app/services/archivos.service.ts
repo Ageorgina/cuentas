@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import { FileItem } from '../general/model/file-item';
+import { FileItem } from '../general/model';
 import { AlertasService } from './srv_shared/alertas.service';
 import { HttpClient } from '@angular/common/http';
 @Injectable({
@@ -32,7 +32,6 @@ export class ArchivosService {
                    ( error ) => {
                     this.alerta.textError = error.message;
                     this.alerta.showError();
-                 //  console.error( 'Error al subir', error );
                   }, () => {
                     uploadTask.snapshot.ref.getDownloadURL().then( downloadURL => {
                       item.url = downloadURL;

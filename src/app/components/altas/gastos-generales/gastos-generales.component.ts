@@ -3,7 +3,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Gasto, Usuario, Proyecto, FileItem } from '../../../general/model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Utils } from '../../../general/utils/utils';
-import { AngularFireStorage } from '@angular/fire/storage';
 import { ArchivosService, AlertasService, ProyectosService, UsuariosService, GastosService } from '../../../services';
 
 @Component({
@@ -44,10 +43,11 @@ export class GastosGeneralesComponent {
   financiero: boolean;
   tesorero: boolean;
   sameU: boolean;
+  estaSobreElemento = false;
 
   // tslint:disable-next-line: variable-name
-  constructor( private _fileS: ArchivosService, private formBuilder: FormBuilder, private _user: UsuariosService, private _pyt: ProyectosService, 
-    private _gastoS: GastosService, private active: ActivatedRoute, private router: Router, private utils: Utils, public alert: AlertasService ) {
+  constructor( private _fileS: ArchivosService,  private _user: UsuariosService, private _pyt: ProyectosService, private _gastoS: GastosService,
+               private active: ActivatedRoute,private formBuilder: FormBuilder, private router: Router, private utils: Utils, public alert: AlertasService ) {
     this.loading = false;
     this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
     this._gastoS.cargarTipoGtos().subscribe((tipoGtos: any[]) => { this.tipoGto = tipoGtos; });

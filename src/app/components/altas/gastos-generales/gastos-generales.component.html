@@ -19,11 +19,9 @@
                 <p #error id="error" *ngIf="submitted && fval.fecha.invalid" class="mt-2">*Este campo no puede ir vacío</p>
             </div>
             <br>
-            <div class="around">
-                <div class="mt-3 col-md-3">
-                    <label class="control-label" for="montodisp">Monto Disponible: </label>
-                    <input disabled class="form-control-sm" id="montodisp" value="{{saldoDisp |currency}}" type="text">
-                </div>
+            <div class="mt-3 col-md-3">
+                <label class="control-label" for="montodisp">Monto Disponible: </label>
+                <input disabled class="form-control-sm" id="montodisp" value="{{saldoDisp |currency}}" type="text">
             </div>
         </div><br>
         <div class="around">

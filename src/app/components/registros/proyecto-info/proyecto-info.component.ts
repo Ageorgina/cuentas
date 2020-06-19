@@ -22,11 +22,13 @@ export class ProyectoInfoComponent {
                // tslint:disable-next-line: variable-name
   constructor( private _proyectoS: ProyectosService, private gastoS: GastosService, private nominaS: NominaService,
                private active: ActivatedRoute, private router: Router ) {
-    this.id_proyecto = this.active.snapshot.paramMap.get('id_proyecto');
+                this.loading = false;
+                this.id_proyecto = this.active.snapshot.paramMap.get('id_proyecto');
     this._proyectoS.cudProyectos().doc(this.id_proyecto).valueChanges().subscribe((upP: Proyecto) => {
       this.updateP = upP;
       this.loading = false;
     });
+    this.loading = false;
     this.gastoS.cargarGastos().subscribe((gastos: Gasto[]) => {
       gastos.filter(gasto => {
         if (gasto.proyecto === this.updateP.nombre) {
@@ -48,13 +50,12 @@ export class ProyectoInfoComponent {
     this.nominaS.cargarNomina().subscribe((nominas: Nomina[]) => {
       nominas.filter(nomina => {
         if (nomina.proyecto === this.updateP.nombre) {
-          console.log('nominas', nomina)
           this.nominas.push(nomina);
         } else {
           return ;
         } }); });
       }
 
-      actualizar(value) {     this.router.navigate(['registro-nomina', `${value.id_nomina}`]); }
+      actualizar(value) { this.router.navigate(['registro-nomina', `${value.id_nomina}`]); }
 
 }
