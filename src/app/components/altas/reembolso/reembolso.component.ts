@@ -37,6 +37,7 @@ export class ReembolsoComponent implements OnInit {
   headTitle = ['Nombre', 'Progreso'];
   comprobante: string;
   arrayUrl: any[] = [];
+  botonCancelar = 'Cancelar';
   aprobar: any;
   usuarioLocal: any;
   usuarioActual: any;
@@ -53,6 +54,7 @@ export class ReembolsoComponent implements OnInit {
                private user: UsuariosService, private formBuilder: FormBuilder, private router: Router,
                private active: ActivatedRoute,  private utils: Utils, public alert: AlertasService ) {
                  this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
+
                  this.user.cargarUsuarios().subscribe((usuarios: Usuario[]) => {
                   this.usuarios = usuarios;
                   usuarios.filter( usuario => {
@@ -72,6 +74,8 @@ export class ReembolsoComponent implements OnInit {
                    estatus: [''],
                    comprobantes: [''],
                    solicitante: [''],
+                   observacionesaprobador: [''],
+                   observacionespagado: [''],
                    proyecto: ['', Validators.required]
                   });
                  this.id_reembolso = this.active.snapshot.paramMap.get('id_reembolso');
@@ -87,29 +91,43 @@ export class ReembolsoComponent implements OnInit {
                     this.reembolsoForm.get(['solicitante']).setValue(this.updateR.solicitante);
                     this.reembolsoForm.get(['estatus']).setValue(this.updateR.estatus);
                     this.reembolsoForm.get(['proyecto']).setValue(this.updateR.proyecto);
+                    this.reembolsoForm.get(['observacionesaprobador']).setValue(this.updateR.observacionesaprobador);
+                    this.reembolsoForm.get(['observacionespagado']).setValue(this.updateR.observacionespagado);
                     this.sameU = this.usuarioActual['correo'] === this.updateR.solicitante;
+
                     if (this.sameU) {
                       this.reembolsoForm.controls['estatus'].disable();
+                      this.reembolsoForm.controls['observacionesaprobador'].disable();
+                      this.reembolsoForm.controls['observacionespagado'].disable();
+                      if (this.updateR.estatus !== 'Solicitar') {
+                        this.reembolsoForm.disable();
+                        this.botonCancelar = 'Regresar';
+                      }
                     }
-                    if (this.updateR.estatus !== 'Solicitar') {
+                    if (!this.sameU) {
                       this.reembolsoForm.disable();
                       this.reembolsoForm.controls['estatus'].enable();
-                    }
-                    if (this.updateR.estatus === 'Pagado') {
-                      this.reembolsoForm.get(['estatus']).setValue('Pagado');
-                      this.reembolsoForm.disable();
-                    }
-                    if ((this.aprobador  || this.tesorero) && !this.sameU) {
-                      this.reembolsoForm.disable();
-                      this.reembolsoForm.controls['estatus'].enable();
+                      if ( this.aprobador) {
+                        this.reembolsoForm.controls['observacionesaprobador'].enable();
+                      } else {
+                        this.reembolsoForm.controls['observacionespagado'].enable();
+                      }
                     }
                   });
                 } else {
                 this.reembolsoForm.get(['estatus']).setValue('Solicitar');
+                this.reembolsoForm.get(['proyecto']).setValue('Proyecto');
                 this.reembolsoForm.controls['estatus'].disable();
+                this.reembolsoForm.controls['observacionesaprobador'].disable();
+                this.reembolsoForm.controls['observacionespagado'].disable();
                 }
                  this._pyt.cargarProyectos().subscribe((proyectos: Proyecto[]) => {
-                  this.proyectos = proyectos; });
+                  this.proyectos = proyectos;
+                  this.proyectos.filter(proyecto => {
+                    if(this.id_reembolso){
+                      if (this.updateR.proyecto === proyecto.nombre ) { this.project = proyecto; } }
+                    });
+                 });
                  this.__gastoS.cargarTipoGtos().subscribe((tipoGtos: any[]) => { this.tipoGto = tipoGtos; });
   }
 
@@ -145,18 +163,27 @@ export class ReembolsoComponent implements OnInit {
       this.reembolso = this.reembolsoForm.value;
       this.reembolso.solicitante = this.updateR.solicitante;
       this.submitted = false;
-      if (this.reembolso.estatus === ('Aprobado')  ) {
+      if (this.reembolso.estatus !== 'Pagado'  ) {
+      this.proyecto = this.project;
       this.reembolso.aprobo = this.usuarioLocal.usuario.username;
+      this.reembolso.fechaAprobador = new Date();
+      this.reembolso.observacionespagado = '';
       }
-      if (this.reembolso.estatus === ('Pagado') ) {
+      if (this.reembolso.estatus === 'Pagado' ) {
+        this.proyecto = this.project;
+        console.log('this.proyecto', this.proyecto)
         this.reembolso.aprobo = this.updateR.aprobo;
+        this.reembolso.fechaPagado = new Date();
         this.reembolso.pago = this.usuarioLocal.usuario.username;
+        this.proyecto['monto_d'] = Number(this.proyecto['monto_d']) - Number(this.updateR.cantidad);
       }
       if (this.reembolso.estatus === ('Solicitar') ) {
         this.reembolso.aprobo = '';
         this.reembolso.pago = '';
+
       }
       this.reembolso['comprobantes'] = this.updateR.comprobantes;
+      this._pyt.cudProyectos().doc(this.proyecto.id_proyecto).update(this.proyecto);
       this.__gastoS.cudReembolsos().doc(this.id_reembolso).update(this.reembolso);
       this.alert.showSuccess();
       this.loading = false;
@@ -185,6 +212,7 @@ export class ReembolsoComponent implements OnInit {
   this.loading = false;
   this.reembolsoForm.reset();
   this.reembolsoForm.get(['estatus']).setValue('Solicitar');
+  this.reembolsoForm.get(['proyecto']).setValue('Proyecto');
   this.archivos = [];
   }
 
@@ -193,7 +221,7 @@ export class ReembolsoComponent implements OnInit {
   async cargarArchivos() {
   this._fileS.CARPETA_FILES = 'comprobantes';
   let algo: FileItem[] = await new Promise((resolve, reject) => {
-    this._fileS.cargarArchivosFb( this.archivos).finally(() => { resolve( this.archivos); }).catch(() => reject([])); 
+    this._fileS.cargarArchivosFb( this.archivos).finally(() => { resolve( this.archivos); }).catch(() => reject([]));
     });
   }
 
@@ -208,7 +236,10 @@ export class ReembolsoComponent implements OnInit {
   this.archivos.splice( archivo, 1);
   }
   valor(nombre) {
-  this.proyectos.filter(proyecto => {
-    if (nombre === proyecto.nombre) { this.proyecto = proyecto; } });
+    console.log('nombre', nombre)
+    this.proyectos.filter(proyecto => {
+    console.log('proyecto', proyecto)
+    if (nombre === proyecto.nombre) { this.proyecto = proyecto;
+                                      console.log(':D', this.proyecto) } });
   }
   }

@@ -13,12 +13,21 @@
                 <p id="error" *ngIf="submitted && fval.proyecto.invalid">*Este campo no puede ir vacío</p>
             </div>
             <br>
+            <div *ngIf="tesorero" class="mt-3 col-md-3">
+                <label class="control-label" for="jefe">Solicitante:</label><br>
+                <select id="jefe" formControlName="solicitante" class="form-control">
+                    <option disabled>ASG</option>
+                    <option *ngFor="let jefe of jefes" >{{jefe.correo}} </option>
+                  </select>
+            </div>
+            <br>
             <div class="mt-3 col-md-3">
                 <label class="control-label" for="fecha">Fecha: <span><i class="far fa-calendar-alt "></i></span> </label>
                 <input class="form-control" id="fecha" min="proyecto.fechaini" formControlName="fecha" type="date" data-toggle="tooltip " title="*Campo obligatorio ">
                 <p #error id="error" *ngIf="submitted && fval.fecha.invalid" class="mt-2">*Este campo no puede ir vacío</p>
             </div>
             <br>
+
             <div class="mt-3 col-md-3">
                 <label class="control-label" for="montodisp">Monto Disponible: </label>
                 <input disabled class="form-control-sm" id="montodisp" value="{{saldoDisp |currency}}" type="text">
@@ -47,23 +56,33 @@
             <div class="mt-3 col-md-3">
                 <label class="control-label">Reembolso: </label><br>
                 <label class="switch">
-                        <input type="checkbox" name="check" id="check" formControlName="reembolso">
+                        <input type="checkbox" name="check" id="check" formControlName="reembolso" (click)="cambio($event.target)">
                         <span class="slider round"></span>
                       </label>
             </div>
             <br>
             <div class="mt-3 col-md-3">
-                <label class="control-label mr-2" for="estatus">Estatus:</label><br>
-                <select id="estatus" formControlName="estatus">
-                    <option *ngIf="!aprobador && !id_gasto" value="Solicitar">Solicitar</option>
-                    <option  disabled value='Aprobado'>Aprobado</option>
-                    <option *ngIf="!aprobador" value="Pagado">Pagado</option>
-                  </select>
+                <label class="control-label mr-2">Estatus:</label><br>
+                <select formControlName="estatus">
+                    <option *ngIf="updateG"  disabled [value]="updateG?.estatus" >{{updateG?.estatus}}</option>
+                    <option *ngIf="!id_gasto" value='Aprobado'>Aprobado</option>
+                    <option value='Pagado'>Pagado</option>
+                </select>
                 <p id="error" *ngIf="submitted && fval.estatus.invalid">*Este campo no puede ir vacío</p>
             </div>
 
         </div> <br>
-        <label class="class ml-5" *ngIf="!id_gasto">Subir comprobantes: </label><br>
+        <div class="around">
+            <div class="mt-3 class">
+                <label class="control-label" for="observaciones">Observaciones: </label>
+                <input class="form-control-sm" id="observacionesaprobador" placeholder="Observaciones" formControlName="observacionesaprobador" type="text" data-toggle="tooltip" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.observacionesaprobador.errors }"><br><br>
+                <input *ngIf=" (!aprobador && id_gasto)   || (updateG?.pago !== undefined && updateG?.observacionespagado !== (undefined || '') && sameU)" class="form-control-sm" id="observacionespagado" placeholder="Observaciones del tesorero o financiero" formControlName="observacionespagado"
+                    type="text" data-toggle="tooltip" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.observacionespagado.errors }">
+            </div>
+            <br>
+        </div>
+        <br>
+        <label class="class ml-5 mt-3" *ngIf="!id_gasto">Subir comprobantes: </label><br>
         <div *ngIf="!id_gasto" class="around">
             <div *ngIf="(archivos.length <=  2)" class="drop-img mt-3 col-md-4">
                 <div appNgDropFiles [archivos]="archivos" (mouseSobre)="estaSobreElemento = $event; cargarArchivos();" [ngClass]="{ 'file-over': estaSobreElemento }" class="well drop-zone">
@@ -100,9 +119,9 @@
         </div>
         <br>
         <div *ngIf="actualizar" class="center mt-3">
-            <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class="mr-3 fas fa-times"></i>
-                Cancelar</button>
-            <button type="submit" id="eliminar" class="btn btn-outline-warning"><i class="mr-3 fas fa-sync-alt"></i>
+            <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i *ngIf=" botonCancelar === 'Cancelar'" class="mr-3 fas fa-times"></i><i *ngIf=" botonCancelar !== 'Cancelar'"  class=" mr-3 fa fa-arrow-left" aria-hidden="true"></i>
+                {{botonCancelar}} </button>
+            <button *ngIf=" botonCancelar === 'Cancelar'" type="submit" id="eliminar" class="btn btn-outline-warning"><i class="mr-3 fas fa-sync-alt"></i>
                     Actualizar</button>
         </div>
         <div class="center mt-3">

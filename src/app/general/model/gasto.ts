@@ -18,5 +18,9 @@ export class Gasto {
     solicitante: string;
     aprobo: string;
     pago: string;
+    fechaAprobo: Date;
+    fechaPago: Date;
+    observacionesaprobador: string;
+    observacionespagado: string;
 }
 

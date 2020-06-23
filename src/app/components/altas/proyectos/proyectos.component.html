@@ -52,27 +52,28 @@
             <div id="cte" class="col-md-4 mt-3">
                 <label class="control-label mr-3">Cliente: </label>
                 <label class="switch mr-3">
-                        <input type="checkbox" name="check" id="check" value="true" checked (change)="cambiocte($event)" >
+                        <input type="checkbox" formControlName="interno" (change)="cambiocte($event)" >
                         <span class="slider round"></span>
                     </label>
                 <div class="between">
                     <div class="divcte ">
-                        <select *ngIf="checked" id="empresa" formControlName="empresa" (click)="empresaSelected($event.target)" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
+                        <select *ngIf="proyectosForm.value.interno !== true " id="empresa" formControlName="empresa" (click)="empresaSelected($event.target)" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
                                 <option disabled value='Empresa'>Empresa</option>
                                 <option *ngFor="let cte of empresas" >{{cte.empresa}}</option>
                             </select>
-                        <select *ngIf="!checked" id="empresa" formControlName="empresa" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
+                        <select *ngIf="proyectosForm.value.interno === true" id="empresa" formControlName="empresa" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
                                 <option disabled value='Empresa'>Empresa</option>
-                                <option  value='ASG'>ASG</option>
+                                <option value='ASG'>ASG</option>
                             </select>
                     </div>
                     <br>
                     <div class="divcte">
-                        <select *ngIf="checked" formControlName="resp_cte" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
+                        <select *ngIf="proyectosForm.value.interno !== true " formControlName="resp_cte" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
                             <option disabled value='Responsable'>Responsable</option>
-                            <option *ngFor="let cte of clientes" >{{cte.nombre}}</option>
+                            <option *ngIf="updateP" style="color: gray;">{{updateP?.resp_cte}}</option>
+                            <option *ngFor="let cte of clientes">{{cte.nombre}} {{cte.ap_p}}</option>
                         </select>
-                        <select *ngIf="!checked" formControlName="resp_cte" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
+                        <select *ngIf="proyectosForm.value.interno === true" formControlName="resp_cte" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
                             <option disabled value='Responsable'>Responsable</option>
                             <option *ngFor="let area of areas">{{area.nombre_area}}</option>
                         </select>

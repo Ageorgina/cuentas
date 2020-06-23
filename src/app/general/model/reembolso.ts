@@ -15,6 +15,10 @@ export class Reembolso {
     comprobantes: string;
     arrComprobantes: string[];
     pago: string;
+    fechaAprobador: Date;
+    fechaPagado: Date;
+    observacionesaprobador: string;
+    observacionespagado: string;
     constructor() {
         this.estatus = 'Solicitar';
     }

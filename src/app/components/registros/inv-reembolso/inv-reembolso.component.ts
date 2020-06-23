@@ -19,6 +19,8 @@ export class InvReembolsoComponent {
   admin: string;
   rolU: string;
   tesorero: string;
+  aprobador: boolean = false;
+  financiero: string;
   usuarioLocal: any;
   usuarioActual: any;
   tipo: string;
@@ -31,9 +33,9 @@ export class InvReembolsoComponent {
                   usuarios.filter( usuario => {
                   if (this.usuarioLocal.usuario.username === usuario['correo'] ) {
                     this.usuarioActual = usuario;
+                    this.loading = false;
                     this._gstS.cargarReembolsos().subscribe((reembolsos: Reembolso[]) => {
                       reembolsos.filter( reembolso => {
-                        this.loading = false;
                         if (this.usuarioActual.rol !== 'Usuario') {
                           if ( this.usuarioActual['rol'] === 'Aprobador') {
                             if (reembolso.estatus === 'Solicitar') {

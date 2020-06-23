@@ -12,6 +12,7 @@ export class Oficina {
     id_partida: Date;
     comprobantes: string;
     arrComprobantes: string[];
+    observaciones: string;
 }
 export class Partida {
     fecha: Date;

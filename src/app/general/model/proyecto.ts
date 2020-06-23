@@ -27,5 +27,6 @@ export class Proyecto {
     fechafin: string;
     // tslint:disable-next-line: variable-name
     monto_r: number;
+    interno: boolean;
 
   }

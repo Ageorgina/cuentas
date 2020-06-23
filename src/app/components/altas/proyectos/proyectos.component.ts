@@ -60,6 +60,7 @@ export class ProyectosComponent implements OnInit {
       proceso: [''],
       id_act: [''],
       desc_act: [''],
+      interno: ['']
   });
     this.id_proyecto = this.active.snapshot.paramMap.get('id_proyecto');
     if (this.id_proyecto) {
@@ -82,6 +83,7 @@ export class ProyectosComponent implements OnInit {
         this.proyectosForm.get(['id_act']).setValue(this.updateP.id_act);
         this.proyectosForm.get(['desc_act']).setValue(this.updateP.desc_act);
         this.proyectosForm.get(['monto_d']).setValue(this.updateP.monto_d);
+        this.proyectosForm.get(['interno']).setValue(this.updateP.interno);
       });
       }
       this.proyectosForm.get(['empresa']).setValue('Empresa');
@@ -113,11 +115,11 @@ export class ProyectosComponent implements OnInit {
       return ;
     }
     if (this.id_proyecto && this.proyectosForm.valid) {
-
       this.submitted = false;
       this.proyecto = this.proyectosForm.value;
-      this.monto_d = this.proyectosForm.value.monto_p; // pediente
-      this.proyectosForm.value.monto_d = this.monto_d;
+      if (this.proyecto.monto_p !== this.updateP.monto_p) {
+        this.proyecto.monto_d = Number(this.proyecto.monto_p)  -  (Number(this.updateP.monto_p) - Number(this.updateP.monto_d) );
+      }
       this._proyectoS.cudProyectos().doc(this.id_proyecto).update(this.proyecto);
       this.router.navigate(['proyectos']);
       this.alert.showSuccess();

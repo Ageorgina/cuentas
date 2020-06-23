@@ -10,7 +10,6 @@ import { AlertasService, DescargasService, UsuariosService, GastosService } from
 })
 export class InvGastosGeneralesComponent implements OnInit {
   titulo = 'Gastos Generales';
-  headTitle = ['Solicitante', 'Fecha', 'Monto', 'Motivo', 'Tipo', 'Proyecto', 'Estatus', 'Comprobantes', 'Modificar'];
   elements: Gasto[] = [];
   loading = true;
   usuarioLocal: any;
@@ -23,47 +22,44 @@ export class InvGastosGeneralesComponent implements OnInit {
   // tslint:disable-next-line: variable-name
   constructor( private _gstS: GastosService, private _user: UsuariosService, private router: Router,
                private alert: AlertasService, private descargas: DescargasService ) {
-
-    this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
-    this._gstS.cargarGastos().subscribe((gastos: Gasto[]) => {
-                this._user.cargarUsuarios().subscribe( (usuarios: Usuario[]) => {
-                  usuarios.filter(usuario => {
-                    this.sameU = usuario.correo === this.usuarioLocal['usuario'].username;
-                    if (this.usuarioLocal['usuario'].username === usuario.correo) {
-                      this.usuarioActual = usuario;
-                    }
-                    gastos.filter(registro => {
-                      if (this.sameU) {
-                        if ( (this.usuarioActual.correo === registro.solicitante) || registro.estatus === 'Aprobado' )  {
-                          if (this.usuarioActual.rol === 'Tesorero' ||  this.usuarioActual.rol === 'Financiero') {
-                            this.loading = false;
-                            this.elements.push(registro);
-                            registro.arrComprobantes = registro.comprobantes.split(',');
-                          }
-                          }
-                        if (this.usuarioActual.rol === 'Administrador')  {
-                          this.loading = false;
-                          this.elements.push(registro);
-                          registro.arrComprobantes = registro.comprobantes.split(',');
+                this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
+                this._user.cargarUsuarios().subscribe(usuarios => {
+                 usuarios.filter( usuario => {
+                 if (this.usuarioLocal.usuario.username === usuario['correo'] ) {
+                   this.usuarioActual = usuario;
+                   this._gstS.cargarGastos().subscribe((gastos: Gasto[]) => {
+                     gastos.filter( gasto => {
+                       this.loading = false;
+                       if (this.usuarioActual.rol !== 'Aprobador') {
+                        if (this.usuarioActual.correo === gasto.solicitante || gasto.reembolso === true) {
+                         if (gasto.reembolso === true) {
+                          this.elements.push(gasto);
+                          gasto['arrComprobantes'] = gasto['comprobantes'].split(',');
+                         }
                         }
                       } else {
-                        this.loading = false;
+                         if ( gasto.solicitante === this.usuarioActual.correo ) {
+                           this.elements.push(gasto);
+                           gasto['arrComprobantes'] = gasto['comprobantes'].split(',');
+                       }
                       }
-                });
-                    });
-                  });
-                });
-                }
+                 });
+               });
+             }
+           });
+          });
+        }
 
   ngOnInit() {
-
     this.loading = false;
   }
   borrar( value ) {
     this.loading = true;
-    this._gstS.cudGastos().doc(value.id_gasto).delete();
+    this.loading = true;this._gstS.cudGastos().doc(value.id_gasto).delete().finally(() => {
     this.alert.showSuccess();
     this.loading = false;
+    this.router.navigate(['registro-gastos']);
+    });
   }
 
   actualizar(value) {

@@ -5,7 +5,16 @@
     <table class="table">
         <thead>
             <tr>
-                <th *ngFor="let head of headTitle">{{head}}</th>
+                <th>Solicitante</th>
+                <th>Fecha</th>
+                <th>Monto</th>
+                <th>Motivo</th>
+                <th>Tipo gasto</th>
+                <th>Proyecto</th>
+                <th *ngIf="!aprobador">Aprobo</th>
+                <th>Estatus</th>
+                <th>Comprobantes</th>
+                <th>Modificar</th>
             </tr>
         </thead>
         <tbody>
@@ -16,6 +25,7 @@
                 <td>{{el.motivo}}</td>
                 <td>{{el.tipo_gasto}}</td>
                 <td>{{el.proyecto}}</td>
+                <td *ngIf="!aprobador">{{el.aprobo}}</td>
                 <td>{{el.estatus}}</td>
                 <td>
                     <button class="btn btn-outline-info btn-sm" data-toggle="modal" [attr.data-target]="'#'+el.id_gasto"> Ver comprobantes ...
@@ -37,7 +47,7 @@
 </td>
 <td>
     <button type="button" class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
-    <button *ngIf="usuarioActual.rol==='Administrador' && el.estatus !=='Pagado'" type=" button " class="btn btn-outline-danger btn-sm " (click)="borrar(i) "> <i class="fas fa-trash-alt "></i> Eliminar</button>
+    <button *ngIf="usuarioActual.rol==='Administrador' || (el.estatus !=='Pagado' && sameU)" type=" button " class="btn btn-outline-danger btn-sm " (click)="borrar(i) "> <i class="fas fa-trash-alt "></i> Eliminar</button>
 </td>
 </tr>
 

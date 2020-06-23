@@ -31,7 +31,7 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 
 
 import { environment } from '../environments/environment';
-import { NgDropFilesDirective } from './directives/ng-drop-files.directive';
+import { NgDropFilesDirective } from './general/directives/ng-drop-files.directive';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './security/logout/logout.component';
 import { ReembolsoComponent } from './components/altas/reembolso/reembolso.component';
