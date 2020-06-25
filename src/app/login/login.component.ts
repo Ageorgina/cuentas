@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
   return1Url: string;
   return2Url: string;
   return3Url: string;
+  return4Url: string;
   errorText: string;
   search: any;
   stringSearch: string;
@@ -55,6 +56,7 @@ export class LoginComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/registro-reembolso';
     this.return2Url = this.route.snapshot.queryParams.return2Url || '/registro-gastos';
     this.return3Url = this.route.snapshot.queryParams.return3Url || '/reembolsos';
+    this.return4Url = this.route.snapshot.queryParams.return4Url || '/registro-usuarios';
   }
 
 
@@ -81,7 +83,7 @@ export class LoginComponent implements OnInit {
     this.validar();
     }
     );
-  } else{
+  } else {
     this.loading = false;
     this.alert.vaciosError();
   }
@@ -107,7 +109,6 @@ export class LoginComponent implements OnInit {
                   if (this.f.username.errors && !this.f.password.errors) {
                     this.alert.invalidUser();
                   } else {
-                    console.log('entro I no existe')
                     if (this.correo !== this.f.username.value && !this.f.password.errors) {
                       this.alert.userDoesntExist();
                     }
@@ -122,12 +123,26 @@ export class LoginComponent implements OnInit {
                 } else if ( data.access_token) {
                   this.loading = false;
                   if (this.usuarioL['rol'] === 'Usuario') {
-                  this.router.navigate([this.returnUrl]);
+                    if (this._authS.update === true ) {
+                      this.router.navigate(['usuarios']);
+                     } else {
+                      this.router.navigate([this.returnUrl]);
+                     }
                   } else {
                     if (this.usuarioL['rol'] === 'Financiero') {
+                      if (this._authS.update === true ) {
+                        this.router.navigate(['usuarios']);
+                       } else {
                       this.router.navigate([this.return3Url]);
+                       }
                     } else {
-                  this.router.navigate([this.return2Url]);
+                      if (this._authS.activo === true && this._authS.update !== true ) {
+                        this.router.navigate([this.return4Url]);
+                      } else if (this._authS.update === true ) {
+                        this.router.navigate(['usuarios']);
+                       } else {
+                        this.router.navigate([this.return2Url]);
+                      }
                 }
               }
             }

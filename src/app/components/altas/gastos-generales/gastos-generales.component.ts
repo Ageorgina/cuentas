@@ -218,6 +218,7 @@ export class GastosGeneralesComponent {
     this.gastosForm.get(['estatus']).setValue('Pagado');
     this.gastosForm.get(['proyecto']).setValue('Proyecto');
     this.gastosForm.get(['tipo_gasto']).setValue('Tipo gasto');
+    this.gastosForm.get(['solicitante']).setValue('ASG');
   }
 
   async cargarArchivos() {

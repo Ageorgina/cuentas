@@ -290,9 +290,7 @@ export class RegistroOficinaComponent {
       if (result.value) {
       this.gstS.cudPartida().doc(this.partidaActual.id_partidafb).update(this.modificado);
       this.regresar();
-      Swal.fire(
-      'Exitoso'
-      );
+      this.alert.showSuccess();
       }
       });
   }

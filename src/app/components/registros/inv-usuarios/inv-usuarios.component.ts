@@ -11,7 +11,7 @@ import { AlertasService, UsuariosService } from '../../../services';
 export class InvUsuariosComponent implements OnInit {
   titulo = 'Usuarios ASG';
   headTitle = ['Nombre', 'Rol', 'Área', 'Jefe Inmediato', 'Correo', 'Puesto','Modificar'];
-  elements: Usuario[] = [];
+  elements: Usuario[];
   usuario = Usuario;
   loading = true;
   usuariosConsultas: any[];
@@ -25,15 +25,14 @@ export class InvUsuariosComponent implements OnInit {
   tesorero: string;
 
   // tslint:disable-next-line: variable-name
-  constructor( private _user: UsuariosService,
-               private router: Router,
-               private alert: AlertasService) {
+  constructor( private _user: UsuariosService, private router: Router) {
                 this.loading = false;
                 this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
                 this._user.cargarUsuarios().subscribe( (usuarios: Usuario[]) => {
                   usuarios.filter(usuario => {
                     this.sameU = usuario.correo === this.usuarioLocal['usuario'].username;
                     if (this.sameU) {
+                      this.elements = [];
                     if (usuario.rol === 'Usuario') {
                       this.rolU = usuario.rol;
                       this.elements.push(usuario);
@@ -42,10 +41,14 @@ export class InvUsuariosComponent implements OnInit {
                           this.admin = usuario.rol;
                           this.elements = usuarios;
                           return;
+                         } else if ( usuario.rol === 'Financiero') {
+                          this.elements.push(usuario);
+                         } else {
+                          this.tesorero = usuario.rol;
+                          this.elements = usuarios;
+                          return;
                          }
-                         this.tesorero = usuario.rol;
-                         this.elements = usuarios;
-                         return;
+
                       }
                     }
                   });

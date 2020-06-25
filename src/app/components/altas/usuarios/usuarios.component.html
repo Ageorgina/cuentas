@@ -8,6 +8,7 @@
                 <div class="col-md-3 mt-3">
                     <label class="control-label" for="ap_p">Apellido Paterno: </label>
                     <input class="form-control-sm" id="ap_p" placeholder="Apellido Paterno" formControlName="ap_p" type="text" data-toggle="tooltip" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.ap_p.errors }">
+                    <p id="error" class="error" *ngIf="submitted && fval.ap_p.invalid">*Este campo no puede ir vacío</p>
                 </div>
                 <div class="col-md-3 mt-3">
                     <label class="control-label" for="ap_m">Apellido Materno: </label>
@@ -17,18 +18,26 @@
                 <div class="col-md-3 mt-3">
                     <label class="control-label" for="nombre">Nombre(s): </label>
                     <input class="form-control-sm" id="nombre" placeholder="Nombre(s)" formControlName="nombre" type="text" data-toggle="tooltip" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.nombre.errors }">
+                    <p id="error" class="error" *ngIf="submitted && fval.ap_m.invalid">*Este campo no puede ir vacío</p>
                 </div>
             </div><br>
             <div class="around">
                 <div class="col-md-3 mt-3">
-                    <label class="control-label" for="correo">Correo: </label>
+                    <label class="control-label" for="correo">Correo: </label><br>
                     <input class="form-control-sm" id="correo" placeholder="Correo" formControlName="correo" type="email" data-toggle="tooltip" title="*Campo obligatorio" [ngClass]="{ 'is-invalid': submitted && fval.correo.errors }">
                     <p id="error" class="error" *ngIf="userForm.get('correo').hasError('email')">*Correo Invalido</p>
-                </div>
+                    <p id="error" class="error" *ngIf=" submitted && userForm.get('correo').hasError('required')">*Este campo no puede ir vacío</p>
+                </div><br>
+                <div *ngIf="tesorero || rolU || financiero" class="col-md-3 mt-3">
+                    <input type="text" id="vacio" disabled>
+                </div> <br>
                 <div class="col-md-3 mt-3">
-                    <label class="control-label" for="password">Contraseña: </label>
-                    <input class="form-control-sm" minlength="6" (change)="cambio($event)" id="password" placeholder="Contraseña" formControlName="password" type="text" data-toggle="tooltip" title="*Min 6 caracteres" [ngClass]="{ 'is-invalid': submitted && fval.password.errors }">
+                    <label class="control-label" for="password">Contraseña: </label><br>
+                    <input class="form-control-sm" minlength="6" (change)="cambio($event.target.value)" id="password" placeholder="Contraseña" formControlName="password" type="text" data-toggle="tooltip" title="*Min 6 caracteres" [ngClass]="{ 'is-invalid': submitted && fval.password.errors }">
+                    <p id="error" class="error" *ngIf=" submitted && userForm.get('password').hasError('required')">*Este campo no puede ir vacío</p>
+                    <p id="error" class="error" *ngIf=" submitted && userForm.get('password').hasError('minlength')">Mínimo 6 caracteres</p>
                 </div>
+                <br>
                 <div *ngIf="admin || aprobador" class="col-md-3 mt-3">
                     <label class="control-label" for="resp_area">Personal a su cargo: </label><br>
                     <label class="switch">
@@ -44,20 +53,20 @@
                      <option disabled value='Jefe inmediato'>Jefe inmediato</option> 
                      <option *ngFor="let resp of usuarios">{{resp.nombre}}</option> 
                      </select>
-                    <p id="error" *ngIf="submitted && fval.resp_asg.invalid">*Este campo no puede ir vacío</p>
+                    <p id="error" *ngIf="submitted && (fval.resp_asg.value === 'Jefe inmediato')">*Este campo no puede ir vacío</p>
                 </div><br>
-                <div class="col-md-2 mt-3">
+                <div class="col-md-3 mt-3">
                     <input type="text" id="vacio" disabled>
                 </div> <br>
                 <div class="col-md-3 mt-3">
                     <label class="control-label" for="area">Área: </label><br>
                     <select id="area" formControlName="area" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio">
-                        <option disabled value='Área'>Área</option>
+                        <option *ngIf="!id_user" disabled value='Área'>Área</option>
+                        <option *ngIf="userU"  disabled [value]="updateU?.area" >{{updateU?.area}}</option>
                         <option *ngFor="let area of areas">{{area.nombre_area}}</option>
                     </select>
-                    <p id="error" *ngIf="submitted && fval.area.invalid">*Este campo no puede ir vacío</p>
+                    <p id="error" *ngIf="submitted && (fval.area.value === 'Área')">*Este campo no puede ir vacío</p>
                 </div>
-
             </div>
 
             <div *ngIf="admin || aprobador" class="around">
@@ -71,15 +80,16 @@
                         <option value="Tesorero">TESORERO</option>
                         <option value="Usuario">USUARIO</option>
                     </select>
-                    <p id="error" *ngIf="submitted && fval.area.invalid">*Este campo no puede ir vacío</p>
+                    <p id="error" *ngIf="submitted && (fval.rol.value === 'Rol')">*Este campo no puede ir vacío</p>
                 </div>
                 <br>
-                <div *ngIf="!id_user" class="mt-3 col-md-2"><input type="text" id="vacio" disabled></div>
+                <div *ngIf="!id_user || activado===true" class="mt-3 col-md-3"><input type="text" id="vacio" disabled></div>
                 <br>
                 <div class="col-md-3 mt-3">
-                    <label class="control-label" for="puesto">Puesto: </label>
+                    <label class="control-label" for="puesto">Puesto: </label><br>
                     <input class="form-control-sm" id="puesto" placeholder="Puesto" formControlName="puesto" type="text" data-toggle="tooltip" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid ': submitted &&
                 fval.puesto.errors }">
+                    <p id="error" *ngIf="submitted && (fval.puesto.value === '')">*Este campo no puede ir vacío</p>
                 </div>
                 <div *ngIf="admin && activado===false" class="col-md-3 mt-3">
                     <label class="control-label" for="activo">Activo: </label><br>
@@ -91,19 +101,26 @@
 
             </div>
 
-            <div *ngIf="sameU" class="col-md-5 mt-3">
-                <h6>Selecciona una imagen de usuario [Obligatoria]</h6>
-                <div id="imagen">
-                    <input id="fichero" type="file" type="file" accept="image/*" (change)="avatar($event)">
-                    <label for="fichero" class="circle"></label>
-                </div>
-                <div>
-                    <input *ngIf="archivos.length>= 1" value="{{imgUser.nombreArchivo}}">
-                </div>
+            <div class="around">
+                <div *ngIf="sameU" class="col-md-3 mt-3">
+                    <h6>Selecciona una imagen de usuario [Obligatoria]</h6><br>
+                    <div id="imagen">
+                        <input id="fichero" type="file" type="file" accept="image/*" (change)="avatar($event)">
+                        <label for="fichero" class="circle"></label>
+                    </div>
+                    <input *ngIf="imgUser" value="{{imgUser?.nombreArchivo}}" disabled>
+                </div> <br>
+                <div *ngIf="!sameU" class="mt-3 col-md-3"><input type="text" id="vacio" disabled></div>
+                <br>
+                <div *ngIf="id_user" class="col-md-3 mt-3 center">
+                    <img *ngIf="!sameU" src="{{updateU?.imagen}}" width="100">
+                </div> <br>
+                <div class=" mt-3 col-md-3"><input type="text" id="vacio" disabled></div>
+                <br>
             </div>
             <br>
             <div *ngIf="actualizar" class="center">
-                <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class=" mr-3  fas fa-times"></i>
+                <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class=" mr-3 fas fa-times"></i>
                     Cancelar</button>
                 <button type="submit" id="eliminar" class="btn btn-outline-warning" (click)="asignar()"><i class="mr-3 fas fa-sync-alt"></i>
                         Actualizar</button>
@@ -114,5 +131,4 @@
             </div>
         </form>
     </div>
-    <!-- <app-login></app-login> -->
 </div>

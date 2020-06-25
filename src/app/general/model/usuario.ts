@@ -22,6 +22,7 @@ export class Usuario {
     idUsuario: number;
     activo: boolean;
     imagen: string;
+    creado: string;
     constructor( ) {
       this.idUsuario = 0;
       // tslint:disable-next-line:max-line-length

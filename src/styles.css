@@ -428,6 +428,10 @@ div#filesButton {
     border: 1px, solid transparent;
 }
 
+link#icon {
+    height: 10% !important;
+}
+
 
 /*  ************************************************************** */
 

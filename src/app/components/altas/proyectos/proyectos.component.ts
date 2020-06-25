@@ -156,7 +156,6 @@ regresar() {
   this.router.navigate(['proyectos']);
 }
 cambiocte(event) {
-  console.log('cambio', event.target.checked);
   if(event.target.checked === true ) {
     this.checked = true;
   } else {

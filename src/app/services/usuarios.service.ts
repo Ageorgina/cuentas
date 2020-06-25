@@ -30,8 +30,6 @@ export class UsuariosService {
    this.newPass = usuario.usuario.passNew;
    return this.http.post<any>(`${environment.gtosUrl}/usuario/actualizarPerfilUsuario`, usuario );
   }
-  cambioPass() {
-    return this.newPass;
-  }
+
 
 }

@@ -171,7 +171,6 @@ export class ReembolsoComponent implements OnInit {
       }
       if (this.reembolso.estatus === 'Pagado' ) {
         this.proyecto = this.project;
-        console.log('this.proyecto', this.proyecto)
         this.reembolso.aprobo = this.updateR.aprobo;
         this.reembolso.fechaPagado = new Date();
         this.reembolso.pago = this.usuarioLocal.usuario.username;
@@ -236,10 +235,7 @@ export class ReembolsoComponent implements OnInit {
   this.archivos.splice( archivo, 1);
   }
   valor(nombre) {
-    console.log('nombre', nombre)
     this.proyectos.filter(proyecto => {
-    console.log('proyecto', proyecto)
-    if (nombre === proyecto.nombre) { this.proyecto = proyecto;
-                                      console.log(':D', this.proyecto) } });
+    if (nombre === proyecto.nombre) { this.proyecto = proyecto; } });
   }
   }
