@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Utils } from '../../../general/utils/utils';
 import Swal from 'sweetalert2';
 import { OficinaService, AlertasService, ArchivosService } from '../../../services';
+import { AuthService } from '../../../security/services/auth.service';
 
 @Component({
   selector: 'app-registro-oficina',
@@ -47,10 +48,10 @@ export class RegistroOficinaComponent {
   comprobante: string;
   arrayUrl: string[] = [];
   // tslint:disable-next-line:variable-name
-  constructor( private formBuilder: FormBuilder, private alert: AlertasService, private router: Router,
+  constructor( private formBuilder: FormBuilder, private alert: AlertasService, private router: Router, private auth: AuthService,
                private gstS: OficinaService, private utils: Utils, private active: ActivatedRoute, private _fileS: ArchivosService ) {
                  this.loading = true;
-                 this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
+                 this.usuarioLocal = this.auth.userFb;
                  this.gstS.cargarPartidas().subscribe( partidas => {
                   this.submitted = false;
                   this.par = partidas;
@@ -85,10 +86,10 @@ export class RegistroOficinaComponent {
                    cantidad: ['', Validators.required],
                   });
                  this.ofForm = this.formBuilder.group({
-                    resp_asg: [''],
+                   resp_asg: [''],
                   fecha: ['', Validators.required],
                   cantidad: ['', Validators.required],
-                  motivo: ['', Validators.required],
+                  motivo: [''],
                   id_partida: [''],
                   comprobantes: ['']
                 });
@@ -127,7 +128,7 @@ export class RegistroOficinaComponent {
                   this.entroError();
                   return ;
                 }
-                if (this.pFecha !== this.partida.fecha  && this.par.length >= 1 ) {
+                if (this.pFecha !== this.partida.fecha && this.par.length >= 1 ) {
                   this.submitted = false;
                   this.partida.id_partida = this.partida.fecha;
                   this.partida.sobrante = this.partida.cantidad;
@@ -146,6 +147,9 @@ export class RegistroOficinaComponent {
                 this.loading = true;
                 this.gasto = this.ofForm.value;
                 this.arrayUrl = [];
+                this.gasto.resp_asg = this.usuarioLocal.correo;
+                this.gasto.id_partidafb = this.partidaActual.id_partidafb;
+                this.gasto.id_partida = this.partidaActual.id_partida;
                 this.archivos.filter( data => { if (data.url !== 'NO TIENE URL') {
                   this.arrayUrl.push(data.url);
                 } });
@@ -162,14 +166,20 @@ export class RegistroOficinaComponent {
                   this.alert.formInvalid();
                   return ;
                 }
-                if (this.saldoDisp < this.gasto.cantidad ) {
+                if ((this.saldoDisp < this.gasto.cantidad)  && this.ofForm.valid) {
                   this.submitted = false;
                   this.textError = 'No cuentas con el saldo suficiente para registrar este gasto';
                   this.entroError();
                 }
                 if (!this.id_of && this.gastos.length >= 1) {
+                  if (this.saldoDisp < this.gasto.cantidad) {
+                    this.submitted = false;
+                    this.textError = 'No cuentas con el saldo suficiente para registrar este gasto';
+                    this.entroError();
+                    return ;
+                  }
                   this.submitted = false;
-                  this.usuario = this.usuarioLocal.usuario.username;
+                  this.usuario = this.usuarioLocal.respuesta.usuario.username;
                   this.gasto.id_partida = this.partidaActual.id_partida;
                   this.gasto.resp_asg = this.usuario;
                   this.gasto.id_partidafb = this.partidaActual.id_partidafb;
@@ -248,7 +258,7 @@ export class RegistroOficinaComponent {
 
     gVacio() {
       if ( this.gastos.length === 0 ) {
-        this.usuario = this.usuarioLocal.usuario.username;
+        this.usuario = this.usuarioLocal.respuesta.usuario.username;
         this.gasto.id_partida = this.partidaActual.id_partida;
         this.gasto.resp_asg = this.usuario;
         this.gasto.id_partidafb = this.partidaActual.id_partidafb;

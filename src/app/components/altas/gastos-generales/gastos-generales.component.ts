@@ -53,6 +53,7 @@ export class GastosGeneralesComponent {
   constructor( private _fileS: ArchivosService,  private _user: UsuariosService, private _pyt: ProyectosService, private _gastoS: GastosService,
                private active: ActivatedRoute,private formBuilder: FormBuilder, private router: Router, private utils: Utils, public alert: AlertasService ) {
     this.loading = false;
+    this.submitted = false;
     this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
     this._gastoS.cargarTipoGtos().subscribe((tipoGtos: any[]) => { this.tipoGto = tipoGtos; });
     this.gastosForm = this.formBuilder.group({

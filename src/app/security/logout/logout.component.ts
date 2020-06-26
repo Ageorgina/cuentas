@@ -11,12 +11,11 @@ export class LogoutComponent {
   loading = false;
 
   constructor(
-      private route: ActivatedRoute,
       private router: Router,
-      private authenticationService: AuthService,
-  ) {
-      this.authenticationService.logout();
-      this.router.navigate(['login']);
-  }
+      private auth: AuthService,
+  ) { }
 
+   logout() {
+    this.auth.logout();
+   }
 }

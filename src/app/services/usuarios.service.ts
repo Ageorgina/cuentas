@@ -10,16 +10,21 @@ import { usuarioU } from '../general/model';
 })
 export class UsuariosService {
   newPass = '';
+  sameU = false;
 
   constructor( private db: AngularFirestore, private http: HttpClient) {
   }
-
+  // FB
    cargarUsuarios() {
-    return this.db.collection('usuarios').valueChanges({idField: 'id_user'});
-  }
-  cudUsuarios() {
-    return this.db.collection('usuarios');
-  }
+     return this.db.collection('usuarios').valueChanges({idField: 'id_user'}); 
+    }
+    cudUsuarios() {
+      return this.db.collection('usuarios');
+    }
+
+
+  // DB
+
   crearUsuarioS(usuario: UserBase) {
     return this.http.post<any>(`${environment.gtosUrl}/usuario/crearUsuario`, usuario);
   }
@@ -28,7 +33,7 @@ export class UsuariosService {
   }
   actualizar(usuario: usuarioU) {
    this.newPass = usuario.usuario.passNew;
-   return this.http.post<any>(`${environment.gtosUrl}/usuario/actualizarPerfilUsuario`, usuario );
+   return this.http.post<any>(`${environment.gtosUrl}/usuario/actualizarPerfilUsuario`, usuario )
   }
 
 

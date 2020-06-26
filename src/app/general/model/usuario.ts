@@ -17,12 +17,12 @@ export class Usuario {
     id_user: string;
     // tslint:disable-next-line:variable-name
     resp_area: boolean;
-    authenticated: boolean;
     rol: string;
     idUsuario: number;
     activo: boolean;
     imagen: string;
-    creado: string;
+    createdby: string;
+    resultado: {};
     constructor( ) {
       this.idUsuario = 0;
       // tslint:disable-next-line:max-line-length

@@ -5,30 +5,30 @@
             <!-- <a href="javascript:void(0)" id='closebtn' class="closebtn" onclick="closeNav()">&times;</a> -->
             <div class="acordeon">
                 <img id="logo" src="../../../assets/img/logo.png">
-                <div *ngIf="!financiero" class="acordeon__item">
+                <div *ngIf="financiero !== true" class="acordeon__item">
                     <input type="radio" name="acordeon" id="item1">
                     <label for="item1" class="acordeon__titulo">REGISTRAR</label>
                     <div class="btn-group-vertical acordeon__contenido">
-                        <button *ngIf="admin || aprobador" type="button" class="btn btn-default ml-2" routerLink="/registro-clientes"><i class="fab fa-cloudsmith"></i>Clientes</button>
-                        <button *ngIf="!usuario" type="button" class="btn btn-default ml-2" routerLink="/registro-gastos"><i class="fab fa-cloudsmith"></i>Gastos Generales</button>
-                        <button *ngIf="admin || aprobador" type="button" class="btn btn-default ml-2" routerLink="/registro-proyectos"><i class="fab fa-cloudsmith"></i>Proyectos</button>
-                        <button *ngIf="admin || usuario || tesorero" type="button" class="btn btn-default ml-2" routerLink="/registro-reembolso"><i class="fab fa-cloudsmith"></i>Reembolso</button>
-                        <button *ngIf="admin || aprobador || tesorero" type="button" class="btn btn-default ml-2" routerLink="/registro-usuarios"><i class="fab fa-cloudsmith"></i>Usuarios ASG</button>
-                        <button *ngIf="admin || aprobador " type="button" class="btn btn-default ml-2" routerLink="/registro-nomina"><i class="fab fa-cloudsmith"></i>Nómina</button>
+                        <button *ngIf="(admin || aprobador) === true" type="button" class="btn btn-default ml-2" routerLink="/registro-clientes"><i class="fab fa-cloudsmith"></i>Clientes</button>
+                        <button *ngIf="rolU === false" type="button" class="btn btn-default ml-2" routerLink="/registro-gastos"><i class="fab fa-cloudsmith"></i>Gastos Generales</button>
+                        <button *ngIf="(admin || aprobador) === true" type="button" class="btn btn-default ml-2" routerLink="/registro-proyectos"><i class="fab fa-cloudsmith"></i>Proyectos</button>
+                        <button *ngIf="aprobador === false" type="button" class="btn btn-default ml-2" routerLink="/registro-reembolso"><i class="fab fa-cloudsmith"></i>Reembolso</button>
+                        <button *ngIf="rolU === false" type="button" class="btn btn-default ml-2" routerLink="/registro-usuarios"><i class="fab fa-cloudsmith"></i>Usuarios ASG</button>
+                        <button *ngIf="(admin || aprobador) === true" type="button" class="btn btn-default ml-2" routerLink="/registro-nomina"><i class="fab fa-cloudsmith"></i>Nómina</button>
                     </div>
                 </div>
                 <div class="acordeon__item">
                     <input type="radio" name="acordeon" id="item2">
                     <label for="item2" class="acordeon__titulo">GESTIÓN</label>
                     <div class="btn-group-vertical acordeon__contenido">
-                        <button *ngIf="admin || aprobador" type="button" class="btn btn-default ml-2" routerLink="/clientes"><i class="fab fa-cloudsmith"></i>Clientes</button>
-                        <button *ngIf="!usuario" type="button" class="btn btn-default ml-2" routerLink="/gastos"><i class="fab fa-cloudsmith"></i>Gastos Generales</button >
-                        <button *ngIf="admin || aprobador" type="button" class="btn btn-default ml-2" routerLink="/proyectos"><i class="fab fa-cloudsmith"></i>Proyectos</button>
+                        <button *ngIf="(admin || aprobador) === true" type="button" class="btn btn-default ml-2" routerLink="/clientes"><i class="fab fa-cloudsmith"></i>Clientes</button>
+                        <button *ngIf="rolU === false" type="button" class="btn btn-default ml-2" routerLink="/gastos"><i class="fab fa-cloudsmith"></i>Gastos Generales</button >
+                        <button *ngIf="(admin || aprobador) === true" type="button" class="btn btn-default ml-2" routerLink="/proyectos"><i class="fab fa-cloudsmith"></i>Proyectos</button>
                         <button type="button" class="btn btn-default ml-2" routerLink="/reembolsos"><i class="fab fa-cloudsmith"></i>Reembolso</button >
                         <button type="button" class="btn btn-default ml-2" routerLink="/usuarios"><i class="fab fa-cloudsmith"></i>Usuarios ASG</button>
                     </div>
                 </div>
-                <div *ngIf="tesorero || admin" class="acordeon__item">
+                <div *ngIf="(admin || tesorero) === true" class="acordeon__item">
                     <input type="radio" name="acordeon" id="item3">
                     <label data-toggle="tooltip" data-placement="right" title="Caja" for="item3" class="acordeon__titulo">OFICINA</label>
                     <div class="btn-group-vertical acordeon__contenido">
@@ -50,7 +50,7 @@
     </div>
 
     <div class="f" style="text-align: end;">
-        <a (click)="logout()"><i class="fas fa-sign-out-alt mr-1" clic></i>Salir</a>
+        <a (click)="logout()"><i class="fas fa-sign-out-alt mr-1"></i>Salir</a>
         <br> <a class="text">©2020 Copyright ASG Advisory Services</a>
     </div>
 

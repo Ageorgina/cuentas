@@ -107,7 +107,7 @@ export class ClientesComponent {
       }
     }
 
-  addArea() {
+  addArea( ) {
     this.loading = true;
     this.submitted = true;
     if (!this.id_area && this.areaForm.invalid) {

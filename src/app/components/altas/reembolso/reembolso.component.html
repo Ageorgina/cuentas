@@ -59,7 +59,7 @@
                     <div appNgDropFiles [archivos]="archivos" (mouseSobre)="estaSobreElemento = $event; cargarArchivos();" [ngClass]="{ 'file-over': estaSobreElemento }" class="well drop-zone">
 
                         <div id="filesButton">
-                            <input id="fichero" type="file" accept="image/*; application/pdf;'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';'application/vnd.ms-excel'" (change)="botonFiles($event)">
+                            <input id="fichero" type="file" accept="image/*, application/pdf, .xlsx, .xls" (change)="botonFiles($event)">
                             <label for="fichero" class="circle"></label>
                         </div>
                     </div>

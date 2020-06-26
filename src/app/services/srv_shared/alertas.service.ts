@@ -132,5 +132,14 @@ export class AlertasService {
       timer: this.timer
   });
   }
+  changeInfoSuccess() {
+    Swal.fire({
+      position: 'center',
+      icon: 'success',
+      title: 'Se reiniciará tu sesión',
+      showConfirmButton: false,
+      timer: 2000
+    });
+  }
 
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Usuario, usuarioU } from '../../../general/model';
 import { Router } from '@angular/router';
 import { AlertasService, UsuariosService } from '../../../services';
+import { AuthService } from '../../../security/services/auth.service';
 @Component({
   selector: 'app-inv-usuarios',
   templateUrl: './inv-usuarios.component.html',
@@ -10,7 +11,7 @@ import { AlertasService, UsuariosService } from '../../../services';
 
 export class InvUsuariosComponent implements OnInit {
   titulo = 'Usuarios ASG';
-  headTitle = ['Nombre', 'Rol', 'Área', 'Jefe Inmediato', 'Correo', 'Puesto','Modificar'];
+  headTitle = ['Nombre', 'Rol', 'Área', 'Jefe Inmediato', 'Correo', 'Puesto', 'Modificar'];
   elements: Usuario[];
   usuario = Usuario;
   loading = true;
@@ -23,14 +24,15 @@ export class InvUsuariosComponent implements OnInit {
   admin: string;
   rolU: string;
   tesorero: string;
+  aprobador: string;
 
   // tslint:disable-next-line: variable-name
-  constructor( private _user: UsuariosService, private router: Router) {
+  constructor( private _user: UsuariosService, private router: Router, private auth: AuthService) {
                 this.loading = false;
-                this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
+                this.usuarioLocal = this.auth.userFb;
                 this._user.cargarUsuarios().subscribe( (usuarios: Usuario[]) => {
                   usuarios.filter(usuario => {
-                    this.sameU = usuario.correo === this.usuarioLocal['usuario'].username;
+                    this.sameU = usuario.correo === this.usuarioLocal.correo;
                     if (this.sameU) {
                       this.elements = [];
                     if (usuario.rol === 'Usuario') {
@@ -40,19 +42,19 @@ export class InvUsuariosComponent implements OnInit {
                          if (usuario.rol === 'Administrador') {
                           this.admin = usuario.rol;
                           this.elements = usuarios;
-                          return;
                          } else if ( usuario.rol === 'Financiero') {
                           this.elements.push(usuario);
-                         } else {
+                         } else if (usuario.rol === 'Tesorero') {
                           this.tesorero = usuario.rol;
                           this.elements = usuarios;
-                          return;
+                         }  else if (usuario.rol === 'Aprobador') {
+                          this.aprobador = usuario.rol;
+                          this.elements = usuarios;
                          }
-
                       }
                     }
                   });
-                  this.loading = false;
+
                 });
               }
 
