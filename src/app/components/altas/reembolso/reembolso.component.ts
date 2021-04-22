@@ -67,7 +67,8 @@ export class ReembolsoComponent implements OnInit {
                   }
                 });
               });
-                 this.reembolsoForm = this.formBuilder.group({
+
+                this.reembolsoForm = this.formBuilder.group({
                    fecha: ['', Validators.required],
                    cantidad: ['', Validators.required],
                    motivo: ['', Validators.required],
@@ -218,6 +219,7 @@ export class ReembolsoComponent implements OnInit {
   regresar() { this.router.navigate(['reembolsos']); }
 
   async cargarArchivos() {
+    console.log('cargarArchivos')
   this._fileS.CARPETA_FILES = 'comprobantes';
   let algo: FileItem[] = await new Promise((resolve, reject) => {
     this._fileS.cargarArchivosFb( this.archivos).finally(() => { resolve( this.archivos); }).catch(() => reject([]));
@@ -225,8 +227,10 @@ export class ReembolsoComponent implements OnInit {
   }
 
   async botonFiles(event) {
+
   const file = new FileItem(event.target.files[0]);
   this.archivos.push(file);
+  console.log('botonFiles archivos',this.archivos)
   this.cargarArchivos();
   }
 
@@ -235,6 +239,7 @@ export class ReembolsoComponent implements OnInit {
   this.archivos.splice( archivo, 1);
   }
   valor(nombre) {
+    console.log('valor', nombre)
     this.proyectos.filter(proyecto => {
     if (nombre === proyecto.nombre) { this.proyecto = proyecto; } });
   }

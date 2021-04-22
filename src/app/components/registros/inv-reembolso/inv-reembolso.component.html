@@ -16,7 +16,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let el of elements; let i of index">
+            <tr *ngFor="let el of elements; index as i">
                 <td>{{el.solicitante}}</td>
                 <td>{{el.fecha}}</td>
                 <td style="text-align: right;">{{el.cantidad | currency }}</td>
@@ -24,7 +24,7 @@
                 <td>{{el.estatus}}</td>
                 <td *ngIf="usuarioActual?.rol !== 'Usuario'">{{el.aprobo}}</td>
                 <td>
-                    <button class="btn btn-outline-info btn-sm" data-toggle="modal" [attr.data-target]="'#'+el.id_reembolso"> Ver comprobantes ...
+                    <button mdbBtn mdbWavesEffect class="btn btn-outline-info btn-sm" data-toggle="modal" [attr.data-target]="'#'+el.id_reembolso"> Ver comprobantes ...
                     <div [attr.id]="el.id_reembolso " class="modal fade ">
                         <div class="modal-dialog modal-lg ">
                             <!-- Modal content-->
@@ -33,7 +33,9 @@
                                     <img class="zoom m-2 " *ngFor="let file of el.arrComprobantes " [src]="file " (click)="descargar(file) ">
                                 </div>
                                 <div class="modal-footer ">
-                                    <button type="button " class="btn btn-default " data-dismiss="modal " (click)="limpiar(el) ">Cerrar</button>
+                                    <button  mdbBtn
+
+mdbWavesEffect  type="button " class="btn btn-light " data-dismiss="modal " (click)="limpiar(el) ">Cerrar</button>
 </div>
 </div>
 </div>
@@ -41,8 +43,8 @@
 </button>
 </td>
 <td>
-    <button type="button " class="btn btn-outline-success mr-2 btn-sm " (click)="actualizar(i) "><i class="fas fa-edit "></i> Modificar</button>
-    <button *ngIf="el.estatus==='Solicitar' && usuarioActual.rol==='Administrador' " type="button " class="btn btn-outline-danger btn-sm " (click)="borrar(i) "> <i class="fas fa-trash-alt "></i> Eliminar</button>
+    <button mdbBtn mdbWavesEffect type="button " class="btn btn-outline-success mr-2 btn-sm " (click)="actualizar(el) "><i class="fas fa-edit "></i> Modificar</button>
+    <button mdbBtn mdbWavesEffect *ngIf="el.estatus==='Solicitar' && usuarioActual.rol==='Administrador' " type="button " class="btn btn-outline-danger btn-sm " (click)="borrar(i) "> <i class="fas fa-trash-alt "></i> Eliminar</button>
 </td>
 </tr>
 

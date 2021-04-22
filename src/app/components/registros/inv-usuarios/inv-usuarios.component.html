@@ -10,7 +10,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let el of elements; let i of index" [ngStyle]="{'color': el.activo ? ' #202C4C': 'red'}">
+            <tr *ngFor="let el of elements; index as i" [ngStyle]="{'color': el.activo ? ' #202C4C': 'red'}">
                 <td> {{el.ap_p}} {{el.ap_m}} {{el.nombre}}</td>
                 <td>{{el.rol}}</td>
                 <td>{{el.area}}</td>
@@ -18,8 +18,8 @@
                 <td>{{el.correo}}</td>
                 <td>{{el.puesto}}</td>
                 <td class="center">
-                    <button type="button" class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
-                    <button *ngIf='admin' type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
+                    <button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
+                    <button mdbBtn mdbWavesEffect *ngIf='admin' type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
                 </td>
             </tr>
         </tbody>

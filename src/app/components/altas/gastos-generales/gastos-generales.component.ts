@@ -223,6 +223,8 @@ export class GastosGeneralesComponent {
   }
 
   async cargarArchivos() {
+
+    console.log('cargarArchivos')
     this._fileS.CARPETA_FILES = 'comprobantes';
     let algo: FileItem[] = await new Promise((resolve, reject) => {
       this._fileS.cargarArchivosFb( this.archivos).finally(() => { resolve(this.archivos); })
@@ -232,6 +234,8 @@ export class GastosGeneralesComponent {
   async botonFiles(event) {
     const file = new FileItem(event.target.files[0]);
     this.archivos.push(file);
+
+  console.log('botonFiles archivos',this.archivos)
     this.cargarArchivos();
   }
 
@@ -244,6 +248,7 @@ export class GastosGeneralesComponent {
       this.router.navigate(['gastos']);
     }
   valor(nombre) {
+    console.log('valor', nombre)
     this.proyectos.filter(proyecto => {
       if (nombre === proyecto.nombre) {
         this.saldoDisp = proyecto.monto_d;

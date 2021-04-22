@@ -140,13 +140,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let el of nominas ; let i of index">
+                            <tr *ngFor="let el of nominas ; index as i">
                                 <td>{{el.nombre}}</td>
                                 <td>{{el.fechaini}}</td>
                                 <td>{{el.fechafin}}</td>
                                 <td style="text-align: right; ">{{el.costoProyecto | currency }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-outline-success mr-2 btn-sm " (click)="actualizar(i) "><i class="fas fa-edit "></i> Modificar</button>
+                                    <button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-success mr-2 btn-sm " (click)="actualizar(i) "><i class="fas fa-edit "></i> Modificar</button>
                                 </td>
                             </tr>
                         </tbody>

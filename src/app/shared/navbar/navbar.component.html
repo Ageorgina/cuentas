@@ -4,36 +4,36 @@
         <div id="sidenav" class="sidenav">
             <!-- <a href="javascript:void(0)" id='closebtn' class="closebtn" onclick="closeNav()">&times;</a> -->
             <div class="acordeon">
-                <img id="logo" src="../../../assets/img/logo.png">
+                <img id="logo" src="./assets/img/logo.png">
                 <div *ngIf="financiero !== true" class="acordeon__item">
                     <input type="radio" name="acordeon" id="item1">
                     <label for="item1" class="acordeon__titulo">REGISTRAR</label>
                     <div class="btn-group-vertical acordeon__contenido">
-                        <button *ngIf="(admin || aprobador) === true" type="button" class="btn btn-default ml-2" routerLink="/registro-clientes"><i class="fab fa-cloudsmith"></i>Clientes</button>
-                        <button *ngIf="rolU === false" type="button" class="btn btn-default ml-2" routerLink="/registro-gastos"><i class="fab fa-cloudsmith"></i>Gastos Generales</button>
-                        <button *ngIf="(admin || aprobador) === true" type="button" class="btn btn-default ml-2" routerLink="/registro-proyectos"><i class="fab fa-cloudsmith"></i>Proyectos</button>
-                        <button *ngIf="aprobador === false" type="button" class="btn btn-default ml-2" routerLink="/registro-reembolso"><i class="fab fa-cloudsmith"></i>Reembolso</button>
-                        <button *ngIf="rolU === false" type="button" class="btn btn-default ml-2" routerLink="/registro-usuarios"><i class="fab fa-cloudsmith"></i>Usuarios ASG</button>
-                        <button *ngIf="(admin || aprobador) === true" type="button" class="btn btn-default ml-2" routerLink="/registro-nomina"><i class="fab fa-cloudsmith"></i>Nómina</button>
+                        <button mdbWavesEffect color="link" *ngIf="(admin || aprobador) === true" type="button" class="btn ml-2" routerLink="/registro-clientes"><i class="fab fa-cloudsmith"></i>Clientes</button >
+                        <button mdbWavesEffect  color="link" *ngIf="rolU === false" type="button" class="btn ml-2" routerLink="/registro-gastos"><i class="fab fa-cloudsmith"></i>Gastos Generales</button >
+                        <button mdbWavesEffect  color="link" *ngIf="(admin || aprobador) === true" type="button" class="btn ml-2" routerLink="/registro-proyectos"><i class="fab fa-cloudsmith"></i>Proyectos</button >
+                        <button mdbWavesEffect  color="link" *ngIf="aprobador === false" type="button" class="btn ml-2" routerLink="/registro-reembolso"><i class="fab fa-cloudsmith"></i>Reembolso</button >
+                        <button mdbWavesEffect  color="link" *ngIf="rolU === false" type="button" class="btn ml-2" routerLink="/registro-usuarios"><i class="fab fa-cloudsmith"></i>Usuarios ASG</button >
+                        <button mdbWavesEffect  color="link" *ngIf="(admin || aprobador) === true" type="button" class="btn ml-2" routerLink="/registro-nomina"><i class="fab fa-cloudsmith"></i>Nómina</button >
                     </div>
                 </div>
                 <div class="acordeon__item">
                     <input type="radio" name="acordeon" id="item2">
                     <label for="item2" class="acordeon__titulo">GESTIÓN</label>
                     <div class="btn-group-vertical acordeon__contenido">
-                        <button *ngIf="(admin || aprobador) === true" type="button" class="btn btn-default ml-2" routerLink="/clientes"><i class="fab fa-cloudsmith"></i>Clientes</button>
-                        <button *ngIf="rolU === false" type="button" class="btn btn-default ml-2" routerLink="/gastos"><i class="fab fa-cloudsmith"></i>Gastos Generales</button >
-                        <button *ngIf="(admin || aprobador) === true" type="button" class="btn btn-default ml-2" routerLink="/proyectos"><i class="fab fa-cloudsmith"></i>Proyectos</button>
-                        <button type="button" class="btn btn-default ml-2" routerLink="/reembolsos"><i class="fab fa-cloudsmith"></i>Reembolso</button >
-                        <button type="button" class="btn btn-default ml-2" routerLink="/usuarios"><i class="fab fa-cloudsmith"></i>Usuarios ASG</button>
+                        <button mdbWavesEffect  color="link" *ngIf="(admin || aprobador) === true" type="button" class="btn ml-2" routerLink="/clientes"><i class="fab fa-cloudsmith"></i>Clientes</button >
+                        <button mdbWavesEffect  color="link" *ngIf="rolU === false" type="button" class="btn ml-2" routerLink="/gastos"><i class="fab fa-cloudsmith"></i>Gastos Generales</button   >
+                        <button mdbWavesEffect  *ngIf="(admin || aprobador) === true" type="button" class="btn ml-2" routerLink="/proyectos"><i class="fab fa-cloudsmith"></i>Proyectos</button>
+                        <button mdbWavesEffect color="link" type="button" class="btn ml-2" routerLink="/reembolsos"><i class="fab fa-cloudsmith"></i>Reembolso</button   >
+                        <button mdbWavesEffect  type="button" class="btn ml-2" routerLink="/usuarios"><i class="fab fa-cloudsmith"></i>Usuarios ASG</button>
                     </div>
                 </div>
                 <div *ngIf="(admin || tesorero) === true" class="acordeon__item">
                     <input type="radio" name="acordeon" id="item3">
                     <label data-toggle="tooltip" data-placement="right" title="Caja" for="item3" class="acordeon__titulo">OFICINA</label>
                     <div class="btn-group-vertical acordeon__contenido">
-                        <button type="button" class="btn btn-default ml-2" routerLink="/registro-oficina"><i class="fab fa-cloudsmith"></i>Registrar</button>
-                        <button type="button" class="btn btn-default ml-2" routerLink="/oficina"><i class="fab fa-cloudsmith"></i>Gestión</button>
+                        <button mdbWavesEffect color="link" type="button" class="btn ml-2" routerLink="/registro-oficina"><i class="fab fa-cloudsmith"></i>Registrar</button >
+                        <button mdbWavesEffect  color="link" type="button" class="btn ml-2" routerLink="/oficina"><i class="fab fa-cloudsmith"></i>Gestión</button >
                     </div>
                 </div>
             </div>

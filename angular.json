@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "cuentas"
+    }
+  },
+  "defaultProject": "cuentas",
+  "cli": {
+    "analytics": false
+  }
 }

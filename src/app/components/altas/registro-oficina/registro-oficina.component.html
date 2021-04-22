@@ -25,13 +25,13 @@
                     </div>
                 </div>
                 <div *ngIf="actualizar" class="center mt-3">
-                    <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class="mr-3 fas fa-times"></i>
+                    <button mdbBtn mdbWavesEffect type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class="mr-3 fas fa-times"></i>
                         Cancelar</button>
-                    <button type="submit" id="eliminar" class="btn btn-outline-warning"><i class="mr-3 fas fa-sync-alt"></i>
+                    <button mdbBtn mdbWavesEffect type="submit" id="eliminar" class="btn btn-outline-warning"><i class="mr-3 fas fa-sync-alt"></i>
                             Actualizar</button>
                 </div>
                 <div class="center mt-3">
-                    <button #guardar *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="mr-3 fas fa-cloud-download-alt"></i>
+                    <button mdbBtn mdbWavesEffect #guardar *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="mr-3 fas fa-cloud-download-alt"></i>
                         {{boton}}</button>
                 </div>
 
@@ -46,7 +46,7 @@
                             <label class="control-label" for="partida">Saldo disponible: </label><br>
                             <div class="btn-group">
                                 <input disabled class="form-control-sm col-md-6" id="partida" value="{{saldoDisp | currency}}" type="text">
-                                <button class="btn btn-outline-info btn-sm" data-toggle="tooltip" data-placement="top" data-tooltip="Si hay un nuevo ingreso o no alcanza el saldo disponible puedes devolverlo y comenzar una nueva partida" type="button" (click)="devolver()">
+                                <button mdbBtn mdbWavesEffect class="btn btn-outline-info btn-sm" data-toggle="tooltip" data-placement="top" data-tooltip="Si hay un nuevo ingreso o no alcanza el saldo disponible puedes devolverlo y comenzar una nueva partida" type="button" (click)="devolver()">
                             <i class="fa fa-reply-all" aria-hidden="true"></i>
                             Devolver </button>
                             </div>
@@ -102,9 +102,9 @@
                                     </td>
                                     <td>
                                         <div class="progress">
-                                            <div class="progress-bar" role="progressbar" [ngStyle]="{'width': archivo.progreso + '%', 'background-color':  archivo.completo?'green':'blue' }" aria-valuenow="{{ archivo.progreso }}" aria-valuemin="0" aria-valuemax="100">{{archivo.progreso}} </div>
+                                            <div class="progress-bar progress-bar-striped  " role="progressbar" [ngStyle]="{'width': archivo.progreso + '%', 'background-color':  archivo.completo?'green':'blue' }" aria-valuenow="{{ archivo.progreso }}" aria-valuemin="0" aria-valuemax="100">{{archivo.progreso}} </div>
                                         </div>
-                                        <i class="fas fa-times btn-outline-danger" (click)="limpiarArchivos(archivos, archivo)"></i>
+                                        <i class="fas fa-times ex" (click)="limpiarArchivos(archivos, archivo)"></i>
                                     </td>
                                 </tr>
                             </tbody>
@@ -113,13 +113,13 @@
                 </div>
                 <br>
                 <div *ngIf="actualizar" class="center mt-3">
-                    <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class="mr-3 fas fa-times"></i>
+                    <button mdbBtn mdbWavesEffect type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class="mr-3 fas fa-times"></i>
                     Cancelar</button>
-                    <button type="submit" id="eliminar" class="btn btn-outline-warning"><i class="mr-3 fas fa-sync-alt"></i>
+                    <button mdbBtn mdbWavesEffect type="submit" id="eliminar" class="btn btn-outline-warning"><i class="mr-3 fas fa-sync-alt"></i>
                         Actualizar</button>
                 </div>
                 <div class="center mt-3">
-                    <button #guardar *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="mr-3 fas fa-cloud-download-alt"></i>
+                    <button mdbBtn mdbWavesEffect #guardar *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="mr-3 fas fa-cloud-download-alt"></i>
                     {{boton}}</button>
                 </div>
             </form>

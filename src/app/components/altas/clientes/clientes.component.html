@@ -50,14 +50,14 @@
                 </div>
             </div> <br/>
             <div *ngIf="actualizar" class="center">
-                <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class="fas fa-times"></i>
+                <button mdbBtn mdbWavesEffect type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i class="fas fa-times"></i>
                     Cancelar</button>
-                <button type="submit" id="eliminar" class="btn btn-outline-warning"><i class="fas fa-sync-alt"></i>
+                <button mdbBtn mdbWavesEffect type="submit" id="eliminar" class="btn btn-outline-warning"><i class="fas fa-sync-alt"></i>
                         Actualizar</button>
             </div>
 
             <div class="center">
-                <button #guardar *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="fas fa-cloud-download-alt"></i>
+                <button mdbBtn mdbWavesEffect #guardar *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="fas fa-cloud-download-alt"></i>
                     {{boton}}</button>
             </div>
         </form>
@@ -73,13 +73,13 @@
         'is-invalid': submitted && f.nombre_area.errors } ">
                     <br>
                     <div *ngIf="actualizar " class="center ">
-                        <button type="button " id="cancelar " class="btn btn-outline-danger mr-4 " (click)="backArea() "><i class=" mr-3 fas fa-times "></i>
+                        <button mdbBtn mdbWavesEffect type="button " id="cancelar " class="btn btn-outline-danger mr-4 " (click)="backArea() "><i class=" mr-3 fas fa-times "></i>
                             Cancelar</button>
-                        <button type="submit " id="actualizar " class="btn btn-outline-warning "><i class=" mr-3 fas fa-sync-alt "></i>
+                        <button mdbBtn mdbWavesEffect type="submit " id="actualizar " class="btn btn-outline-warning "><i class=" mr-3 fas fa-sync-alt "></i>
                             Actualizar</button>
                     </div>
                     <div class="center ">
-                        <button #guardar *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class=" mr-3 fas fa-cloud-download-alt "></i>
+                        <button mdbBtn mdbWavesEffect #guardar *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class=" mr-3 fas fa-cloud-download-alt "></i>
                             {{boton}}</button>
                     </div>
                 </form>
@@ -93,11 +93,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let el of areas; let i of index ">
+                        <tr *ngFor="let el of areas; index as i ">
                             <td class="left ">{{el.nombre_area}}</td>
                             <td class="center ">
-                                <button type="button" class="btn btn-outline-success mr-2 btn-sm " (click)="actualizar_area(i) "><i class=" mr-3 fas fa-edit "></i> Modificar</button>
-                                <button *ngIf="admin" type="button" class="btn btn-outline-danger btn-sm " (click)="borrar(i) "> <i class="mr-3 fas fa-trash-alt "></i> Eliminar</button>
+                                <button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-success mr-2 btn-sm " (click)="actualizar_area(i) "><i class=" mr-3 fas fa-edit "></i> Modificar</button>
+                                <button mdbBtn mdbWavesEffect *ngIf="admin" type="button" class="btn btn-outline-danger btn-sm " (click)="borrar(i) "> <i class="mr-3 fas fa-trash-alt "></i> Eliminar</button>
                             </td>
                         </tr>
                     </tbody>

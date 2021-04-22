@@ -74,14 +74,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let archivo of archivos; let i of index">
-                                <td>{{archivo.nombreArchivo}}
-                                </td>
+                            <tr *ngFor="let archivo of archivos">
+                                <td> {{archivo.nombreArchivo}}</td>
                                 <td>
                                     <div class="progress">
-                                        <div class="progress-bar" role="progressbar" [ngStyle]="{'width': archivo.progreso + '%', 'background-color':  archivo.completo?'green':'blue' }" aria-valuenow="{{ archivo.progreso }}" aria-valuemin="0" aria-valuemax="100">{{archivo.progreso}} </div>
+                                        <div class="progress-bar progress-bar-striped  " role="progressbar" [ngStyle]="{'width': archivo.progreso + '%', 'background-color':  archivo.completo?'green':'blue' }" aria-valuenow="{{ archivo.progreso }}" aria-valuemin="0" aria-valuemax="100">{{archivo.progreso}} </div>
                                     </div>
-                                    <i class="fas fa-times btn-outline-danger" (click)="limpiarArchivos(archivos,archivo)"></i>
+                                    <i class="fas fa-times ex " (click)="limpiarArchivos(archivos,archivo)"></i>
                                 </td>
                             </tr>
                         </tbody>
@@ -90,13 +89,13 @@
             </div>
             <br>
             <div *ngIf="actualizar" class="center mt-3">
-                <button type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i *ngIf=" botonCancelar === 'Cancelar'" class="mr-3 fas fa-times"></i><i *ngIf=" botonCancelar !== 'Cancelar'"  class=" mr-3 fa fa-arrow-left" aria-hidden="true"></i>
+                <button mdbBtn mdbWavesEffect type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="regresar()"><i *ngIf=" botonCancelar === 'Cancelar'" class="mr-3 fas fa-times"></i><i *ngIf=" botonCancelar !== 'Cancelar'"  class=" mr-3 fa fa-arrow-left" aria-hidden="true"></i>
                     {{botonCancelar}} </button>
-                <button *ngIf=" botonCancelar === 'Cancelar'" type="submit" id="eliminar" class="btn btn-outline-warning"><i class="mr-3 fas fa-sync-alt"></i>
+                <button mdbBtn mdbWavesEffect *ngIf=" botonCancelar === 'Cancelar'" type="submit" id="eliminar" class="btn btn-outline-warning"><i class="mr-3 fas fa-sync-alt"></i>
                         Actualizar</button>
             </div>
             <div class="center mt-3">
-                <button #guardar *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="mr-3 fas fa-cloud-download-alt"></i>
+                <button mdbBtn mdbWavesEffect #guardar *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="mr-3 fas fa-cloud-download-alt"></i>
                     {{boton}}</button>
             </div>
 

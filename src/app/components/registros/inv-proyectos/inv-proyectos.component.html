@@ -10,7 +10,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let el of elements; let i of index">
+            <tr *ngFor="let el of elements; index as i">
                 <td>{{el.nombre}}</td>
                 <td>{{el.descripcion}}</td>
                 <td>{{el.fechaini}}</td>
@@ -18,11 +18,13 @@
                 <td>{{el.monto_p | currency }}</td>
                 <td>{{el.monto_d | currency }}</td>
                 <td>{{el.tipo_proyecto}}
-                    <p><button type="button" class="btn btn-outline-info btn-sm" (click)="elementoSelected(i)" data-toggle="modal" data-target="#more"> Más Información...</button>
+                    <p><button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-info btn-sm" (click)="elementoSelected(i)" data-toggle="modal" data-target="#more"> Más Información...</button>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-outline-success btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
-                    <!-- <button type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button> -->
+                    <button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-success btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
+                    <!-- <button  mdbBtn
+
+mdbWavesEffect  type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button> -->
                 </td>
             </tr>
 

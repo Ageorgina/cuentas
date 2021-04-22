@@ -15,12 +15,13 @@ export class UsuariosService {
   constructor( private db: AngularFirestore, private http: HttpClient) {
   }
   // FB
-   cargarUsuarios() {
-     return this.db.collection('usuarios').valueChanges({idField: 'id_user'}); 
-    }
-    cudUsuarios() {
+  cargarUsuarios() {
+    return this.db.collection('usuarios').valueChanges({idField: 'id_user'}); 
+  }
+    
+  cudUsuarios() {
       return this.db.collection('usuarios');
-    }
+  }
 
 
   // DB

@@ -26,12 +26,12 @@ export class LoginComponent implements OnInit {
   respuesta: any;
 
   constructor( private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
-               private auth: AuthService, private alert: AlertasService, private userS: UsuariosService ) {
-                 this.auth.logout();
-                 this.loginForm = this.formBuilder.group({
-                   username: ['', [Validators.required , Validators.email]],
-                   password: ['', [Validators.required, Validators.minLength(6)]]
-                  });
+                private auth: AuthService, private alert: AlertasService, private userS: UsuariosService ) {
+                this.auth.logout();
+                this.loginForm = this.formBuilder.group({
+                  username: ['', [Validators.required , Validators.email]],
+                  password: ['', [Validators.required, Validators.minLength(6)]]
+                });
   }
 
   ngOnInit() {
@@ -67,6 +67,8 @@ export class LoginComponent implements OnInit {
       if (this.respuesta['respuesta'] === undefined) {
         this.entroError();
       } else {
+        localStorage.setItem('rol', data.rol)
+        console.log(data.rol)
         this.entroExitoso();
       }
     });

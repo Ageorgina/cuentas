@@ -16,6 +16,7 @@ export class ArchivosService {
   constructor(private db: AngularFirestore, public alerta: AlertasService, private http: HttpClient ) { }
 
  async cargarArchivosFb(archivos: FileItem[]) {
+   console.log(archivos)
     for ( const item of archivos ) {
       item.estaSubiendo = true;
       if ( item.completo === true ) {
