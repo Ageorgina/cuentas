@@ -1,5 +1,5 @@
 import {Action} from '@ngrx/store';
-import {User} from '../../model/User';
+import { User, UserLog } from '../../model/User';
 
 
 export const AUTH_LOGIN = '[AUTH] - Login';
@@ -9,7 +9,7 @@ export class LoginAction implements Action {
 
   readonly type = AUTH_LOGIN;
 
-  constructor(public user: User) {
+  constructor(public user: UserLog) {
   }
 }
 

@@ -15,15 +15,15 @@ export class ReembolsoComponent implements OnInit {
   nuevoR = true;
   titulo = 'Solicitar Reembolso';
   boton = 'Guardar';
-  usuarios: Usuario[] = [];
+  usuarios = [];
   tipoGto: any[];
-  proyectos: Proyecto[] = [];
+  proyectos = [];
   reembolsoForm: FormGroup;
-  reembolso: Reembolso;
+  reembolso = new Reembolso;
   fecha: string;
   // tslint:disable-next-line: variable-name
   id_reembolso: string;
-  updateR: Reembolso;
+  updateR = new Reembolso;
   textError: string;
   submitted = false;
   loading = true;
@@ -39,46 +39,36 @@ export class ReembolsoComponent implements OnInit {
   arrayUrl: any[] = [];
   botonCancelar = 'Cancelar';
   aprobar: any;
-  usuarioLocal: any;
+  userLog = JSON.parse(sessionStorage.getItem('currentUser'));
   usuarioActual: any;
-  sameU: boolean;
+  same =  false;
   admin: boolean;
   tesorero: boolean;
   aprobador: boolean;
   financiero: boolean;
   uaprobo: string;
-  proyecto: any;
-  project: {} = {};
+  proyecto = new Proyecto;
+  project= new Proyecto;
   // tslint:disable-next-line: variable-name
   constructor( private _fileS: ArchivosService, private _pyt: ProyectosService, private __gastoS: GastosService,
                private user: UsuariosService, private formBuilder: FormBuilder, private router: Router,
-               private active: ActivatedRoute,  private utils: Utils, public alert: AlertasService ) {
-                 this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
+               private _gastoS: GastosService, private active: ActivatedRoute,  private utils: Utils, public alert: AlertasService ) {
 
-                 this.user.cargarUsuarios().subscribe((usuarios: Usuario[]) => {
-                  this.usuarios = usuarios;
-                  usuarios.filter( usuario => {
-                    if ( usuario.correo === this.usuarioLocal['usuario'].username) {
-                      this.usuarioActual = usuario;
-                      if (usuario['rol'] === 'Administrador') { this.admin = true; } else
-                      if (usuario['rol'] === 'Aprobador') { this.aprobador = true; } else
-                      if (usuario['rol'] === 'Financiero') { this.financiero = true; } else
-                      if (usuario['rol'] === 'Tesorero') { this.tesorero = true; }
-                  }
-                });
-              });
-
+                this.user.cargarUsuarios().subscribe(usuarios =>this.usuarios = usuarios);
+                this._gastoS.cargarTipoGtos().subscribe(tipoGtos =>  this.tipoGto = tipoGtos);
                 this.reembolsoForm = this.formBuilder.group({
-                   fecha: ['', Validators.required],
+                   fecha: [{value:'', disabled: true}, Validators.required],
                    cantidad: ['', Validators.required],
                    motivo: ['', Validators.required],
                    estatus: [''],
                    comprobantes: [''],
-                   solicitante: [''],
+                   tipo_gasto: ['Tipo Gasto', Validators.required],
+                   solicitante: ['', Validators.email],
                    observacionesaprobador: [''],
                    observacionespagado: [''],
-                   proyecto: ['', Validators.required]
+                   proyecto: ['Proyecto', Validators.required]
                   });
+
                  this.id_reembolso = this.active.snapshot.paramMap.get('id_reembolso');
                  if ( this.id_reembolso ) {
                   this.titulo = 'Modificar Reembolso';
@@ -91,12 +81,13 @@ export class ReembolsoComponent implements OnInit {
                     this.reembolsoForm.get(['comprobantes']).setValue(this.updateR.comprobantes);
                     this.reembolsoForm.get(['solicitante']).setValue(this.updateR.solicitante);
                     this.reembolsoForm.get(['estatus']).setValue(this.updateR.estatus);
+                    this.reembolsoForm.get(['tipo_gasto']).setValue(this.updateR.tipo_gasto);
                     this.reembolsoForm.get(['proyecto']).setValue(this.updateR.proyecto);
                     this.reembolsoForm.get(['observacionesaprobador']).setValue(this.updateR.observacionesaprobador);
                     this.reembolsoForm.get(['observacionespagado']).setValue(this.updateR.observacionespagado);
-                    this.sameU = this.usuarioActual['correo'] === this.updateR.solicitante;
+                    this.same = this.userLog['email'] === this.updateR.solicitante;
 
-                    if (this.sameU) {
+                    if (this.same) {
                       this.reembolsoForm.controls['estatus'].disable();
                       this.reembolsoForm.controls['observacionesaprobador'].disable();
                       this.reembolsoForm.controls['observacionespagado'].disable();
@@ -105,7 +96,7 @@ export class ReembolsoComponent implements OnInit {
                         this.botonCancelar = 'Regresar';
                       }
                     }
-                    if (!this.sameU) {
+                    if (!this.same) {
                       this.reembolsoForm.disable();
                       this.reembolsoForm.controls['estatus'].enable();
                       if ( this.aprobador) {
@@ -155,6 +146,22 @@ export class ReembolsoComponent implements OnInit {
       this.comprobantes = this.arrayUrl.join(',');
     }
     this.reembolsoForm.value.comprobantes = this.comprobantes;
+    if (this.fval.solicitante.value == '' && this.userLog.rol !== 'Usuario' ) {
+      this.reembolsoForm.get(['solicitante']).setErrors({required: true});
+    }
+    if (this.fval.proyecto.value == 'Proyecto') {
+      this.reembolsoForm.get(['proyecto']).setErrors({required: true});
+    }
+    if (this.fval.fecha.value == '') {
+      this.reembolsoForm.get(['fecha']).setErrors({required: true});
+    }
+    if (this.fval.tipo_gasto.value == 'Tipo Gasto') {
+      this.reembolsoForm.get(['tipo_gasto']).setErrors({required: true});
+    } if(this.updateR.estatus === 'Aprobado' || this.updateR.estatus === 'Rechazado'  ){
+      this.reembolsoForm.get(['observacionesaprobador']).setErrors({required: true});
+    } if(this.updateR.estatus === 'Pagado'){
+      this.reembolsoForm.get(['observacionespagado']).setErrors({required: true});
+    }
     if (!this.reembolsoForm.valid ) {
       this.alert.formInvalid();
       this.loading = false;
@@ -166,7 +173,7 @@ export class ReembolsoComponent implements OnInit {
       this.submitted = false;
       if (this.reembolso.estatus !== 'Pagado'  ) {
       this.proyecto = this.project;
-      this.reembolso.aprobo = this.usuarioLocal.usuario.username;
+      this.reembolso.aprobo = this.userLog.email;
       this.reembolso.fechaAprobador = new Date();
       this.reembolso.observacionespagado = '';
       }
@@ -174,7 +181,7 @@ export class ReembolsoComponent implements OnInit {
         this.proyecto = this.project;
         this.reembolso.aprobo = this.updateR.aprobo;
         this.reembolso.fechaPagado = new Date();
-        this.reembolso.pago = this.usuarioLocal.usuario.username;
+        this.reembolso.pago = this.userLog.email;
         this.proyecto['monto_d'] = Number(this.proyecto['monto_d']) - Number(this.updateR.cantidad);
       }
       if (this.reembolso.estatus === ('Solicitar') ) {
@@ -193,9 +200,13 @@ export class ReembolsoComponent implements OnInit {
       this.submitted = false;
       this.reembolso = this.reembolsoForm.value;
       this.fecha = this.reembolsoForm.value.fecha;
+      
+      if(this.userLog.rol === 'Usuario'){
+        this.reembolso.solicitante = this.userLog.email;
+        
+      }
+      this.reembolso.createdby = this.userLog.email;
       this.reembolso.estatus = 'Solicitar';
-      const solicitante = this.usuarioLocal.usuario.username;
-      this.reembolso.solicitante = solicitante;
       this.__gastoS.cudReembolsos().add(this.reembolso);
       this.alert.showSuccess();
       this.loading = false;
@@ -213,13 +224,14 @@ export class ReembolsoComponent implements OnInit {
   this.reembolsoForm.reset();
   this.reembolsoForm.get(['estatus']).setValue('Solicitar');
   this.reembolsoForm.get(['proyecto']).setValue('Proyecto');
+  this.reembolsoForm.get(['tipo_gasto']).setValue('Tipo Gasto');
+  this.reembolsoForm.get(['fecha']).disable();
   this.archivos = [];
   }
 
   regresar() { this.router.navigate(['reembolsos']); }
 
   async cargarArchivos() {
-    console.log('cargarArchivos')
   this._fileS.CARPETA_FILES = 'comprobantes';
   let algo: FileItem[] = await new Promise((resolve, reject) => {
     this._fileS.cargarArchivosFb( this.archivos).finally(() => { resolve( this.archivos); }).catch(() => reject([]));
@@ -230,7 +242,6 @@ export class ReembolsoComponent implements OnInit {
 
   const file = new FileItem(event.target.files[0]);
   this.archivos.push(file);
-  console.log('botonFiles archivos',this.archivos)
   this.cargarArchivos();
   }
 
@@ -239,8 +250,23 @@ export class ReembolsoComponent implements OnInit {
   this.archivos.splice( archivo, 1);
   }
   valor(nombre) {
-    console.log('valor', nombre)
+    this.reembolsoForm.get(['fecha']).enable();
     this.proyectos.filter(proyecto => {
     if (nombre === proyecto.nombre) { this.proyecto = proyecto; } });
   }
+
+
+changeStatus(status){
+  if(status === 'Pagado'){
+    this.reembolsoForm.controls['observacionespagado'].enable();
+    this.reembolsoForm.controls['observacionesaprobador'].disable();
+    this.reembolsoForm.get(['observacionespagado']).setErrors({required: true});
+    
+  } else if(status === 'Aprobado' || status === 'Rechazado'){
+    
+    this.reembolsoForm.controls['observacionesaprobador'].enable();
+    this.reembolsoForm.controls['observacionespagado'].disable();
+    this.reembolsoForm.get(['observacionesaprobador']).setErrors({required: true});
   }
+}
+}

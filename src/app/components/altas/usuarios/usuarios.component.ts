@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,25 +7,27 @@ import { AlertasService, AreasService, ArchivosService, UsuariosService } from '
 import { FileItem, Usuario, usuarioU, Area } from '../../../general/model';
 import { UserBase } from '../../../security/model/UserBase';
 import { AuthService } from '../../../security/services/auth.service';
+import { Cuenta } from '../../../general/model/cuenta';
 
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.component.html',
   styleUrls: ['./usuarios.component.css']
 })
-export class UsuariosComponent {
+export class UsuariosComponent implements OnInit{
   userSrv = new UserBase();
   titulo = 'Registrar Usuarios ASG';
   usuario: Usuario = new Usuario();
   usuarios: Usuario[] = [];
-  area: Area;
-  areas: Area[];
+  area= new Area;
+  areas: any = [];
+  userLog = JSON.parse(sessionStorage.getItem('currentUser'))
   loading = true;
   userForm: FormGroup;
   boton = 'Guardar';
-  updateU: Usuario;
+  updateU= new Usuario;
   // tslint:disable-next-line: variable-name
-  id_user: string;
+  id_user: any;
   idUsuario: number;
   textError: string;
   submitted = false;
@@ -35,9 +37,8 @@ export class UsuariosComponent {
   userU = new usuarioU();
   id: any;
   resp: any;
-  sameU = false;
+  same = false;
   admin: boolean;
-  tesorero: boolean;
   activo: boolean;
   rolU: boolean;
   aprobador: boolean;
@@ -52,52 +53,58 @@ export class UsuariosComponent {
   imagen = this.usuario.imagen;
   pass: any;
   userCreated: any = UserBase;
+  cuenta: any;
+  tesorero = false;
 
   // tslint:disable-next-line: variable-name
   constructor( private _userS: UsuariosService , private _areaS: AreasService, private formBuilder: FormBuilder, private utils: Utils,
                private auth: AuthService, private active: ActivatedRoute, private router: Router, public alert: AlertasService,
                private files: ArchivosService) {
-                 this.loading = false;
+                this._areaS.cargarAreas().subscribe(areas => this.areas = areas);
+                this.getLider();
+                this.id_user = this.active.snapshot.paramMap.get('id_user');
                  this.userForm = this.formBuilder.group({
                   nombre: ['', Validators.required],
                   ap_p: ['', Validators.required],
                   ap_m: ['', Validators.required],
                   correo: ['', [Validators.required, Validators.email]],
                   password: ['', Validators.required],
-                  area: [''],
-                  resp_asg: [''],
+                  area: ['Área'],
+                  resp_asg: ['Jefe inmediato'],
                   puesto: [''],
-                  rol: [''],
-                  activo: [''],
-                  resp_area: [''],
-                  imagen: ['']
+                  rol: ['Rol'],
+                  activo: [true],
+                  resp_area: [false],
+                  imagen: [''],
+                  banco:[''],
+                  clave:['', Validators.minLength(18)]
                 });
-                 this.userForm.get(['rol']).setValue('Rol');
-                 this.userForm.get(['resp_asg']).setValue('Jefe inmediato');
-                 this.userForm.get(['area']).setValue('Área');
-                 this._areaS.cargarAreas().subscribe((areas: Area[]) => { this.areas = areas;  });
-                 this.usuarioActual = this.auth.userFb;
-                 this.admin = this.auth.admin;
-                 this.aprobador = this.auth.aprobador;
-                 this.tesorero = this.auth.tesorero;
-                 this.financiero = this.auth.financiero;
-                 this.rolU = this.auth.rolU;
-                 this._userS.cargarUsuarios().subscribe((usuarios: Usuario[]) => {
-                 usuarios.filter(responsable => {
-                   if (responsable.resp_area === true) {
-                     this.loading = false;
-                     this.usuarios.push(responsable);
-                      }
-                 });
-               });
-                 this.id_user = this.active.snapshot.paramMap.get('id_user');
-                 if (this.id_user) {
+                if(this.userLog.rol == 'Tesorero' && (this.id_user == undefined || this.id_user == null)){
+                  this.tesorero = true;
+                  this.userForm.get(['area']).disable();
+                  this.userForm.get(['resp_asg']).disable();
+                  this.userForm.get(['rol']).disable();
+                  this.userForm.get(['resp_area']).disable();
+                  this.userForm.get(['puesto']).disable();
+                }
+                 if ( this.id_user !== null) {
                  this.userForm.controls.correo.disable();
-                 this.loading = false;
+
                  this.titulo = 'Modificar Usuario ASG';
                  this.actualizar = true;
                  this._userS.cudUsuarios().doc(this.id_user).valueChanges().subscribe((upusuario: Usuario) => {
                    this.updateU = upusuario;
+                   this._userS.cargarCuentas().subscribe(response=> {
+                     this.cuenta  = response.find(usuario => usuario['correo'] === upusuario.correo);
+                     if(this.cuenta !== undefined){
+                      this.userForm.get(['banco']).setValue(this.cuenta['banco'].toUpperCase())
+                    this.userForm.get(['clave']).setValue(this.cuenta['clave']);
+                     }                    
+                     
+                    
+                  
+                  console.log('cuenta', this.cuenta);
+            
                    this.userForm.get(['nombre']).setValue(this.updateU.nombre);
                    this.userForm.get(['ap_p']).setValue(this.updateU.ap_p);
                    this.userForm.get(['ap_m']).setValue(this.updateU.ap_m);
@@ -110,8 +117,10 @@ export class UsuariosComponent {
                    this.userForm.get(['rol']).setValue(this.updateU.rol);
                    this.userForm.get(['activo']).setValue(this.updateU.activo);
                    this.userForm.get(['imagen']).setValue(this.updateU.imagen);
-                   this.sameU = this.usuarioActual.correo === this.updateU.correo;
+                   this.same = this.userLog['email'] === this.updateU.correo;
                    this.activado = this.updateU.activo;
+                   this.loading = false;
+                });
                  });
                  }
                }
@@ -120,17 +129,30 @@ export class UsuariosComponent {
   onSubmit() {
     this.loading = true;
     this.submitted = true;
-    this.loading = true;
+    if(this.userLog.rol !== 'Tesorero'){
+      if (this.fval.rol.value == 'Rol' ) {
+        this.userForm.get(['rol']).setErrors({required: true});
+      }
+      if (this.fval.area.value == 'Área' ) {
+        this.userForm.get(['area']).setErrors({required: true});
+      }
+      if (this.fval.resp_asg.value == 'Jefe inmediato') {
+        this.userForm.get(['resp_asg']).setErrors({required: true});
+      }
+      if (this.fval.puesto.value == '') {
+        this.userForm.get(['puesto']).setErrors({required: true});
+      }
+    }
     this.usuario = this.userForm.value;
-    this.usuario.createdby = this.usuarioActual.correo;
-    if (!this.userForm.valid || (this.fval.rol.value === 'Rol' || this.fval.area.value  === 'Área' ||
-        this.fval.resp_asg.value === 'Jefe inmediato' || this.fval.puesto.value === '') && !this.tesorero) {
+
+    if (this.userForm.invalid === true ) {
           this.alert.formInvalid();
           this.loading = false;
           return ;
-    } else if (!this.id_user) {
+    } else if ( this.id_user === null || this.id_user === undefined) {
       this.createUser();
-    } else if (this.id_user) {
+    } else if ( this.id_user !== null) {
+      this.usuario = this.userForm.value;
       this.usuario.id_user = this.id_user;
       if (this.archivos.length >= 1) {
         this.archivos.filter( data => {
@@ -139,34 +161,69 @@ export class UsuariosComponent {
           }
           });
         }
-     this.updateUser();
+
+        if(this.cuenta === undefined){ 
+
+          this.cuenta = new Cuenta;
+          this.cuenta.ap_p = this.usuario.ap_p;
+          this.cuenta.ap_m = this.usuario.ap_m;
+          this.cuenta.nombre= this.usuario.nombre;
+          this.cuenta.banco= this.fval.banco.value;
+          this.cuenta.clave= this.fval.clave.value;
+          this.cuenta.correo= this.updateU.correo;
+          this.cuenta.createby= this.userLog.email;
+          this._userS.cudCuentas().add({...this.cuenta}).then(()=> {
+            this.updateUser();
+          }).catch(()=>{
+            this.loading  = false;
+            this.alert.showError();
+          });
+        } else {
+          this.cuenta['ap_p'] = this.usuario.ap_p;
+          this.cuenta['ap_m'] = this.usuario.ap_m;
+          this.cuenta['nombre'] = this.usuario.nombre;
+          this.cuenta['banco'] = this.fval.banco.value;
+          this.cuenta['clave'] = this.fval.clave.value;
+          this.cuenta['correo'] = this.updateU.correo;
+          this._userS.cudCuentas().doc(this.cuenta.id_cuenta).update({...this.cuenta}).then(()=>{
+            this.updateUser();
+          }).catch(()=>{
+            this.loading  = false;
+            this.alert.showError();
+          });
+        }
+
     }
   }
 
 createUser() {
-  this.userSrv.usuario.username = this.usuario.correo;
-  this.userSrv.usuario.email = this.usuario.correo;
-  this.userSrv.usuario.correoPrincipal = this.usuario.correo;
-  this.userSrv.usuario.santo = this.usuario.password;
+  this.usuario = this.userForm.value;
+  this.userSrv.usuario.username = this.fval.correo.value;
+  this.userSrv.usuario.email = this.fval.correo.value;
+  this.userSrv.usuario.correoPrincipal = this.fval.correo.value;
+  this.userSrv.usuario.santo = this.fval.password.value;
   this.usuario.activo = true;
   this.usuario.imagen = this.imagen;
-  if (this.tesorero) {
-    this.usuario.rol = 'Usuario';
-    this.usuario.resp_asg = 'Default';
-    this.usuario.puesto = 'Default';
-    this.usuario.area = 'Default';
-    this.id_user = '0';
-    this.usuario.resp_area = false;
-  }
   this._userS.crearUsuarioS(this.userSrv).subscribe(  resp => {
+    this.usuario.createdby = this.userLog.email;
     if (resp.resultado.error) {
       this.loading = false;
       this.alert.textError = 'El correo ya existe';
       this.alert.showError();
+      return;
     }  else {
       this.usuario.idUsuario = resp.resultado.id;
+      if (this.userLog.rol === 'Tesorero' && ( this.id_user === null)) {
+        this.usuario.rol = 'Usuario';
+        this.usuario.resp_asg = 'administrador@asgbpm.com';
+        this.usuario.puesto = 'Default';
+        this.usuario.area = 'Administración';
+        this.usuario.resp_area = false;
+      }
+      
       this._userS.cudUsuarios().add(this.usuario).finally( () => {
         this.alert.showSuccess();
+        this.getLider();
         this.limpiar();
       });
     }
@@ -187,9 +244,11 @@ async avatar(event) {
 }
 
 updateUser() {
-  this._userS.actualizar(this.userUpdateDB()).subscribe( () => {
-    this._userS.cudUsuarios().doc(this.id_user).update(this.usuario).finally(() => {
-      if (this.sameU) {
+  this._userS.actualizar(this.userUpdateDB()).toPromise().then( () => {
+    this.usuario.idUsuario = this.updateU.idUsuario;
+    this._userS.cudUsuarios().doc(this.usuario.id_user).update(this.usuario).then(() => {
+
+      if (this.same === true) {
         this.auth.logout();
         this.alert.changeInfoSuccess();
       } else {
@@ -197,8 +256,19 @@ updateUser() {
           this.regresar();
           this.alert.showSuccess();
       }
+      }).catch(()=>{
+        this.loading = false;
+        this.alert.textError = 'Error del servidor';
+        this.alert.showError();
       });
+    }).catch(() => {
+      this.loading = false;
+      this.alert.textError = 'Error del servidor';
+      this.alert.showError();
     });
+}
+ngOnInit(){
+  this.loading = false;
 }
 
 userUpdateDB() {
@@ -219,6 +289,7 @@ limpiar() {
   this.userForm.get(['rol']).setValue('Rol');
   this.userForm.get(['resp_asg']).setValue('Jefe inmediato');
   this.userForm.get(['area']).setValue('Área');
+  
 }
 
 regresar() {
@@ -227,6 +298,16 @@ regresar() {
 
 checkLetras($event: KeyboardEvent) { this.utils.letras($event); }
 checkNumeros($event: KeyboardEvent) {  this.utils.numeros($event); }
+getLider(){
+  this.usuarios = [];
+  this._userS.cargarUsuarios().subscribe((usuarios: Usuario[]) => {
+    usuarios.filter(responsable => {
+      if (responsable.resp_area === true) {
+        this.usuarios.push(responsable);
+         }
+    });
+  });
+}
 
 
 }

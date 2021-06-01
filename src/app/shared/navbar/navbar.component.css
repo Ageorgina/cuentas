@@ -3,9 +3,9 @@
     width: 0;
     position: fixed;
     z-index: 1;
-    top: 6.5%;
+    top: 0;
     left: 0;
-    background-color: rgba(225, 225, 228, 0.699);
+    background-color: rgba(225, 225, 228, 0.863);
     overflow-x: hidden;
     transition: 0.5s;
 }
@@ -72,6 +72,12 @@
 .btn {
     text-align: left;
     color: #202C4C;
+    font-weight: bold;
+    /* background-color: #4E936F; */
+    margin: 0 !important;
+    padding-left: 10%;
+    width: 100%;
+    /* padding: 0 !important; */
 }
 
 .acordeon__contenido {
@@ -128,7 +134,7 @@ input#usuario {
     flex-wrap: nowrap;
     flex-direction: column;
     /* width: 500px; */
-    margin-left: 10%;
+    /* margin-left: 10%; */
 }
 
 .text {

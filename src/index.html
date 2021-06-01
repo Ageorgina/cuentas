@@ -29,14 +29,22 @@
         $(document).mouseup(function(cierre) {
             if ($(cierre)[0].target.localName != 'label') {
                 closeNav()
+            } else {
+                return;
             }
         });
 
         function openNav() {
+            if (document.getElementById("sidenav") === null) {
+                return;
+            }
             document.getElementById("sidenav").style.width = "175px";
         }
 
         function closeNav() {
+            if (document.getElementById("sidenav") === null) {
+                return;
+            }
             document.getElementById("sidenav").style.width = "0";
         }
     </script>

@@ -4,59 +4,43 @@
  import { BehaviorSubject, Observable } from 'rxjs';
  import { map } from 'rxjs/operators';
  import { environment } from '../../../environments/environment';
- import { User} from '../model/User';
+ import { UserLog } from '../model/User';
  import { catchError } from 'rxjs/operators';
  import { Store } from '@ngrx/store';
  import { AppState } from '../../security/store/reducers/app.reducers';
  import { LoginAction, LogoutAction, ActivarLoadingAction, DesactivarLoadingAction } from '../../security/store/actions';
  import { Router } from '@angular/router';
  import { UsuariosService } from '../../services';
- import { Usuario } from '../../general/model';
 
  @Injectable({providedIn: 'root'})
 export class AuthService {
-  private currentUserSubject: BehaviorSubject<User>;
-  public currentUser: Observable<User>;
-  public loading: boolean;
-  private correo: string;
-  public userFb: any;
-  public admin: boolean;
-  public aprobador: boolean;
-  public tesorero: boolean;
-  public financiero: boolean;
-  public rolU: boolean;
+  userFb:any ;
+  userLog = new UserLog;
 
 
-  constructor( private http: HttpClient, private store: Store<AppState>, private router: Router, private user: UsuariosService) {
-    localStorage.removeItem('currentUser');
-    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
-    this.currentUser = this.currentUserSubject.asObservable();
+
+  constructor( private http: HttpClient, private router: Router, private user: UsuariosService) {
+
   }
 
-  public get currentUserValue(): User {
-    return this.currentUserSubject.value;
-  }
+
 
   login(username: string, password: string) {
-    this.correo = username;
-    this.userFB();
-    this.store.dispatch(new ActivarLoadingAction());
+    this.userFB(username);
     return this.http.post<any>(`${environment.gtosUrl}/login`, {username, password}).pipe(map(user => {
-      if (user.usuario.username === this.userFb.correo) {
-        this.userFb.respuesta = user;
-        this.admin = this.userFb.rol === 'Administrador';
-        this.aprobador = this.userFb.rol === 'Aprobador';
-        this.tesorero = this.userFb.rol === 'Tesorero';
-        this.financiero = this.userFb.rol === 'Financiero';
-        this.rolU = this.userFb.rol === 'Usuario';
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        this.currentUserSubject.next(user);
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        this.currentUserSubject.next(user);
-        this.store.dispatch(new LoginAction(user));
+      
+      if (user['usuario'].username === this.userFb.correo) {
+        
+        
+        this.userLog.email = username;
+        this.userLog.rol = this.userFb.rol;
+        this.userLog.status = 200;
+        this.userLog.image = this.userFb.imagen;
+        this.userLog.refresh = user['refresh_token']
+        sessionStorage.setItem('currentUser', JSON.stringify(this.userLog));
+        sessionStorage.setItem('token', user['access_token']);
       }
-      this.store.dispatch(new DesactivarLoadingAction());
-      return this.userFb;
+      return this.userLog;
     }), catchError(err => {
       if ( err.statusText === 'Internal Server Error') {
         return 'I';
@@ -69,14 +53,11 @@ export class AuthService {
     );
   }
 
- userFB() {
-    this.user.cargarUsuarios().subscribe( usuarios => {
-      usuarios.filter( (usuario: Usuario) => {
-        if (this.correo === usuario.correo) {
-          this.userFb = usuario;
-        }
-      });
+ userFB(username) {
+     this.user.cargarUsuarios().subscribe( usuarios => {
+      this.userFb = usuarios.find(usuario => usuario['correo'] === username)
     });
+    
   }
 
   logout() {
@@ -87,11 +68,20 @@ export class AuthService {
   }
 
   async logoutUser() {
-    this.store.dispatch(new DesactivarLoadingAction());
-    this.store.dispatch(new LogoutAction());
+    //this.store.dispatch(new DesactivarLoadingAction());
+    //this.store.dispatch(new LogoutAction());
+    sessionStorage.removeItem('currentUser');
+    sessionStorage.removeItem('token');
     localStorage.removeItem('currentUser');
-    this.currentUserSubject.next(null);
+    localStorage.removeItem('token');
+    //this.currentUserSubject.next(null);
+    sessionStorage.clear();
     localStorage.clear();
+  }
+
+  getMenu(name){
+    const rol = name.toLowerCase();
+    return this.http.get('./assets/menu/'+rol+'.json');
   }
 
 }

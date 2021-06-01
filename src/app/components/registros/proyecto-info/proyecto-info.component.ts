@@ -17,7 +17,7 @@ export class ProyectoInfoComponent {
   nominas: Nomina[] = [];
   reembolsos: Reembolso[] = [];
   gastosTitle = ['Fecha', 'Monto', 'Motivo', 'Estatus'];
-  nominaTitle = ['Nombre', 'Fecha Inicio', 'Fecha Fin', 'Costo', 'Modificar'];
+  nominaTitle = ['Nombre', 'Fecha Inicio', 'Fecha Fin', 'Costo', 'Acciones'];
   reembolsoTitle = ['Fecha', 'Monto', 'Motivo', 'Estatus'];
                // tslint:disable-next-line: variable-name
   constructor( private _proyectoS: ProyectosService, private gastoS: GastosService, private nominaS: NominaService,

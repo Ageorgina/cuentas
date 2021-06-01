@@ -5,33 +5,33 @@
     <div class="m-3 card">
         <div class="around">
             <div class="mt-3 col-md-3">
-                <label class="control-label">Fecha Inicio: <span><i class="far fa-calendar-alt"></i></span> </label><br>
+                <label class="control-label">Fecha Inicio<span><i class="ml-2 far fa-calendar-alt"></i></span> </label><br>
                 <input class="form-control-sm" disabled value="{{updateP?.fechaini}}">
             </div>
             <br>
             <div class="mt-3 col-md-3">
-                <label class="control-label" for="fechafin">Fecha Cierre: <span><i class="far fa-calendar-alt "></i></span> </label><br>
+                <label class="control-label" for="fechafin">Fecha Cierre<span><i class="far fa-calendar-alt "></i></span> </label><br>
                 <input class="form-control-sm" disabled id="fechafin" value="{{updateP?.fechafin}}">
             </div>
             <br>
             <div class="mt-3 col-md-3 ">
-                <label class="control-label" for="resp_asg">Responsable ASG:</label><br>
+                <label class="control-label" for="resp_asg">Responsable ASG</label><br>
                 <select disabled id="resp_asg"><option>{{updateP?.resp_asg}}</option></select>
             </div>
         </div>
         <div class="around">
             <div class="col-md-3 mt-3 ">
-                <label class="control-label" for="descripcion">Descripción: </label><br>
+                <label class="control-label" for="descripcion">Descripción</label><br>
                 <input class="form-control-sm" disabled class="form-control-sm" id="descripcion" value="{{updateP?.descripcion}}">
             </div>
             <br>
             <div class="col-md-3 mt-3 ">
-                <label class="control-label " for="tipo_proyecto ">Tipo de proyecto: </label><br>
+                <label class="control-label " for="tipo_proyecto ">Tipo de proyecto</label><br>
                 <input class="form-control-sm" disabled id="tipo_proyecto " value="{{updateP?.tipo_proyecto}} ">
             </div>
             <br>
             <div class="mt-3 col-md-3 ">
-                <label class="control-label " for="estatus ">Estatus:</label> <br>
+                <label class="control-label " for="estatus ">Estatus</label> <br>
                 <select id="estatus " class="seleccionador " disabled>
                     <option> {{updateP?.estatus}}</option>
                 </select>
@@ -39,46 +39,46 @@
         </div>
         <div class="around ">
             <div class="col-md-3 mt-3">
-                <label class="control-label" for="monto_p">Monto Presupuestado: </label><br>
+                <label class="control-label" for="monto_p">Monto Presupuestado</label><br>
                 <input class="form-control-sm" disabled class="form-control-sm" id="monto_p" value="{{updateP?.monto_p | currency}} ">
             </div>
             <br>
             <div class="col-md-3 mt-3">
-                <label class="control-label" for="monto_d">Monto disponible: </label><br>
+                <label class="control-label" for="monto_d">Monto disponible</label><br>
                 <input class="form-control-sm" disabled class="form-control-sm" id="monto_d" value="{{updateP?.monto_d | currency}} ">
             </div>
             <br>
             <div class="col-md-3 mt-3">
-                <label class="control-label" for="monto_r">Monto Real: </label><br>
+                <label class="control-label" for="monto_r">Monto Real</label><br>
                 <input class="form-control-sm" disabled class="form-control-sm" id="monto_r" value="{{updateP?.monto_r | currency}} ">
             </div>
         </div>
         <div class="around">
             <div class="mt-3 col-md-3 ">
-                <label class="control-label">Empresa: </label> <br>
+                <label class="control-label">Empresa</label> <br>
                 <select id="empresa " disabled> <option>{{updateP?.empresa}}</option></select>
             </div>
             <br>
             <div class="mt-3 col-md-3 "><input type="text" id="vacio" disabled></div>
             <br>
             <div class="mt-3 col-md-3 ">
-                <label class="control-label">Cliente: </label> <br>
+                <label class="control-label">Cliente</label> <br>
                 <select id="resp_cte " disabled><option>{{updateP?.resp_cte}}</option></select>
             </div>
         </div>
         <div class="around">
             <div class="mt-3 col-md-3 ">
-                <label class="control-label">Proceso: </label> <br>
+                <label class="control-label">Proceso</label> <br>
                 <input class="form-control-sm" disabled id="proceso " value="{{updateP?.proceso}} ">
             </div>
             <br>
             <div class="mt-3 col-md-3 ">
-                <label class="control-label">ID Actividad: </label> <br>
+                <label class="control-label">ID Actividad</label> <br>
                 <input class="form-control-sm" disabled id="id_act " value="{{updateP?.id_act}} ">
             </div>
             <br>
             <div class="mt-3 col-md-3 ">
-                <label class="control-label">Descripción Actividad: </label> <br>
+                <label class="control-label">Descripción Actividad</label> <br>
                 <input class="form-control-sm" disabled id="desc_act " value="{{updateP?.desc_act}} ">
             </div>
         </div>
@@ -86,8 +86,8 @@
         <div class="around">
             <div *ngIf="gastos.length> 0" id="tabla_p">
                 <div id="tabla">
-                    <label>Gastos: </label><br>
-                    <table class="table">
+                    <label>Gastos</label><br>
+                    <table class="table x">
                         <thead>
                             <tr>
                                 <th *ngFor="let head of gastosTitle ">{{head}}</th>
@@ -109,7 +109,7 @@
         <div class="around">
             <div *ngIf="reembolsos.length> 0" id="tabla_p">
                 <div id="tabla">
-                    <label>Reembolsos: </label><br>
+                    <label>Reembolsos</label><br>
                     <table class="table ">
                         <thead>
                             <tr>
@@ -132,21 +132,21 @@
         <div class="around ">
             <div *ngIf="nominas.length> 0" id="tabla_p">
                 <div id="tabla">
-                    <label>Nominas: </label><br>
-                    <table class="table">
+                    <label>Nominas</label><br>
+                    <table class="table" mdbTable #tableEl="mdbTable">
                         <thead>
                             <tr>
                                 <th *ngFor="let head of nominaTitle ">{{head}}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let el of nominas ; index as i">
+                            <tr *ngFor="let el of nominas ; let i = index">
                                 <td>{{el.nombre}}</td>
                                 <td>{{el.fechaini}}</td>
                                 <td>{{el.fechafin}}</td>
                                 <td style="text-align: right; ">{{el.costoProyecto | currency }}</td>
                                 <td>
-                                    <button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-success mr-2 btn-sm " (click)="actualizar(i) "><i class="fas fa-edit "></i> Modificar</button>
+                                    <button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-success mr-2 btn-sm " (click)="actualizar(el) "><i class="fas fa-edit "></i> Modificar</button>
                                 </td>
                             </tr>
                         </tbody>

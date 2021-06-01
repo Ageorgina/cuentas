@@ -4,14 +4,14 @@
 <h3 class="ml-4">Monto Disponible: {{saldoDisp | currency}}</h3>
 <br>
 <div id=tabla>
-    <table class="table">
+    <table class="table" mdbTable #tableEl="mdbTable">
         <thead>
             <tr>
                 <th *ngFor="let head of headTitle">{{head}}</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let el of elements; index as i">
+            <tr *ngFor="let el of elements; let i = index">
                 <td>{{el.resp_asg}}</td>
                 <td>{{el.fecha}}</td>
                 <td>{{el.id_partida}}</td>
@@ -37,8 +37,8 @@ mdbWavesEffect  type="button" class="btn btn-light" data-dismiss="modal">Cerrar<
 </button>
 </td>
 <td>
-    <button mdbBtn mdbWavesEffect type=" button " class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(i) "><i class="fas fa-edit "></i> Modificar</button>
-    <button mdbBtn mdbWavesEffect type="button " class="btn btn-outline-danger btn-sm " (click)="borrar(i) "> <i class="fas fa-trash-alt "></i> Eliminar</button>
+    <button mdbBtn mdbWavesEffect type=" button " class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(el) "><i class="fas fa-edit "></i> Modificar</button>
+    <button mdbBtn mdbWavesEffect type="button " class="btn btn-outline-danger btn-sm " (click)="borrar(el) "> <i class="fas fa-trash-alt "></i> Eliminar</button>
 </td>
 </tr>
 </tbody>

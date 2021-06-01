@@ -12,33 +12,39 @@ import { Utils } from '../../../general/utils/utils';
 })
 export class ProyectosComponent implements OnInit {
   titulo = 'Registrar Proyecto';
-  usuarios: Usuario[] =  [];
+  userLog = JSON.parse(sessionStorage.getItem('currentUser'))
+  usuarios =  [];
   clientes = [];
   proyectosForm: FormGroup;
-  proyecto: Proyecto;
-  gastos: Gasto[] = [];
+  proyecto = new Proyecto;
+  gastos = [];
   boton = 'Guardar';
   // tslint:disable-next-line: variable-name
   monto_d: number;
   // tslint:disable-next-line: variable-name
   id_proyecto: string;
-  updateP: Proyecto;
+  updateP= new Proyecto;
   textError: string;
   submitted = false;
   loading = true;
   actualizar = false;
   checked = true;
   areas: any;
-  empresas: Cliente[];
+  empresas = [];
                // tslint:disable-next-line: variable-name
   constructor( private formBuilder: FormBuilder, private _user: UsuariosService, private _proyectoS: ProyectosService,
                // tslint:disable-next-line: variable-name
                private _gst: GastosService, private _cte: ClientesService, private _areas: AreasService,
                private active: ActivatedRoute, private router: Router, public alert: AlertasService, private utils: Utils,
                ) {
-    this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => { this.usuarios = usuarios; });
-    this._cte.cargarClientes().subscribe((empresas: Cliente[]) => {
-      this.empresas =  empresas;
+    this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => { 
+      usuarios.filter( x=> {
+        if(x.resp_area === true){
+          this.usuarios.push(x);
+        }
+      } )
+       });
+    this._cte.cargarClientes().subscribe((empresas: Cliente[]) => { this.empresas =  empresas;
 
       });
     this._gst.cargarGastos().subscribe((gastos: Gasto[]) => { this.gastos = gastos; });
@@ -53,14 +59,14 @@ export class ProyectosComponent implements OnInit {
       tipo_proyecto: ['', Validators.required],
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
-      estatus: ['', Validators.required],
-      empresa: ['', Validators.required],
-      resp_cte: ['', Validators.required],
-      resp_asg: ['',Validators.required],
+      estatus: ['Estatus', Validators.required],
+      empresa: ['Empresa', Validators.required],
+      resp_cte: ['Responsable', Validators.required],
+      resp_asg: ['ASG',Validators.required],
       proceso: [''],
       id_act: [''],
       desc_act: [''],
-      interno: ['']
+      interno: [false]
   });
     this.id_proyecto = this.active.snapshot.paramMap.get('id_proyecto');
     if (this.id_proyecto) {
@@ -86,10 +92,10 @@ export class ProyectosComponent implements OnInit {
         this.proyectosForm.get(['interno']).setValue(this.updateP.interno);
       });
       }
-      this.proyectosForm.get(['empresa']).setValue('Empresa');
-      this.proyectosForm.get(['resp_asg']).setValue('ASG');
-      this.proyectosForm.get(['estatus']).setValue('Estatus');
-      this.proyectosForm.get(['resp_cte']).setValue('Responsable');
+      // this.proyectosForm.get(['empresa']).setValue('Empresa');
+      // this.proyectosForm.get(['resp_asg']).setValue('ASG');
+      // this.proyectosForm.get(['estatus']).setValue('Estatus');
+      // this.proyectosForm.get(['resp_cte']).setValue('Responsable');
 
   }
 
@@ -97,6 +103,8 @@ export class ProyectosComponent implements OnInit {
     this.loading = false;
   }
   empresaSelected(event) {
+    this.proyectosForm.get(['resp_cte']).setValue('Responsable');
+    this.clientes = [];
     this.empresas.filter( empresa => {
       if ( event.value === empresa.empresa) {
         this.clientes.push(empresa);
@@ -109,6 +117,18 @@ export class ProyectosComponent implements OnInit {
   onSubmit() {
     this.loading = true;
     this.submitted = true;
+    if (this.fval.resp_asg.value == 'ASG' ) {
+      this.proyectosForm.get(['resp_asg']).setErrors({required: true});
+    }
+    if ( this.fval.empresa.value == 'Empresa') {
+      this.proyectosForm.get(['empresa']).setErrors({required: true});
+    }
+    if ( this.fval.resp_cte.value == 'Responsable') {
+      this.proyectosForm.get(['resp_cte']).setErrors({required: true});
+    }
+    if ( this.fval.estatus.value == 'Estatus') {
+      this.proyectosForm.get(['estatus']).setErrors({required: true});
+    }
     if (!this.proyectosForm.valid) {
       this.alert.formInvalid();
       this.loading = false;
@@ -144,6 +164,8 @@ limpiar() {
   this.proyectosForm.get(['resp_asg']).setValue('ASG');
   this.proyectosForm.get(['estatus']).setValue('Estatus');
   this.proyectosForm.get(['resp_cte']).setValue('Responsable');
+  this.proyectosForm.get(['interno']).setValue(false);
+  this.proyectosForm.get(['empresa']).enable();
 }
 
 checkNumeros($event: KeyboardEvent) {
@@ -156,10 +178,15 @@ regresar() {
   this.router.navigate(['proyectos']);
 }
 cambiocte(event) {
+  this.proyectosForm.get(['resp_cte']).setValue('Responsable');
   if(event.target.checked === true ) {
-    this.checked = true;
-  } else {
+    this.proyectosForm.get(['empresa']).setValue('ASG');
+    this.proyectosForm.get(['empresa']).disable();
     this.checked = false;
+  } else {
+    this.checked = true;
+    this.proyectosForm.get(['empresa']).enable();
+    this.proyectosForm.get(['empresa']).setValue('Empresa');
   }
 }
 

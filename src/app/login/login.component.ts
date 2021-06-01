@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
   search: any;
   stringSearch: string;
   correo: string;
-  usuarioL: Usuario;
+  usuarioL= new Usuario;
   respuesta: any;
 
   constructor( private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
@@ -64,11 +64,10 @@ export class LoginComponent implements OnInit {
   login() {
     this.auth.login(this.f.username.value, this.f.password.value).subscribe( data => {
       this.respuesta = data;
-      if (this.respuesta['respuesta'] === undefined) {
+      if (data['status'] !== 200) {
+
         this.entroError();
       } else {
-        localStorage.setItem('rol', data.rol)
-        console.log(data.rol)
         this.entroExitoso();
       }
     });
@@ -89,6 +88,7 @@ export class LoginComponent implements OnInit {
       this.loading = false;
       this.alert.showError();
     } else if (this.respuesta === 'I') {
+      this.alert.textError = 'Error en el servidor';
       this.loading = false;
       if (this.f.username.errors && this.f.password.errors) {
         this.alert.validError();
@@ -101,14 +101,18 @@ export class LoginComponent implements OnInit {
         }
       }
     } else if (this.respuesta === 'F') {
+      this.alert.textError =  'Unauthorized';
       this.loading = false;
       if (!this.userS.newPass ) {
         if (this.f.username.value && this.loginForm.get( 'password').hasError( 'minlength')) {
           this.alert.invalidPass();
+          return;
         } else {
           this.alert.dontMatch();
+          return ;
         }
-      }
+      } 
+      this.alert.showError();
     }
   }
 

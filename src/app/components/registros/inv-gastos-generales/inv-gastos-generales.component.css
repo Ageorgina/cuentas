@@ -1,19 +1,23 @@
 .zoom {
     /* Aumentamos la anchura y altura durante 2 segundos */
+    width: 80px;
+    height: 85px;
     transition: width 2s, height 2s, transform 2s;
     -moz-transition: width 2s, height 2s, -moz-transform 2s;
     -webkit-transition: width 2s, height 2s, -webkit-transform 2s;
     -o-transition: width 2s, height 2s, -o-transform 2s;
 }
 
-.zoom:hover {
-    /* tranformamos el elemento al pasar el mouse por encima al doble de
-       su tamaño con scale(2). */
-    transform: scale(2);
-    -moz-transform: scale(2);
-    /* Firefox */
-    -webkit-transform: scale(2);
-    /* Chrome - Safari */
-    -o-transform: scale(2);
-    /* Opera */
-}
+
+/* .zoom:hover {
+     tranformamos el elemento al pasar el mouse por encima al doble de
+       su tamaño con scale(2). 
+    margin-top: 200px !important;
+    transform: scale(3);
+    -moz-transform: scale(3);
+    /* Firefox 
+    -webkit-transform: scale(3);
+    /* Chrome - Safari 
+    -o-transform: scale(3);
+    /* Opera 
+} */

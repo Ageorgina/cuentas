@@ -1,0 +1,19 @@
+[{
+        "id": "item2",
+        "grupo": "Gestion",
+        "secciones": [{
+                "nombre": "gastos generales",
+                "ruta": "gastos"
+            },
+            {
+                "nombre": "reembolsos",
+                "ruta": "reembolsos"
+            },
+            {
+                "nombre": "Usuarios ASG",
+                "ruta": "usuarios"
+            }
+        ]
+    }
+
+]

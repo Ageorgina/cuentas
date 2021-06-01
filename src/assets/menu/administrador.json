@@ -1,0 +1,67 @@
+[{
+        "id": "item1",
+        "grupo": "Altas",
+        "secciones": [{
+                "nombre": "Clientes",
+                "ruta": "registro-clientes"
+            },
+            {
+                "nombre": "gastos generales",
+                "ruta": "registro-gastos"
+            },
+            {
+                "nombre": "proyectos",
+                "ruta": "registro-proyectos"
+            },
+            {
+                "nombre": "reembolsos",
+                "ruta": "registro-reembolso"
+            },
+            {
+                "nombre": "Usuarios ASG",
+                "ruta": "registro-usuarios"
+            }, {
+                "nombre": "Nómina",
+                "ruta": "registro-nomina"
+            }
+        ]
+    },
+    {
+        "id": "item2",
+        "grupo": "Gestion",
+        "secciones": [{
+                "nombre": "Clientes",
+                "ruta": "clientes"
+            },
+            {
+                "nombre": "gastos generales",
+                "ruta": "gastos"
+            },
+            {
+                "nombre": "proyectos",
+                "ruta": "proyectos"
+            },
+            {
+                "nombre": "reembolsos",
+                "ruta": "reembolsos"
+            },
+            {
+                "nombre": "Usuarios ASG",
+                "ruta": "usuarios"
+            }
+        ]
+    },
+    {
+        "id": "item3",
+        "grupo": "Oficina",
+        "secciones": [{
+                "nombre": "Partida",
+                "ruta": "registro-oficina"
+            },
+            {
+                "nombre": "gestión",
+                "ruta": "oficina"
+            }
+        ]
+    }
+]

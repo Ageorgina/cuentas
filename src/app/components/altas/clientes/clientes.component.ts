@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Utils } from '../../../general/utils/utils';
 import { Area, Cliente, Usuario } from '../../../general/model';
 import { ClientesService, AreasService, AlertasService, UsuariosService } from '../../../services';
+import { UserLog } from '../../../security/model/User';
 
 @Component({
   selector: 'app-clientes',
@@ -12,37 +13,30 @@ import { ClientesService, AreasService, AlertasService, UsuariosService } from '
 })
 export class ClientesComponent {
   titulo = 'Registrar Cliente';
-  cliente: Cliente;
+  userLog = JSON.parse(sessionStorage.getItem('currentUser'))
+  cliente = new Cliente;
   boton = 'Guardar';
   cteForm: FormGroup;
   // tslint:disable-next-line: variable-name
   id_cte: string;
-  updateCte: Cliente;
+  updateCte= new Cliente;
   textError: string;
   submitted = false;
   loading = true;
   actualizar = false;
   areaForm: FormGroup;
-  area: Area;
+  area = new Area;
   // tslint:disable-next-line:variable-name
   id_area: string;
   areas: Area[];
-  updateArea: Area;
+  updateArea = new Area;
   admin: boolean;
-  usuarioLocal: any;
 
                // tslint:disable-next-line: variable-name
   constructor( private _cteS: ClientesService, public _areaS: AreasService, private formBuilder: FormBuilder, private _user: UsuariosService,
                private active: ActivatedRoute, private router: Router, public alert: AlertasService, public utils: Utils ) {
-                this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => {
-                  this.loading = false;
-                  this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
-                  usuarios.filter( usuario => {
-                    if ( usuario.correo === this.usuarioLocal['usuario'].username) {
-                      if (usuario['rol'] === 'Administrador') { this.admin = true; }
-                  }
-                }); });
-    this.loading = false;
+
+//    this.loading = false;
     this.cteForm = this.formBuilder.group({
       nombre: ['', Validators.required],
       ap_p: [''],
@@ -54,7 +48,6 @@ export class ClientesComponent {
     this.areaForm = this.formBuilder.group({ nombre_area: ['', Validators.required] });
     this._areaS.cargarAreas().subscribe((areas: Area[]) => { this.areas = areas; });
     this.id_cte = this.active.snapshot.paramMap.get('id_cte');
-      // tslint:disable-next-line:align
       if (this.id_cte) {
         this.loading = false;
         this.actualizar = true;
@@ -67,6 +60,7 @@ export class ClientesComponent {
         this.cteForm.get(['empresa']).setValue(this.updateCte.empresa);
         this.cteForm.get(['celular']).setValue(this.updateCte.celular); });
     }
+    this.loading = false;
   }
 
   get fval() { return this.cteForm.controls; }
@@ -75,29 +69,27 @@ export class ClientesComponent {
   onSubmit() {
     this.loading = true;
     this.submitted = true;
-    if (!this.id_cte && this.cteForm.invalid) {
+
+    if (this.cteForm.invalid == true) {
       this.textError = '¡Faltan campos por llenar!';
       this.alert.textError = this.textError;
       this.alert.showError();
       this.loading = false;
       return ;
     }
-    if (!this.cteForm.valid) {
-      this.textError = '¡Faltan campos por llenar!';
-      this.alert.textError = this.textError;
-      this.alert.showError();
-      this.loading = false;
-      return ;
-    }
-    if (!this.id_cte && this.cteForm.valid ) {
+    if (!this.id_cte && this.cteForm.valid  === true) {
       this.submitted = false;
       this.cliente = this.cteForm.value;
+      this.cliente.ap_p = this.cteForm.value.ap_p.toLowerCase();
+      this.cliente.ap_m = this.cteForm.value.ap_m.toLowerCase();
+      this.cliente.nombre = this.cteForm.value.nombre.toLowerCase();
+      this.cliente.empresa = this.cteForm.value.empresa.toUpperCase();
       this._cteS.cudCtes().add(this.cliente);
       this.alert.showSuccess();
       this.limpiar();
       this.loading = false;
     }
-    if (this.id_cte && this.cteForm.valid) {
+    if (this.id_cte && this.cteForm.valid === true) {
       this.submitted = false;
       this.cliente = this.cteForm.value;
       this._cteS.cudCtes().doc(this.id_cte).update(this.cliente);
@@ -127,6 +119,7 @@ export class ClientesComponent {
     if (!this.id_area && this.areaForm.valid) {
       this.submitted = false;
       this.area = this.areaForm.value;
+      this.area.nombre_area = this.areaForm.value.nombre_area.toLowerCase();
       this._areaS.cudAreas().add(this.area);
       this.alert.showSuccess();
       this.limpiar();
@@ -134,7 +127,7 @@ export class ClientesComponent {
     }
     if (this.id_area && this.areaForm.valid) {
       this.submitted = false;
-      this.area = this.areaForm.value;
+      this.area = this.areaForm.value.toLowerCase();
       this.alert.showSuccess();
       this._areaS.cudAreas().doc(this.id_area).update(this.area).finally( () => {
         this.backArea();

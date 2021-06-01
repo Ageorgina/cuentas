@@ -3,10 +3,10 @@
 <div class="loading" *ngIf="loading">Loading&#8230;</div>
 <div class="m-3 card">
     <div class="around">
-        <div *ngIf="!id_cte" class=" mt-3 ml-5 class">
-            <label class="control-label">Tipo de cliente: </label><br>
+        <div *ngIf="!id_cte" class="mt-3 ml-5 class">
+            <label class="control-label">Tipo de cliente</label><br>
             <label class="switch">
-                <input type="checkbox" name="check" id="check" value="true" checked onchange="javascript:showContent()" >
+                <input type="checkbox"name="check"id="check"value="true"checked onchange="javascript:showContent()">
                 <span class="slider round"></span>
               </label>
         </div>
@@ -14,38 +14,30 @@
     <div id="externo">
         <h3 class="center">Externo</h3>
         <form [formGroup]="cteForm" (ngSubmit)="onSubmit()" class="m-3">
-            <div class="around">
-                <div class="col-md-3 mt-3">
-                    <label class="control-label" for="ap_p">Apellido Paterno: </label>
-                    <input class="form-control " id="ap_p" placeholder="Apellido Paterno" formControlName="ap_p" type="text" data-toggle="tooltip " title="*Campo obligatorio " (keyup)="checkLetras($event) " [ngClass]="{ 'is-invalid': submitted && fval.ap_p.errors }">
+            <div class="between">
+                <div class="col-md-4 mt-3">
+                    <label class="control-label" for="ap_p">Apellido Paterno</label>
+                    <input class="form-control" id="ap_p" placeholder="Apellido Paterno" formControlName="ap_p" type="text" data-toggle="tooltip" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.ap_p.errors }">
                 </div>
-                <div class="col-md-3 mt-3">
-                    <label class="control-label" for="ap_m">Apellido Materno: </label>
-                    <input class="form-control " id="ap_m" placeholder="Apellido Materno" formControlName="ap_m" type="text" data-toggle="tooltip " title="*Campo obligatorio " (keyup)="checkLetras($event) " [ngClass]="{ 'is-invalid': submitted && fval.ap_m.errors }">
+                <div class="col-md-4 mt-3">
+                    <label class="control-label" for="ap_m">Apellido Materno</label>
+                    <input class="form-control" id="ap_m" placeholder="Apellido Materno" formControlName="ap_m" type="text" data-toggle="tooltip" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.ap_m.errors }">
                 </div>
-                <div class="col-md-3 mt-3">
-                    <label class="control-label" for="nombre">Nombre(s): </label>
-                    <input class="form-control " id="nombre" placeholder="Nombre(s)" formControlName="nombre" type="text" data-toggle="tooltip " title="*Campo obligatorio " (keyup)="checkLetras($event) " [ngClass]="{ 'is-invalid': submitted && fval.nombre.errors }">
+                <div class="col-md-4 mt-3">
+                    <label class="control-label" for="nombre">Nombre(s)</label>
+                    <input class="form-control" id="nombre" placeholder="Nombre(s)" formControlName="nombre" type="text" data-toggle="tooltip" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.nombre.errors }">
                 </div>
-            </div>
-            <br>
-            <div class="around">
-                <div class="mt-3 class">
-                    <label class="control-label" for="empresa">Empresa: </label>
+                <div class="mt-3 class col-md-12">
+                    <label class="control-label" for="empresa">Empresa</label>
                     <input class="form-control" id="empresa" placeholder="Empresa" formControlName="empresa" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.empresa.errors }">
                 </div>
-            </div>
-            <br>
-            <div class="around">
-                <div class="mt-3 class">
-                    <label class="control-label" for="puesto">Puesto: </label>
+
+                <div class="mt-3 class col-md-12">
+                    <label class="control-label" for="puesto">Puesto</label>
                     <input class="form-control" id="puesto" placeholder="Puesto" formControlName="puesto" type="text" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" (keyup)="checkLetras($event)" [ngClass]="{ 'is-invalid': submitted && fval.puesto.errors }">
                 </div>
-            </div> <br/>
-
-            <div class="around">
-                <div class="mt-3 class">
-                    <label class="control-label" for="celular">Celular: </label>
+                <div class="mt-3 class col-md-12">
+                    <label class="control-label" for="celular">Celular</label>
                     <input class="form-control" maxlength="10" id="celular" placeholder="Celular" formControlName="celular" type="text" (keyup)="checkNumeros($event)">
                 </div>
             </div> <br/>
@@ -64,40 +56,40 @@
     </div>
 
     <div id="interno" style="display: none;">
-        <h3 class=" center ">Interno</h3>
-        <div class="between ">
+        <h3 class="center">Interno</h3>
+        <div class="between">
             <div class="col-md-5">
-                <form [formGroup]="areaForm " (ngSubmit)="addArea() " class="m-3 ">
-                    <label class="control-label " for="nombre_area ">Nombre: </label>
-                    <input #nombre_area class="form-control " id="nombre_area " placeholder="Nombre " formControlName="nombre_area" data-toggle="tooltip " data-placement="top " title="*Campo obligatorio " (keyup)="checkLetras($event) " [ngClass]="{
-        'is-invalid': submitted && f.nombre_area.errors } ">
+                <form [formGroup]="areaForm" (ngSubmit)="addArea()" class="m-3">
+                    <label class="control-label" for="nombre_area">Nombre</label>
+                    <input #nombre_area class="form-control" id="nombre_area" placeholder="Nombre" formControlName="nombre_area" data-toggle="tooltip" data-placement="top" title="*Campo obligatorio" [ngClass]="{
+        'is-invalid': submitted && f.nombre_area.errors }">
                     <br>
-                    <div *ngIf="actualizar " class="center ">
-                        <button mdbBtn mdbWavesEffect type="button " id="cancelar " class="btn btn-outline-danger mr-4 " (click)="backArea() "><i class=" mr-3 fas fa-times "></i>
+                    <div *ngIf="actualizar" class="center">
+                        <button mdbBtn mdbWavesEffect type="button" id="cancelar" class="btn btn-outline-danger mr-4" (click)="backArea()"><i class="mr-3 fas fa-times"></i>
                             Cancelar</button>
-                        <button mdbBtn mdbWavesEffect type="submit " id="actualizar " class="btn btn-outline-warning "><i class=" mr-3 fas fa-sync-alt "></i>
+                        <button mdbBtn mdbWavesEffect type="submit" id="actualizar" class="btn btn-outline-warning"><i class="mr-3 fas fa-sync-alt"></i>
                             Actualizar</button>
                     </div>
-                    <div class="center ">
-                        <button mdbBtn mdbWavesEffect #guardar *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class=" mr-3 fas fa-cloud-download-alt "></i>
+                    <div class="center">
+                        <button mdbBtn mdbWavesEffect #guardar *ngIf="!actualizar" type="submit" id="guardar" class="col-md-5"><i class="mr-3 fas fa-cloud-download-alt"></i>
                             {{boton}}</button>
                     </div>
                 </form>
             </div>
-            <div class="col-md-5 " id="tabla ">
-                <table class="table ">
+            <div class="col-md-5" id="tabla">
+                <table class="table x">
                     <thead>
                         <tr>
                             <th>Nombre</th>
-                            <th>Modificar</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let el of areas; index as i ">
-                            <td class="left ">{{el.nombre_area}}</td>
-                            <td class="center ">
-                                <button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-success mr-2 btn-sm " (click)="actualizar_area(i) "><i class=" mr-3 fas fa-edit "></i> Modificar</button>
-                                <button mdbBtn mdbWavesEffect *ngIf="admin" type="button" class="btn btn-outline-danger btn-sm " (click)="borrar(i) "> <i class="mr-3 fas fa-trash-alt "></i> Eliminar</button>
+                        <tr *ngFor="let el of areas; let i = index">
+                            <td class="left">{{el.nombre_area | titlecase}}</td>
+                            <td class="center">
+                                <button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar_area(el)"><i class="mr-3 fas fa-edit"></i> Modificar</button>
+                                <button mdbBtn mdbWavesEffect *ngIf="userLog.rol === 'Administrador'" type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(el)"> <i class="mr-3 fas fa-trash-alt"></i> Eliminar</button>
                             </td>
                         </tr>
                     </tbody>

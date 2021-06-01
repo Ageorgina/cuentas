@@ -19,6 +19,7 @@ export class Reembolso {
     fechaPagado: Date;
     observacionesaprobador: string;
     observacionespagado: string;
+    createdby: string;
     constructor() {
         this.estatus = 'Solicitar';
     }

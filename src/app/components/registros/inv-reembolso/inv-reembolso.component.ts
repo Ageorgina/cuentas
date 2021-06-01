@@ -1,73 +1,45 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef} from '@angular/core';
 import { Reembolso } from '../../../general/model';
 import { Router } from '@angular/router';
 import { GastosService, AlertasService, UsuariosService, DescargasService } from '../../../services';
-
+import { MdbTableDirective, MdbTablePaginationComponent } from 'angular-bootstrap-md';
 @Component({
   selector: 'app-inv-reembolso',
   templateUrl: './inv-reembolso.component.html',
   styleUrls: ['./inv-reembolso.component.css']
 })
-export class InvReembolsoComponent {
+export class InvReembolsoComponent implements OnInit, AfterViewInit  {
 
   titulo = 'Reembolsos';
 
   elements: Reembolso[] = [];
   loading = true;
   comprobantes: any[] = [];
-  sameU: boolean;
+  same: false;
   admin: string;
   rolU: string;
   tesorero: string;
   aprobador: boolean = false;
   financiero: string;
-  usuarioLocal: any;
-  usuarioActual: any;
+  userLog = JSON.parse(sessionStorage.getItem('currentUser'));
   tipo: string;
   file: {} = {};
-  // tslint:disable-next-line: variable-name
-  constructor( private _gstS: GastosService, private router: Router, private _user: UsuariosService,
+  @ViewChild(MdbTablePaginationComponent, { static: true }) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective, { static: true }) mdbTable: MdbTableDirective
+  previous: any = [];
+  constructor( private _gstS: GastosService,  private cdRef: ChangeDetectorRef, private router: Router, private _user: UsuariosService,
                private alert: AlertasService, private descargas: DescargasService) {
-                 this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
-                 this._user.cargarUsuarios().subscribe(usuarios => {
-                  usuarios.filter( usuario => {
-                  if (this.usuarioLocal.usuario.username === usuario['correo'] ) {
-                    this.usuarioActual = usuario;
-                    this.loading = false;
-                    this._gstS.cargarReembolsos().subscribe((reembolsos: Reembolso[]) => {
-                      reembolsos.filter( reembolso => {
-                        if (this.usuarioActual.rol !== 'Usuario') {
-                          if ( this.usuarioActual['rol'] === 'Aprobador') {
-                            if (reembolso.estatus === 'Solicitar') {
-                              this.elements.push(reembolso);
-                              reembolso['arrComprobantes'] = reembolso['comprobantes'].split(',');
-                            }
-                          } else {
-                              if (reembolso.estatus === 'Aprobado' || (reembolso.solicitante === this.usuarioActual.correo)) {
-                                this.elements.push(reembolso);
-                                reembolso['arrComprobantes'] = reembolso['comprobantes'].split(',');
-                              }
-                          }
-                        } else {
-                          if ( reembolso.solicitante === this.usuarioActual.correo ) {
-                            this.elements.push(reembolso);
-                            reembolso['arrComprobantes'] = reembolso['comprobantes'].split(',');
-                          }
-                        }
-
-                  });
-                });
-              }
-            });
-              });
+                 this.init();
 
               }
 
   borrar( value ) {
+    this.loading = true;
+
     this._gstS.cudReembolsos().doc(value.id_reembolso).delete();
+    this.elements = [];
+    this.init();
     this.alert.showSuccess();
-    this.router.navigate(['registro-reembolso']);
-    this.loading = false;
   }
 
   actualizar(value) {
@@ -101,4 +73,53 @@ export class InvReembolsoComponent {
       this.alert.showError();
   });
   }
+  ngOnInit() {
+    this.loading = false;
+  }
+  ngAfterViewInit() {
+
+    this.mdbTablePagination.setMaxVisibleItemsNumberTo(5);
+    this.mdbTablePagination.calculateFirstItemIndex();
+    this.mdbTablePagination.calculateLastItemIndex();
+    this.cdRef.detectChanges();
+  }
+  init(){
+    this._gstS.cargarReembolsos().subscribe((reembolsos: Reembolso[]) => {
+      this.elements = [];
+      reembolsos.filter( reembolso => {
+        if(this.userLog.email === reembolso.solicitante){
+            this.elements.push(reembolso);
+            reembolso['arrComprobantes'] = reembolso['comprobantes'].split(',');
+        } else if(this.userLog.rol === 'Administrador'){
+
+            if(this.elements.includes(reembolso)  === false) {
+            this.elements.push(reembolso);
+            reembolso['arrComprobantes'] = reembolso['comprobantes'].split(',');
+            }
+          } else if ( this.userLog['rol'] === 'Aprobador'  ) {
+            if (reembolso.estatus === 'Solicitar') {
+              if(this.elements.includes(reembolso)  === false) {
+              this.elements.push(reembolso);
+              reembolso['arrComprobantes'] = reembolso['comprobantes'].split(',');
+            }
+          }
+          } else if ( this.userLog['rol'] === 'Financiero' || this.userLog['rol'] === 'Tesorero' ) {
+            if (reembolso.estatus === 'Aprobado' &&  this.userLog['email'] !== reembolso.solicitante) {
+              if(this.elements.includes(reembolso)  === false){
+              this.elements.push(reembolso);
+              reembolso['arrComprobantes'] = reembolso['comprobantes'].split(',');
+            } 
+          }
+          } 
+
+
+  });
+
+this.mdbTable.setDataSource(this.elements);
+this.elements = this.mdbTable.getDataSource();
+this.previous = this.mdbTable.getDataSource();
+this.loading = false;
+});
+  }
+
 }

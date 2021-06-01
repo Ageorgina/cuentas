@@ -1,0 +1,40 @@
+<button mdbBtn title="Información del solicitante" mdbWavesEffect type="button" id="info" class="btn-flotante btn btn-outline-info" data-toggle="modal" data-target="#infoModal" (click)="clicked()"><i class=" fas fa-info-circle"aria-hidden="true"></i> </button>
+
+<div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" #infoModal id="infoModal" aria-labelledby="infoModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="loading" *ngIf="loading">Loading&#8230;</div>
+            <div class="m-3 card">
+                <form [formGroup]="ctaForm" class="m-3">
+                    <div class="between">
+                        <div class="col-md-4 mt-3">
+                            <label class="control-label" for="ap_p">Apellido Paterno</label>
+                            <input class="form-control" id="ap_p" placeholder="Apellido Paterno" formControlName="ap_p" type="text" data-toggle="tooltip" title="*Campo obligatorio">
+                        </div>
+                        <div class="col-md-4 mt-3">
+                            <label class="control-label" for="ap_m">Apellido Materno</label>
+                            <input class="form-control" id="ap_m" placeholder="Apellido Materno" formControlName="ap_m" type="text" data-toggle="tooltip" title="*Campo obligatorio">
+                        </div>
+                        <div class="col-md-4 mt-3">
+                            <label class="control-label" for="nombre">Nombre(s)</label>
+                            <input class="form-control" id="nombre" placeholder="Nombre(s)" formControlName="nombre" type="text" data-toggle="tooltip" title="*Campo obligatorio">
+                        </div>
+                        <div class="col-md-4 mt-3">
+                            <label class="control-label" for="banco">Banco</label>
+                            <input class="form-control" id="banco" placeholder="Banco" formControlName="banco" type="text" data-toggle="tooltip" title="*Campo obligatorio">
+                        </div>
+                        <div class="col-md-4 mt-3">
+                            <label class="control-label" for="clave">Clave Interbancaria</label>
+                            <input class="form-control" id="clave" placeholder="Clave Interbancaria" formControlName="clave" type="text" data-toggle="tooltip" title="*Campo obligatorio">
+                        </div>
+                        <div class="col-md-4 mt-3">
+                            <label class="control-label" for="correo">Correo</label><br>
+                            <input class="form-control form-control-sm" id="correo" placeholder="Correo" formControlName="correo" type="email" data-toggle="tooltip" title="*Campo obligatorio">
+                        </div>
+                        <br>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,32 +3,37 @@
 
 <div class="loading" *ngIf="loading">Loading&#8230;</div>
 <div id="tabla_p">
-    <table class="table">
+    <table class=" z-depth-1" mdbTable #tableEl="mdbTable">
         <thead>
             <tr>
                 <th *ngFor="let head of headTitle">{{head}}</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let el of elements; index as i">
-                <td>{{el.nombre}}</td>
-                <td>{{el.descripcion}}</td>
-                <td>{{el.fechaini}}</td>
-                <td>{{el.fechafin}}</td>
-                <td>{{el.monto_p | currency }}</td>
-                <td>{{el.monto_d | currency }}</td>
-                <td>{{el.tipo_proyecto}}
-                    <p><button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-info btn-sm" (click)="elementoSelected(i)" data-toggle="modal" data-target="#more"> Más Información...</button>
+            <tr *ngFor="let el of elements; let i = index">
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">{{el.nombre}}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">{{el.descripcion}}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">{{el.fechaini}}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">{{el.fechafin}}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">{{el.monto_p | currency }}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">{{el.monto_d | currency }}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">{{el.tipo_proyecto}}
+                    <p><button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-info btn-sm" (click)="elementoSelected(el)" data-toggle="modal" data-target="#more"> Más Información...</button>
                 </td>
-                <td>
-                    <button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-success btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
-                    <!-- <button  mdbBtn
-
-mdbWavesEffect  type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button> -->
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">
+                    <button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-success btn-sm" (click)="actualizar(el)"><i class="fas fa-edit"></i> Modificar</button>
+                    <button mdbBtn mdbWavesEffect *ngIf="userLog.rol === 'Administrador' || userLog.email === el.resp_asg" type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(el)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
                 </td>
             </tr>
 
         </tbody>
+        <tfoot class="grey lighten-5 col-md-12">
+            <tr>
+                <td colspan="9" class="tfoot">
+                    <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="elements"></mdb-table-pagination>
+                </td>
+            </tr>
+        </tfoot>
     </table>
 
 </div>

@@ -22,13 +22,19 @@ export class UsuariosService {
   cudUsuarios() {
       return this.db.collection('usuarios');
   }
-
+  cudCuentas(){
+    return this.db.collection('cuentas');
+  }
+  cargarCuentas() {
+    return this.db.collection('cuentas').valueChanges({idField: 'id_cuenta'});
+  }
 
   // DB
 
   crearUsuarioS(usuario: UserBase) {
     return this.http.post<any>(`${environment.gtosUrl}/usuario/crearUsuario`, usuario);
   }
+
   consultaUsuarios() {
     return this.http.get(`${environment.gtosUrl}/usuario/obtenerTodosUsuarios`);
   }

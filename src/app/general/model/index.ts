@@ -8,3 +8,5 @@ export * from './oficina';
 export * from './proyecto';
 export * from './reembolso';
 export * from './usuario';
+export * from './menu';
+export * from './cuenta';

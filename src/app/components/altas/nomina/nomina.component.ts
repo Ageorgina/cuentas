@@ -12,8 +12,8 @@ import { Proyecto, Nomina, Usuario } from '../../../general/model';
 })
 export class NominaComponent implements OnInit {
   titulo = 'Nómina';
-  usuarios: Usuario[] = [];
-  proyectos: Proyecto[] = [];
+  usuarios = [];
+  proyectos = [];
   nominaForm: FormGroup;
   boton = 'Guardar';
   actualizar = false;
@@ -22,19 +22,20 @@ export class NominaComponent implements OnInit {
   saldoDisp = 0;
   // tslint:disable-next-line: variable-name
   id_proyecto: string;
-  proyecto: Proyecto;
-  nomina: Nomina;
+  proyecto= new Proyecto;
+  nomina= new Nomina;
+  userLog = JSON.parse(sessionStorage.getItem('currentUser'));
+
   // tslint:disable-next-line: variable-name
   id_nomina: string;
-  nominaUpdate: Nomina;
+  nominaUpdate= new Nomina;
   saldoProyecto: number;
 
   // tslint:disable-next-line:variable-name
   constructor( private formBuilder: FormBuilder, private _user: UsuariosService, private _pyt: ProyectosService, private utils: Utils,
                private active: ActivatedRoute, private router: Router, public alert: AlertasService, private nominaS: NominaService) {
-                this.loading = false;
-                this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => { this.usuarios = usuarios;  });
-                 this._pyt.cargarProyectos().subscribe((proyectos: Proyecto[]) => {this.proyectos = proyectos; });
+this.init();
+
                  this.nominaForm = this.formBuilder.group({
                    nombre: ['', Validators.required],
                    salario: ['', Validators.required],
@@ -42,10 +43,11 @@ export class NominaComponent implements OnInit {
                    fechafin: ['', Validators.required],
                    proyecto: ['', Validators.required],
                    aumento: ['', Validators.required],
-                   estatus: [''],
-                   salarioReal: ['']
+                   estatus: ['Activo'],
+                   salarioReal: [''],
+                   monto: [0]
                   });
-                 this.nominaForm.get(['estatus']).setValue('Activo');
+                 
                  this.nominaForm.get(['estatus']).disable();
 
                  this.id_nomina = this.active.snapshot.paramMap.get('id_nomina');
@@ -75,21 +77,33 @@ export class NominaComponent implements OnInit {
                    this.nominaForm.get(['proyecto']).setValue('Proyecto');
                    this.nominaForm.get(['estatus']).setValue('Activo');
                    this.nominaForm.get(['aumento']).setValue(1.0);
+                   this.nominaForm.get(['fechaini']).disable();
+                   this.nominaForm.get(['fechafin']).disable();
                   }
 
-
+                  get fval() { return this.nominaForm.controls; }
 
   ngOnInit() {
+    this.loading = false;
   }
 
   onSubmit() {
-    this.nomina = this.nominaForm.value;
-    if (this.nominaForm.invalid) {
-      this.submitted = false;
+    console.log(this.fval)
+    this.submitted = true;
+    if (this.fval.nombre.value == 'ASG' ) {
+      this.nominaForm.get(['nombre']).setErrors({required: true});
+    }
+    if (this.fval.proyecto.value == 'Proyecto') {
+      this.nominaForm.get(['proyecto']).setErrors({required: true});
+    }
+
+    if (this.nominaForm.invalid == true) {
+
       this.loading = false;
       this.alert.formInvalid();
       return ;
     }
+    this.nomina = this.nominaForm.value;
     if (!this.id_nomina && this.nominaForm.valid) {
       this.nomina.estatus = 'Activo';
       this.sueldoP();
@@ -118,7 +132,7 @@ export class NominaComponent implements OnInit {
       }
   }
 
-  get fval() { return this.nominaForm.controls; }
+ 
   checkNumeros($event: KeyboardEvent) { this.utils.numerosp($event); }
 
 
@@ -126,14 +140,43 @@ export class NominaComponent implements OnInit {
   this.submitted = false;
   this.loading = false;
   this.nominaForm.reset();
+  this.usuarios = [];
+  this.proyectos = [];
   this.saldoDisp = 0;
   this.nominaForm.get(['nombre']).setValue('ASG');
   this.nominaForm.get(['proyecto']).setValue('Proyecto');
   this.nominaForm.get(['estatus']).setValue('Activo');
   this.nominaForm.get(['aumento']).setValue(1.0);
+  this.nominaForm.get(['fechaini']).disable();
+  this.nominaForm.get(['fechafin']).disable();
+  this.init();
   }
   regresar() {
   this.router.navigate(['proyectos']);
+}
+init(){
+  this._user.cargarUsuarios().subscribe(usuarios => {
+    this.usuarios =[];
+    usuarios.filter(usuario => {
+    if(this.userLog.rol == 'Aprobador' && usuario['resp_asg'] === this.userLog.email ){
+       this.usuarios.push(usuario)  }
+       else if(this.userLog.rol == 'Administrador'){
+        this.usuarios = usuarios;
+      }
+        })});
+  this._pyt.cargarProyectos().subscribe((proyectos: Proyecto[]) => {
+    this.proyectos =[];
+    proyectos.filter(proyecto => {
+      
+     if(this.userLog.rol == 'Aprobador' && proyecto.resp_asg === this.userLog.email ){
+      this.proyectos.push(proyecto)
+     }       else if(this.userLog.rol == 'Administrador'){
+      this.proyectos = proyectos;
+    }
+    
+    })
+
+  });
 }
 
 
@@ -142,6 +185,8 @@ valor(nombre) {
     if (nombre === proyecto.nombre) {
       this.saldoDisp = proyecto.monto_d;
       this.proyecto = proyecto;
+      this.nominaForm.get(['fechaini']).enable();
+      this.nominaForm.get(['fechafin']).enable();
     }
   });
 }

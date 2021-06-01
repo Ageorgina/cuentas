@@ -1,8 +1,8 @@
-import {User} from '../../model/User';
+import { User, UserLog } from '../../model/User';
 import * as fromAuth from '../actions/auth.actions';
 
 export interface AuthState {
-  user: User;
+  user: UserLog;
 }
 
 const initState: AuthState = {

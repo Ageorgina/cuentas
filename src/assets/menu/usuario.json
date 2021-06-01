@@ -1,0 +1,22 @@
+[{
+        "id": "item1",
+        "grupo": "Altas",
+        "secciones": [{
+            "nombre": "reembolsos",
+            "ruta": "registro-reembolso"
+        }]
+    },
+    {
+        "id": "item2",
+        "grupo": "Gestion",
+        "secciones": [{
+                "nombre": "reembolsos",
+                "ruta": "reembolsos"
+            },
+            {
+                "nombre": "Usuarios ASG",
+                "ruta": "usuarios"
+            }
+        ]
+    }
+]

@@ -3,25 +3,32 @@
 
 <div class="loading" *ngIf="loading">Loading&#8230;</div>
 <div id="tabla">
-    <table class="table">
+    <table class="table z-depth-1" mdbTable #tableEl="mdbTable">
         <thead>
             <tr>
                 <th *ngFor="let head of headTitle">{{head}}</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let el of elements; index as i" [ngStyle]="{'color': el.activo ? ' #202C4C': 'red'}">
-                <td> {{el.ap_p}} {{el.ap_m}} {{el.nombre}}</td>
-                <td>{{el.rol}}</td>
-                <td>{{el.area}}</td>
-                <td>{{el.resp_asg}}</td>
-                <td>{{el.correo}}</td>
-                <td>{{el.puesto}}</td>
-                <td class="center">
-                    <button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
-                    <button mdbBtn mdbWavesEffect *ngIf='admin' type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(i)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
+            <tr *ngFor="let el of elements; let i = index" [ngStyle]="{'color': el.activo ? '#202C4C': 'red'}" [class.same-info]="userLog.email === el.correo">
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row"> {{el.ap_p | titlecase}} {{el.ap_m | titlecase}} {{el.nombre | titlecase}}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.rol}}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.area}}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.resp_asg}}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.correo}}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.puesto}}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">
+                    <button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(el)"><i class="fas fa-edit"></i> Modificar</button>
+                    <button mdbBtn mdbWavesEffect *ngIf="userLog.rol === 'Administrador'" type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(el)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
                 </td>
             </tr>
         </tbody>
+        <tfoot class="grey lighten-5 col-md-12">
+            <tr>
+                <td colspan="7" class="tfoot">
+                    <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="elements"></mdb-table-pagination>
+                </td>
+            </tr>
+        </tfoot>
     </table>
 </div>

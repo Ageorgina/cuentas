@@ -1,3 +1,4 @@
+import { Cuenta } from './cuenta';
 
 export class Usuario {
     nombre: string;
@@ -14,7 +15,7 @@ export class Usuario {
     resp_asg: string;
     area: string;
     // tslint:disable-next-line: variable-name
-    id_user: string;
+    id_user: any;
     // tslint:disable-next-line:variable-name
     resp_area: boolean;
     rol: string;
@@ -23,6 +24,7 @@ export class Usuario {
     imagen: string;
     createdby: string;
     resultado: {};
+    cuenta: {};
     constructor( ) {
       this.idUsuario = 0;
       // tslint:disable-next-line:max-line-length

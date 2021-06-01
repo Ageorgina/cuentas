@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../security/services/auth.service';
+import { Menu } from '../../general/model';
+import { DescargasService } from '../../services/srv_shared/descargas.service';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -8,30 +10,30 @@ import { AuthService } from '../../security/services/auth.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
-  public usuarioActual: any;
+  userLog = JSON.parse(sessionStorage.getItem('currentUser'));
   rol: string;
   user: string;
   imagen: string;
-  public admin: boolean;
-  public aprobador: boolean;
-  public tesorero: boolean;
-  public financiero: boolean;
-  public rolU: boolean;
+  opts: any = [];
 
-  constructor( private auth: AuthService) {
-    if ( this.auth.userFb === undefined) {
+  constructor( private auth: AuthService,  private descargas: DescargasService) {
+
+    if ( this.userLog['status'] !== 200) {
       return;
     } else {
-      this.usuarioActual = this.auth.userFb;
-      this.imagen = this.usuarioActual.imagen;
-      this.user = this.usuarioActual.correo;
-      this.admin = this.auth.admin;
-      this.aprobador = this.auth.aprobador;
-      this.tesorero = this.auth.tesorero;
-      this.financiero = this.auth.financiero;
-      this.rolU = this.auth.rolU;
+      this.imagen = this.userLog.imagen;
+      this.user = this.userLog.correo;
+      this.auth.getMenu(this.userLog.rol).toPromise().then(response => {
+        this.opts = response;
+      }).catch(() => {
+        this.logout();
+      })
+
 
     }
+  }
+  descargar( ) {
+    window.open('https://firebasestorage.googleapis.com/v0/b/cuentas-ffc8b.appspot.com/o/guia.pdf?alt=media&token=75670271-0c25-4a09-9af8-9f0e282a525f')
   }
 
   logout() {

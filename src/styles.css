@@ -22,12 +22,22 @@ th {
     background-color: white;
     border: .5px solid #EBEBEE;
     border-bottom: transparent;
+    font-weight: bold !important;
 }
 
 td {
     text-align: center;
     border-top: transparent;
     border: .5px solid #dedee2;
+    font-size: small;
+}
+
+button#action {
+    border-radius: 25px;
+    padding: 0;
+    margin-right: 2px;
+    width: 30px;
+    text-align: center !important;
 }
 
 p#error,
@@ -112,6 +122,17 @@ h6 {
 .center {
     display: flex;
     justify-content: center;
+    width: 100%;
+    flex-flow: row wrap;
+    align-items: center;
+}
+
+li {
+    color: transparent;
+}
+
+li.page-item {
+    color: #000;
 }
 
 button#guardar {
@@ -120,8 +141,17 @@ button#guardar {
     background-color: #4E936F;
     color: white;
     font-weight: bold;
-    border-radius: 5%;
+    border-radius: 20px;
     /* margin-left: 25%; */
+}
+
+button#eliminar {
+    justify-content: center;
+    display: flex;
+    background-color: #b6b6b6;
+    color: white;
+    font-weight: bold;
+    border-radius: 20px;
 }
 
 .card {
@@ -137,18 +167,37 @@ select:focus {
 .between {
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap;
+    align-items: flex-start;
+    flex-flow: row wrap;
+}
+
+ul.pagination.pagination-circle.pg-blue.d-flex.flex-center {
+    width: 100%;
+    text-align: center;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+tr.same-info>td {
+    font-weight: bold !important;
+    text-transform: uppercase;
 }
 
 .around {
     display: flex;
     justify-content: space-around;
-    flex-wrap: wrap;
+    flex-flow: row wrap;
+}
+
+.progress {
+    min-width: 95%;
 }
 
 .column {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    max-height: 100vh;
 }
 
 label {
@@ -215,8 +264,10 @@ label {
     -o-animation: spinner 1500ms infinite linear;
     animation: spinner 1500ms infinite linear;
     border-radius: 0.5em;
-    -webkit-box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0, rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0, rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.5) -1.5em 0 0 0, rgba(0, 0, 0, 0.5) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0, rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
-    box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0, rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0, rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) -1.5em 0 0 0, rgba(0, 0, 0, 0.75) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0, rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
+    -webkit-box-shadow: #666 1.5em 0 0 0, #666 1.1em 1.1em 0 0, #666 0 1.5em 0 0, #666 -1.1em 1.1em 0 0, #666 -1.5em 0 0 0, #666 -1.1em -1.1em 0 0, #666 0 -1.5em 0 0, #666 1.1em -1.1em 0 0;
+    /* -webkit-box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0, rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0, rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.5) -1.5em 0 0 0, rgba(0, 0, 0, 0.5) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0, rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0; */
+    /* box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0, rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0, rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) -1.5em 0 0 0, rgba(0, 0, 0, 0.75) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0, rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0; */
+    box-shadow: #666 1.5em 0 0 0, #666 1.1em 1.1em 0 0, #666 0 1.5em 0 0, #666 -1.1em 1.1em 0 0, #666 -1.5em 0 0 0, #666 -1.1em -1.1em 0 0, #666 0 -1.5em 0 0, #666 1.1em -1.1em 0 0;
 }
 
 

@@ -20,6 +20,7 @@ export class Gasto {
     pago: string;
     fechaAprobo: Date;
     fechaPago: Date;
+    createdby:string;
     observacionesaprobador: string;
     observacionespagado: string;
 }

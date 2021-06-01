@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate {
 
   }
   canActivate(): Observable<boolean> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      if (this.auth.currentUserValue) {
+      if (sessionStorage.getItem('token')) {
         return true;
       } else {
         this.router.navigate(['/login']);

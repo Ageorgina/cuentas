@@ -13,15 +13,15 @@ import { ArchivosService, AlertasService, ProyectosService, UsuariosService, Gas
 export class GastosGeneralesComponent {
   titulo = 'Registrar Gastos Generales';
   boton = 'Guardar';
-  usuarios: Usuario[] = [];
+  usuarios = [];
   tipoGto: any[];
-  proyectos: Proyecto[] = [];
+  proyectos: any = [];
   gastosForm: FormGroup;
-  gasto: Gasto;
+  gasto = new Gasto;
   fecha: string;
   // tslint:disable-next-line: variable-name
   id_gasto: string;
-  updateG: Gasto;
+  updateG= new Gasto;
   submitted = false;
   loading = true;
   actualizar = false;
@@ -35,9 +35,8 @@ export class GastosGeneralesComponent {
   saldoDisp = 0;
   // tslint:disable-next-line:variable-name
   id_proyecto: string;
-  proyecto: any;
-  usuarioActual: any;
-  usuarioLocal: any;
+  proyecto = new Proyecto;
+  userLog = JSON.parse(sessionStorage.getItem('currentUser'));
   admin: boolean;
   aprobador: boolean;
   financiero: boolean;
@@ -47,45 +46,43 @@ export class GastosGeneralesComponent {
   clicked = false;
   status: string;
   botonCancelar = 'Cancelar';
-  jefes: any[] = [];
+  lideres: any = [];
 
   // tslint:disable-next-line: variable-name
   constructor( private _fileS: ArchivosService,  private _user: UsuariosService, private _pyt: ProyectosService, private _gastoS: GastosService,
                private active: ActivatedRoute,private formBuilder: FormBuilder, private router: Router, private utils: Utils, public alert: AlertasService ) {
-    this.loading = false;
-    this.submitted = false;
-    this.usuarioLocal = JSON.parse(localStorage.getItem('currentUser'));
-    this._gastoS.cargarTipoGtos().subscribe((tipoGtos: any[]) => { this.tipoGto = tipoGtos; });
+    this._gastoS.cargarTipoGtos().subscribe(tipoGtos =>  this.tipoGto = tipoGtos);
+    this._pyt.cargarProyectos().subscribe(proyectos =>{
+      if(this.userLog['rol'] == 'Administrador' || this.userLog['rol'] == 'Tesorero'){
+        this.proyectos = proyectos;
+      } else {
+      this.proyectos = [];
+      proyectos.filter(proyecto => {
+        if(this.userLog.rol == 'Aprobador' && proyecto['resp_asg'] === this.userLog.email ){
+           this.proyectos.push(proyecto);
+        }
+        });
+      }
+      });
     this.gastosForm = this.formBuilder.group({
-      fecha: ['', Validators.required],
+      fecha: [{value: '', disabled : true}, Validators.required],
       cantidad: ['', Validators.required],
       motivo: ['', Validators.required],
-      tipo_gasto: ['', Validators.required],
-      proyecto: ['', Validators.required],
-      estatus: ['', Validators.required],
-      reembolso: [''],
+      tipo_gasto: ['Tipo Gasto', Validators.required],
+      proyecto: ['Proyecto', Validators.required],
+      estatus: [{value:'Pagado', disabled: true}, Validators.required],
+      reembolso: [false],
       comprobantes: [''],
       observacionesaprobador: [''],
       observacionespagado: [''],
-      solicitante: ['']
+      solicitante: ['ASG']
     });
-    this._user.cargarUsuarios().subscribe((usuarios: Usuario[]) => {
+    this._user.cargarUsuarios().subscribe( usuarios => {
       this.usuarios = usuarios;
       usuarios.filter( usuario => {
-        if (usuario.rol === 'Aprobador') {
-          this.loading = false;
-          this.jefes.push(usuario);
+        if (usuario['resp_area'] === true) {
+          this.lideres.push(usuario);
            }
-        if ( usuario.correo === this.usuarioLocal['usuario'].username) {
-          this.usuarioActual = usuario;
-          if (usuario['rol'] === 'Administrador') { this.admin = true; } else
-          if (usuario['rol'] === 'Aprobador') { this.aprobador = true; } else
-          if (usuario['rol'] === 'Financiero') { this.financiero = true; } else
-          if (usuario['rol'] === 'Tesorero') { this.tesorero = true; }
-          this.gastosForm.get(['proyecto']).setValue('Proyecto');
-          this.gastosForm.get(['tipo_gasto']).setValue('Tipo gasto');
-          this.gastosForm.controls['estatus'].disable();
-      }
     });
     });
       this.id_gasto = this.active.snapshot.paramMap.get('id_gasto');
@@ -95,23 +92,27 @@ export class GastosGeneralesComponent {
       this.actualizar = true;
       this._gastoS.cudGastos().doc(this.id_gasto).valueChanges().subscribe((upG: Gasto) => {
         this.updateG = upG;
+        console.log(this.updateG.estatus)
         this.gastosForm.get(['fecha']).setValue(this.updateG.fecha);
         this.gastosForm.get(['cantidad']).setValue(this.updateG.cantidad);
         this.gastosForm.get(['motivo']).setValue(this.updateG.motivo);
         this.gastosForm.get(['reembolso']).setValue(this.updateG.reembolso);
         this.gastosForm.get(['tipo_gasto']).setValue(this.updateG.tipo_gasto);
-        this.gastosForm.get(['proyecto']).setValue(this.updateG.proyecto);
         this.gastosForm.get(['estatus']).setValue(this.updateG.estatus);
         this.gastosForm.get(['comprobantes']).setValue(this.updateG.comprobantes);
         this.gastosForm.get(['observacionesaprobador']).setValue(this.updateG.observacionesaprobador);
         this.gastosForm.get(['observacionespagado']).setValue(this.updateG.observacionespagado);
+        this.gastosForm.get(['proyecto']).setValue(this.updateG.proyecto);
+        this.proyecto = this.proyectos.find((response: Proyecto) =>  response['nombre'].toLowerCase() === this.updateG.proyecto.toLowerCase())
 
-        this.sameU = this.usuarioActual['correo'] === this.updateG.solicitante;
+        
+        this.sameU = this.userLog['email'] === this.updateG.solicitante;
         if (this.sameU) {
               if ( this.updateG.estatus === 'Pagado' ) {
                   this.gastosForm.disable();
                   this.botonCancelar = 'Regresar';
                 } else {
+              
                 this.gastosForm.controls['reembolso'].disable();
                 }
             } else {
@@ -123,18 +124,8 @@ export class GastosGeneralesComponent {
             }
     });
     }
-      this._pyt.cargarProyectos().subscribe((proyectos: Proyecto[]) => {
-      proyectos.filter(proyecto => {
-      if ( this.updateG &&( this.updateG.proyecto === proyecto.nombre)) {
-        this.saldoDisp = proyecto.monto_d;
-        this.proyecto = proyecto;
-      } else {
-        this.proyectos = proyectos;
-      }
-  });
-  });
-      this.gastosForm.get(['estatus']).setValue('Pagado');
-      this.gastosForm.get(['solicitante']).setValue('ASG');
+this.loading = false;
+
     }
 
   get fval() { return this.gastosForm.controls; }
@@ -144,6 +135,18 @@ export class GastosGeneralesComponent {
       this.loading = true;
       this.submitted = true;
       this.arrayUrl = [];
+      if (this.fval.solicitante.value === 'ASG' && this.userLog.rol === 'Tesorero') {
+        this.gastosForm.get(['solicitante']).setErrors({required: true});
+      }
+      if (this.fval.proyecto.value == 'Proyecto') {
+        this.gastosForm.get(['proyecto']).setErrors({required: true});
+      }
+      if (this.fval.fecha.value == '') {
+        this.gastosForm.get(['fecha']).setErrors({required: true});
+      }
+      if (this.fval.tipo_gasto.value == 'Tipo Gasto') {
+        this.gastosForm.get(['tipo_gasto']).setErrors({required: true});
+      }
       this.archivos.filter( data => {
       if (data.url !== 'NO TIENE URL') {
           this.arrayUrl.push(data.url);
@@ -160,10 +163,10 @@ export class GastosGeneralesComponent {
         return ;
       }
     if (this.id_gasto && this.gastosForm.valid) {
-        if (this.usuarioActual.rol !== 'Aprobador' &&  !this.sameU) {
+        if (this.userLog.rol !== 'Aprobador' &&  !this.sameU) {
           if (this.gasto.estatus === 'Pagado') {
             this.gasto.fechaPago = new Date();
-            this.gasto.pago = this.usuarioLocal.usuario.username;
+            this.gasto.pago = this.userLog.email;
             this.gasto.reembolso = false;
             this.proyecto['monto_d'] = Number(this.saldoDisp) - Number(this.updateG.cantidad);
           }
@@ -172,6 +175,7 @@ export class GastosGeneralesComponent {
           this.proyecto['monto_d'] = (Number(this.saldoDisp) + Number(this.updateG.cantidad));
 
         }
+        console.log(this.proyecto.id_proyecto)
         this._pyt.cudProyectos().doc(this.proyecto.id_proyecto).update(this.proyecto);
         this._gastoS.cudGastos().doc(this.id_gasto).update(this.gasto);
         this.alert.showSuccess();
@@ -180,10 +184,12 @@ export class GastosGeneralesComponent {
         this.router.navigate(['gastos']);
       }
     if (!this.id_gasto && this.gastosForm.valid) {
-      if(this.usuarioActual.rol === 'Aprobador'){
-        this.gasto.solicitante = this.usuarioLocal.usuario.username;
+      this.gasto.createdby = this.userLog.email;
+      if(this.userLog.rol === 'Aprobador'){
+        this.gasto.solicitante = this.userLog.email;
       }
-      this.gasto.aprobo = this.usuarioLocal.usuario.username;
+      
+      this.gasto.aprobo = this.userLog.email;
       this.loading = true;
         this.fecha = this.gastosForm.value.fecha;
         this.submitted = false;
@@ -198,6 +204,7 @@ export class GastosGeneralesComponent {
         this.gasto.estatus = 'Aprobado';
         this.gasto.fechaAprobo = new Date();
         }
+ 
         this._pyt.cudProyectos().doc(this.proyecto.id_proyecto).update(this.proyecto);
         this._gastoS.cudGastos().add(this.gasto);
         this.alert.showSuccess();
@@ -214,17 +221,17 @@ export class GastosGeneralesComponent {
     this.submitted = false;
     this.loading = false;
     this.gastosForm.reset();
-    this.archivos = [];
-    this.saldoDisp = 0;
+
     this.gastosForm.get(['estatus']).setValue('Pagado');
     this.gastosForm.get(['proyecto']).setValue('Proyecto');
-    this.gastosForm.get(['tipo_gasto']).setValue('Tipo gasto');
+    this.gastosForm.get(['tipo_gasto']).setValue('Tipo Gasto');
     this.gastosForm.get(['solicitante']).setValue('ASG');
+    this.gastosForm.get(['fecha']).disable();
+    this.archivos = [];
+    this.saldoDisp = 0;
   }
 
   async cargarArchivos() {
-
-    console.log('cargarArchivos')
     this._fileS.CARPETA_FILES = 'comprobantes';
     let algo: FileItem[] = await new Promise((resolve, reject) => {
       this._fileS.cargarArchivosFb( this.archivos).finally(() => { resolve(this.archivos); })
@@ -235,7 +242,6 @@ export class GastosGeneralesComponent {
     const file = new FileItem(event.target.files[0]);
     this.archivos.push(file);
 
-  console.log('botonFiles archivos',this.archivos)
     this.cargarArchivos();
   }
 
@@ -247,14 +253,14 @@ export class GastosGeneralesComponent {
     regresar() {
       this.router.navigate(['gastos']);
     }
-  valor(nombre) {
-    console.log('valor', nombre)
-    this.proyectos.filter(proyecto => {
-      if (nombre === proyecto.nombre) {
-        this.saldoDisp = proyecto.monto_d;
-        this.proyecto = proyecto;
-      }
-    });
+  buscarProyecto(valor) {
+    const nombre = valor.toLowerCase();
+   
+
+    this.proyecto = this.proyectos.find(response => nombre === response.nombre.toLowerCase());
+
+    this.gastosForm.get(['fecha']).enable();
+    this.saldoDisp = this.proyecto['monto_d'];
   }
   cambio(evento) {
     if ( evento.checked === true) {

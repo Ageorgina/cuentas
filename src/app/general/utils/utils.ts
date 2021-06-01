@@ -20,7 +20,7 @@ export class Utils {
     letras($event: KeyboardEvent) {
       const value = ($event.target as HTMLInputElement).value;
       if ($event.target) {
-        ($event.target as HTMLInputElement).value = value.replace(/[^ÑA-ñfZa-z\s]+/g, '');
+        ($event.target as HTMLInputElement).value = value.replace(/[^a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+/g, '');
       }
   }
   numeros($event: KeyboardEvent) {

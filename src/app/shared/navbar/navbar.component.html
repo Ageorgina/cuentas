@@ -4,36 +4,19 @@
         <div id="sidenav" class="sidenav">
             <!-- <a href="javascript:void(0)" id='closebtn' class="closebtn" onclick="closeNav()">&times;</a> -->
             <div class="acordeon">
-                <img id="logo" src="./assets/img/logo.png">
-                <div *ngIf="financiero !== true" class="acordeon__item">
-                    <input type="radio" name="acordeon" id="item1">
-                    <label for="item1" class="acordeon__titulo">REGISTRAR</label>
+                <img id="logo" src="/assets/img/logo.png">
+                <div class="acordeon__item" *ngFor="let opt of opts">
+                    <input type="radio" name="acordeon" [id]="opt.id">
+                    <label data-toggle="tooltip" data-placement="right" title="Caja" [for]="opt.id" class="acordeon__titulo">{{opt.grupo | uppercase}}</label>
                     <div class="btn-group-vertical acordeon__contenido">
-                        <button mdbWavesEffect color="link" *ngIf="(admin || aprobador) === true" type="button" class="btn ml-2" routerLink="/registro-clientes"><i class="fab fa-cloudsmith"></i>Clientes</button >
-                        <button mdbWavesEffect  color="link" *ngIf="rolU === false" type="button" class="btn ml-2" routerLink="/registro-gastos"><i class="fab fa-cloudsmith"></i>Gastos Generales</button >
-                        <button mdbWavesEffect  color="link" *ngIf="(admin || aprobador) === true" type="button" class="btn ml-2" routerLink="/registro-proyectos"><i class="fab fa-cloudsmith"></i>Proyectos</button >
-                        <button mdbWavesEffect  color="link" *ngIf="aprobador === false" type="button" class="btn ml-2" routerLink="/registro-reembolso"><i class="fab fa-cloudsmith"></i>Reembolso</button >
-                        <button mdbWavesEffect  color="link" *ngIf="rolU === false" type="button" class="btn ml-2" routerLink="/registro-usuarios"><i class="fab fa-cloudsmith"></i>Usuarios ASG</button >
-                        <button mdbWavesEffect  color="link" *ngIf="(admin || aprobador) === true" type="button" class="btn ml-2" routerLink="/registro-nomina"><i class="fab fa-cloudsmith"></i>Nómina</button >
+                        <button mdbWavesEffect color="link" type="button" class="btn" [routerLink]="['/'+sec.ruta]" *ngFor="let sec of opt.secciones"><i class="fab fa-cloudsmith"></i>{{sec.nombre | uppercase}}</button >
                     </div>
                 </div>
-                <div class="acordeon__item">
-                    <input type="radio" name="acordeon" id="item2">
-                    <label for="item2" class="acordeon__titulo">GESTIÓN</label>
+                <div class="acordeon__item" >
+                    <input type="radio" name="acordeon" id="guia">
+                    <label data-toggle="tooltip" data-placement="right" title="Caja" for="guia" class="acordeon__titulo" > ARCHIVOS</label>
                     <div class="btn-group-vertical acordeon__contenido">
-                        <button mdbWavesEffect  color="link" *ngIf="(admin || aprobador) === true" type="button" class="btn ml-2" routerLink="/clientes"><i class="fab fa-cloudsmith"></i>Clientes</button >
-                        <button mdbWavesEffect  color="link" *ngIf="rolU === false" type="button" class="btn ml-2" routerLink="/gastos"><i class="fab fa-cloudsmith"></i>Gastos Generales</button   >
-                        <button mdbWavesEffect  *ngIf="(admin || aprobador) === true" type="button" class="btn ml-2" routerLink="/proyectos"><i class="fab fa-cloudsmith"></i>Proyectos</button>
-                        <button mdbWavesEffect color="link" type="button" class="btn ml-2" routerLink="/reembolsos"><i class="fab fa-cloudsmith"></i>Reembolso</button   >
-                        <button mdbWavesEffect  type="button" class="btn ml-2" routerLink="/usuarios"><i class="fab fa-cloudsmith"></i>Usuarios ASG</button>
-                    </div>
-                </div>
-                <div *ngIf="(admin || tesorero) === true" class="acordeon__item">
-                    <input type="radio" name="acordeon" id="item3">
-                    <label data-toggle="tooltip" data-placement="right" title="Caja" for="item3" class="acordeon__titulo">OFICINA</label>
-                    <div class="btn-group-vertical acordeon__contenido">
-                        <button mdbWavesEffect color="link" type="button" class="btn ml-2" routerLink="/registro-oficina"><i class="fab fa-cloudsmith"></i>Registrar</button >
-                        <button mdbWavesEffect  color="link" type="button" class="btn ml-2" routerLink="/oficina"><i class="fab fa-cloudsmith"></i>Gestión</button >
+                        <button mdbWavesEffect color="link" type="button" class="btn " (click)="descargar()" ><i class="mr-1 fa fa-eye"></i><small>GUÍA DE FACTURACIÓN</small></button >
                     </div>
                 </div>
             </div>
@@ -42,16 +25,16 @@
     </a>
     <div class="user">
         <div class="circular">
-            <img id="usuario" src="{{imagen}}">
+            <img id="usuario" [src]="userLog.image">
         </div>
         <div>
-            <input disabled id="usuario" value="{{user}}">
+            <input disabled id="usuario" [value]="userLog.email">
         </div>
     </div>
 
     <div class="f" style="text-align: end;">
         <a (click)="logout()"><i class="fas fa-sign-out-alt mr-1"></i>Salir</a>
-        <br> <a class="text">©2020 Copyright ASG Advisory Services</a>
+        <br> <a class="text">©Copyright ASG Advisory Services</a>
     </div>
 
 </nav>

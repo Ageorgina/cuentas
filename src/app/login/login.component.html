@@ -1,10 +1,9 @@
-<navbar hidden></navbar>
 <section class="view intro fondo">
     <div class="loading" *ngIf="loading">Loading&#8230;</div>
     <div class="center">
         <div class="center" style="width: 90%;">
             <div class="card">
-                <h2 class="text-center font-bold "> <img src="../../assets/img/logo.png "><br><strong>Inicio de sesión</strong></h2>
+                <h2 class="text-center font-bold "> <img src="/assets/img/logo.png "><br><strong>Inicio de sesión</strong></h2>
                 <div class="d-flex">
                     <form [formGroup]="loginForm " (ngSubmit)="onSubmit() ">
                         <div id="formulario" class="md-form ">

@@ -10,7 +10,7 @@ import { AlertasService, DescargasService, OficinaService  } from '../../../serv
 })
 export class InvOficinaComponent implements OnInit {
   titulo = 'Oficina';
-  headTitle = ['Responsable ASG', 'Fecha', 'Partida', 'Monto', 'Motivo', 'Comprobantes', 'Modificar'];
+  headTitle = ['Responsable ASG', 'Fecha', 'Partida', 'Monto', 'Motivo', 'Comprobantes', 'Acciones'];
   elements = [];
   saldoDisp = 0;
   submitted = false;

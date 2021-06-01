@@ -2,44 +2,32 @@
 <h1>Registro {{titulo}}</h1>
 <div class="loading" *ngIf="loading">Loading&#8230;</div>
 <div id="tabla">
-    <table class="table">
+    <table class="table z-depth-1" mdbTable #tableEl="mdbTable">
         <thead>
             <tr>
-                <th>Solicitante</th>
-                <th>Fecha</th>
-                <th>Monto</th>
-                <th>Motivo</th>
-                <th>Tipo gasto</th>
-                <th>Proyecto</th>
-                <th *ngIf="!aprobador">Aprobo</th>
-                <th>Estatus</th>
-                <th>Comprobantes</th>
-                <th>Modificar</th>
+                <th *ngFor="let title of theads">{{title | titlecase}}</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let el of elements; index as i">
-                <td>{{el.solicitante}}</td>
-                <td>{{el.fecha}}</td>
-                <td style="text-align: right;">{{el.cantidad | currency }}</td>
-                <td>{{el.motivo}}</td>
-                <td>{{el.tipo_gasto}}</td>
-                <td>{{el.proyecto}}</td>
-                <td *ngIf="!aprobador">{{el.aprobo}}</td>
-                <td>{{el.estatus}}</td>
-                <td>
+            <tr *ngFor="let el of elements; let i = index" [class.same-info]="userLog.email === el.solicitante">
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">{{el.solicitante}}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.fecha}}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" style="text-align: right;">{{el.cantidad | currency }}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.tipo_gasto}}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.proyecto}}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.aprobo}}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.estatus}}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">
                     <button mdbBtn mdbWavesEffect class="btn btn-outline-info btn-sm" data-toggle="modal" [attr.data-target]="'#'+el.id_gasto"> Ver comprobantes ...
-                    <div [attr.id]="el.id_gasto" class="modal fade">
+                    <div [attr.id]="el.id_gasto"class="modal fade">
                         <div class="modal-dialog modal-lg">
                             <!-- Modal content-->
                             <div class="modal-content">
-                                <div class="modal-body" >
-                                       <img class="zoom m-2" *ngFor="let file of el.arrComprobantes" [src]="file" (click)="descargar(file)">
+                                <div class="modal-body">
+                                       <img class="zoom m-2" onerror="this.src='/assets/img/file.png';" *ngFor="let file of el.arrComprobantes"[src]="file"(click)="descargar(file)">
                                 </div>
                                 <div class="modal-footer">
-                                    <button  mdbBtn
-
-mdbWavesEffect  type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button>
+                                    <button  mdbBtn mdbWavesEffect  type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button>
 </div>
 </div>
 </div>
@@ -47,13 +35,20 @@ mdbWavesEffect  type="button" class="btn btn-light" data-dismiss="modal">Cerrar<
 </button>
 
 </td>
-<td>
-    <button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(i)"><i class="fas fa-edit"></i> Modificar</button>
-    <button mdbBtn mdbWavesEffect *ngIf="usuarioActual.rol==='Administrador' || (el.estatus !=='Pagado' && sameU)" type=" button " class="btn btn-outline-danger btn-sm " (click)="borrar(i) "> <i class="fas fa-trash-alt "></i> Eliminar</button>
+<td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">
+    <button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(el)"><i class="fas fa-edit"></i> Modificar</button>
+    <button mdbBtn mdbWavesEffect *ngIf="(userLog.rol==='Administrador' || userLog.rol==='Aprobador') && el.estatus === 'Aprobado'  " type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(el)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
 </td>
 </tr>
 
 </tbody>
+<tfoot class="grey lighten-5 col-md-12">
+    <tr>
+        <td colspan="9" class="tfoot">
+            <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="elements"></mdb-table-pagination>
+        </td>
+    </tr>
+</tfoot>
 </table>
 
 

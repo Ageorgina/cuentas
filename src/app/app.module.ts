@@ -19,7 +19,7 @@ import { InvOficinaComponent } from './components/registros/inv-oficina/inv-ofic
 import { ReactiveFormsModule } from '@angular/forms';
 
 // MDBootstrap
-import { MDBBootstrapModule } from 'angular-bootstrap-md';
+import { MDBBootstrapModule, TableModule, WavesModule } from 'angular-bootstrap-md';
 import { RegistroOficinaComponent } from './components/altas/registro-oficina/registro-oficina.component';
 
 // Firebase
@@ -38,12 +38,17 @@ import { ReembolsoComponent } from './components/altas/reembolso/reembolso.compo
 import { InvReembolsoComponent } from './components/registros/inv-reembolso/inv-reembolso.component';
 
 // http
-import { HttpClientModule} from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 
 // ngrx
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { StoreModule } from '@ngrx/store';
 import { ProyectoInfoComponent } from './components/registros/proyecto-info/proyecto-info.component';
+import { FilterPipe } from './general/pipes/filter.pipe';
+import { SortPipe } from './general/pipes/sort.pipe';
+import { PagoComponent } from './shared/pago/pago.component';
+import { TokenService } from './security/services/token.service';
+import { CuentasComponent } from './components/altas/cuentas/cuentas.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +71,10 @@ import { ProyectoInfoComponent } from './components/registros/proyecto-info/proy
     InvReembolsoComponent,
     NominaComponent,
     ProyectoInfoComponent,
+    FilterPipe,
+    SortPipe,
+    PagoComponent,
+    CuentasComponent,
   ],
   imports: [
     BrowserModule,
@@ -79,9 +88,17 @@ import { ProyectoInfoComponent } from './components/registros/proyecto-info/proy
     AngularFireStorageModule,
     HttpClientModule,
     StoreModule.forRoot({}),
-    StoreDevtoolsModule
+    StoreDevtoolsModule,
+    WavesModule,
+    TableModule,
   ],
-  providers: [ ],
+  providers: [
+      {
+     provide: HTTP_INTERCEPTORS,
+     useClass: TokenService,
+     multi: true
+   }
+],
   bootstrap: [AppComponent],
   schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
 })
