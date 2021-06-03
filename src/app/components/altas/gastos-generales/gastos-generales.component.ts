@@ -53,7 +53,7 @@ export class GastosGeneralesComponent {
                private active: ActivatedRoute,private formBuilder: FormBuilder, private router: Router, private utils: Utils, public alert: AlertasService ) {
     this._gastoS.cargarTipoGtos().subscribe(tipoGtos =>  this.tipoGto = tipoGtos);
     this._pyt.cargarProyectos().subscribe(proyectos =>{
-      if(this.userLog['rol'] == 'Administrador' || this.userLog['rol'] == 'Tesorero'){
+      if(this.userLog['rol'] == 'Administrador' || this.userLog.rol == 'Financiero' || this.userLog['rol'] == 'Tesorero'){
         this.proyectos = proyectos;
       } else {
       this.proyectos = [];
@@ -87,14 +87,36 @@ export class GastosGeneralesComponent {
     });
       this.id_gasto = this.active.snapshot.paramMap.get('id_gasto');
       if ( this.id_gasto ) {
-      this.loading = false;
+ 
       this.titulo = 'Modificar Gasto';
+
       this.actualizar = true;
       this._gastoS.cudGastos().doc(this.id_gasto).valueChanges().subscribe((upG: Gasto) => {
         this.updateG = upG;
-        console.log(this.updateG.estatus)
+        this.proyecto = this.proyectos.find(p => (p['nombre']).toLowerCase() === (this.updateG['proyecto']).toLowerCase())
+        this.saldoDisp = this.proyecto['monto_d'];
+        this.loading = false;
+        this.sameU = this.userLog['email'] === this.updateG['solicitante'];
+        if ( this.updateG.estatus === 'Pagado') {
+          this.gastosForm.disable();
+          this.botonCancelar = 'Regresar';
+        }
+        if (this.sameU === true && this.updateG['estatus'] === 'Aprobado') {
+                this.gastosForm.enable();
+                this.gastosForm.controls['estatus'].disable();
+                this.gastosForm.controls['observacionesaprobador'].enable();
+
+                this.gastosForm.controls['observacionespagado'].disable();
+            } else if(this.updateG['estatus'] === 'Aprobado' && this.userLog.rol !== 'Aprobador'){
+              this.gastosForm.disable();
+              this.gastosForm.controls['estatus'].enable();
+              this.gastosForm.controls['observacionesaprobador'].disable();
+              this.gastosForm.controls['observacionespagado'].enable();
+            }
+
+            console.log(this.proyecto)
+        this.gastosForm.get(['solicitante']).setValue(this.updateG.solicitante);
         this.gastosForm.get(['fecha']).setValue(this.updateG.fecha);
-        this.gastosForm.get(['cantidad']).setValue(this.updateG.cantidad);
         this.gastosForm.get(['motivo']).setValue(this.updateG.motivo);
         this.gastosForm.get(['reembolso']).setValue(this.updateG.reembolso);
         this.gastosForm.get(['tipo_gasto']).setValue(this.updateG.tipo_gasto);
@@ -103,25 +125,10 @@ export class GastosGeneralesComponent {
         this.gastosForm.get(['observacionesaprobador']).setValue(this.updateG.observacionesaprobador);
         this.gastosForm.get(['observacionespagado']).setValue(this.updateG.observacionespagado);
         this.gastosForm.get(['proyecto']).setValue(this.updateG.proyecto);
-        this.proyecto = this.proyectos.find((response: Proyecto) =>  response['nombre'].toLowerCase() === this.updateG.proyecto.toLowerCase())
 
-        
-        this.sameU = this.userLog['email'] === this.updateG.solicitante;
-        if (this.sameU) {
-              if ( this.updateG.estatus === 'Pagado' ) {
-                  this.gastosForm.disable();
-                  this.botonCancelar = 'Regresar';
-                } else {
-              
-                this.gastosForm.controls['reembolso'].disable();
-                }
-            } else {
-              if ( this.updateG.estatus === 'Aprobado' ) {
-                this.gastosForm.disable();
-                this.gastosForm.controls['estatus'].enable();
-                this.gastosForm.controls['observacionespagado'].enable();
-              }
-            }
+        this.gastosForm.get(['cantidad']).setValue(this.updateG.cantidad);
+
+
     });
     }
 this.loading = false;
@@ -131,7 +138,7 @@ this.loading = false;
   get fval() { return this.gastosForm.controls; }
 
     onSubmit() {
-      this.gasto = this.gastosForm.value;
+
       this.loading = true;
       this.submitted = true;
       this.arrayUrl = [];
@@ -157,6 +164,8 @@ this.loading = false;
           this.comprobantes = this.arrayUrl.join(',');
       }
     this.gastosForm.value.comprobantes = this.comprobantes;
+
+    this.gasto = this.gastosForm.value;
     if (!this.gastosForm.valid) {
         this.alert.formInvalid();
         this.loading = false;
@@ -175,7 +184,6 @@ this.loading = false;
           this.proyecto['monto_d'] = (Number(this.saldoDisp) + Number(this.updateG.cantidad));
 
         }
-        console.log(this.proyecto.id_proyecto)
         this._pyt.cudProyectos().doc(this.proyecto.id_proyecto).update(this.proyecto);
         this._gastoS.cudGastos().doc(this.id_gasto).update(this.gasto);
         this.alert.showSuccess();
@@ -256,11 +264,12 @@ this.loading = false;
   buscarProyecto(valor) {
     const nombre = valor.toLowerCase();
    
-
+    console.log('this.p', this.proyectos)
     this.proyecto = this.proyectos.find(response => nombre === response.nombre.toLowerCase());
 
     this.gastosForm.get(['fecha']).enable();
     this.saldoDisp = this.proyecto['monto_d'];
+    
   }
   cambio(evento) {
     if ( evento.checked === true) {

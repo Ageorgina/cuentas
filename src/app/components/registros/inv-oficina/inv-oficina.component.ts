@@ -110,12 +110,14 @@ partidaUnica() {
       const a = document.createElement('a');
       a.href = dataP;
       if (data.type === 'application/vnd.ms-excel') {
-      a.download = String(fecha) + '.xls';
-    } else if (data.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-      a.download = String(fecha) + '.xlsx';
-    } else {
-      a.download = String(fecha);
-    }
+        a.download = String(fecha) + '.xls';
+      } else if (data.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+        a.download = String(fecha) + '.xlsx';
+      } else if (data.type === 'text/xml') {
+        a.download = String(fecha) + '.xml';
+      }else {
+        a.download = String(fecha);
+      }
       document.body.appendChild(a);
       this.loading = false;
       a.click();

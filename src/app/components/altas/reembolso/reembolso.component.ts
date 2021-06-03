@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuariosService, ArchivosService, ProyectosService, GastosService, AlertasService  } from '../../../services';
-import { Usuario, Proyecto, FileItem, Reembolso } from '../../../general/model';
+import { Proyecto, FileItem, Reembolso } from '../../../general/model';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Utils } from '../../../general/utils/utils';
@@ -143,6 +143,7 @@ export class ReembolsoComponent implements OnInit {
     if (this.archivos.length === 0) {
       this.comprobantes = '';
     } else {
+      console.log('entro aqui')
       this.comprobantes = this.arrayUrl.join(',');
     }
     this.reembolsoForm.value.comprobantes = this.comprobantes;
@@ -207,6 +208,13 @@ export class ReembolsoComponent implements OnInit {
       }
       this.reembolso.createdby = this.userLog.email;
       this.reembolso.estatus = 'Solicitar';
+      if (this.archivos.length === 0) {
+        this.comprobantes = '';
+      } else {
+        console.log('entro aqui')
+        this.comprobantes = this.arrayUrl.join(',');
+      }
+      console.log('rembolso',this.reembolso.comprobantes)
       this.__gastoS.cudReembolsos().add(this.reembolso);
       this.alert.showSuccess();
       this.loading = false;

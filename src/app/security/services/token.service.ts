@@ -14,8 +14,8 @@ constructor() { }
 intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
   const tokenReq = req.clone({
     setHeaders: {
-      Authorization:  `Bearer ${sessionStorage.getItem('token')}`,
-      'Access-Control-Allow-Origin': '*' //,
+      Authorization:  `Bearer ${sessionStorage.getItem('token')}`
+      //, 'Access-Control-Allow-Origin': '*' //,
       //'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
     }
   });

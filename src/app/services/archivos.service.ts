@@ -12,6 +12,7 @@ export class ArchivosService {
   CARPETA_FILES = 'comprobantes';
   id: any;
   storageRef = firebase.storage().ref();
+  storage = firebase.storage();
 
   constructor(private db: AngularFirestore, public alerta: AlertasService, private http: HttpClient ) { }
 
@@ -48,6 +49,18 @@ export class ArchivosService {
 
   private guardarArchivos( file: { nombre: string, url: string } ) {
     return ;
+  }
+
+  descargar(url){
+    const httpsReference = this.storage.refFromURL(url);
+    let resp: any;
+  httpsReference.getDownloadURL().then(response =>{
+        resp = this.http.get(response, { responseType: 'blob' }) ;
+     }).catch(error =>{
+       console.log(error)
+     })
+     return resp
+
   }
 
 }

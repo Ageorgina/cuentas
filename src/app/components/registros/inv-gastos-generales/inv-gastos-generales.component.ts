@@ -56,15 +56,20 @@ export class InvGastosGeneralesComponent implements OnInit, AfterViewInit {
 
   descargar( file ) {
     const fecha = Date.now();
+    console.log(file)
     this.descargas.descargar(file).subscribe(data => {
       const dataP = window.URL.createObjectURL(data);
       const a = document.createElement('a');
       a.href = dataP;
+      console.log(data.type)
+
       if (data.type === 'application/vnd.ms-excel') {
       a.download = String(fecha) + '.xls';
     } else if (data.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
       a.download = String(fecha) + '.xlsx';
-    } else {
+    } else if (data.type === 'text/xml') {
+      a.download = String(fecha) + '.xml';
+    }else {
       a.download = String(fecha);
     }
       document.body.appendChild(a);

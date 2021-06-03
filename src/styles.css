@@ -96,8 +96,8 @@ h6 {
 
 /**** zoom img ****/
 
-.zoom {
-    /* Aumentamos la anchura y altura durante 2 segundos */
+
+/* .zoom {
     transition: width 2s, height 2s, transform 2s;
     -moz-transition: width 2s, height 2s, -moz-transform 2s;
     -webkit-transition: width 2s, height 2s, -webkit-transform 2s;
@@ -105,16 +105,12 @@ h6 {
 }
 
 .zoom:hover {
-    /* tranformamos el elemento al pasar el mouse por encima al doble de
-       su tamaño con scale(2). */
     transform: scale(2);
     -moz-transform: scale(2);
-    /* Firefox */
     -webkit-transform: scale(2);
-    /* Chrome - Safari */
     -o-transform: scale(2);
-    /* Opera */
-}
+  
+} */
 
 
 /* css loading */
@@ -145,7 +141,8 @@ button#guardar {
     /* margin-left: 25%; */
 }
 
-button#eliminar {
+button#eliminar,
+button#cancelar {
     justify-content: center;
     display: flex;
     background-color: #b6b6b6;

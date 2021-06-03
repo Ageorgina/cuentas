@@ -20,7 +20,7 @@
                     <option *ngFor="let proyecto of proyectos">{{proyecto.nombre | titlecase}} </option>
                 </select>
             </div>
-            <div class="mt-3 col-md-4">
+            <div class="mt-3 col-md-4" *ngIf="proyecto !== undefined">
                 <label class="control-label" for="fecha">Fecha<span><i class="ml-2 far fa-calendar-alt"></i></span> </label>
                 <input class="form-control" id="fecha" [min]="proyecto.fechaini" formControlName="fecha" type="date" data-toggle="tooltip" title="*Campo obligatorio" [ngClass]="{ 'is-invalid': submitted && fval.fecha.errors }">
             </div>
@@ -68,7 +68,7 @@
             </div>
         </div>
         <div class="col-md-12 mt-3">
-            <label class="class" *ngIf="!id_gasto">Subir comprobantes </label><br>
+            <label class="class" *ngIf="!id_gasto">Subir comprobantes <br><small><i>Agregar archivo  xml de la factura </i></small> </label><br>
             <div *ngIf="!id_gasto" class="around">
                 <div *ngIf="(archivos.length <=  2)" class="drop-img  col-md-4">
                     <div appNgDropFiles [archivos]="archivos" (mouseSobre)="estaSobreElemento = $event; cargarArchivos();" [ngClass]="{ 'file-over': estaSobreElemento }" class="well drop-zone">

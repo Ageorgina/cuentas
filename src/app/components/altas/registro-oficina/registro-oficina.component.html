@@ -76,7 +76,7 @@
                     </div>
                 </div>
                 <br>
-                <label class="class m-5" *ngIf="!id_of">Subir comprobantes</label><br>
+                <label class="class m-5" *ngIf="!id_of">Subir comprobantes <br><small><i>Agregar archivo  xml de la factura </i></small></label><br>
                 <div *ngIf="!id_of" class="around">
                     <div *ngIf="(archivos.length <=  2)" class="drop-img mt-3 col-md-4">
                         <div appNgDropFiles [archivos]="archivos" (mouseSobre)="estaSobreElemento = $event; cargarArchivos();" [ngClass]="{ 'file-over': estaSobreElemento }" class="well drop-zone">

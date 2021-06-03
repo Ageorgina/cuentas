@@ -1,0 +1,10 @@
+{
+    "/firebase/*": {
+        "target": "https://cuentas-ffc8b-default-rtdb.firebaseio.com",
+        "secure": false,
+        "pathRewrite": {
+            "^/firebase": ""
+        },
+        "changeOrigin": true
+    }
+}

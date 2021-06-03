@@ -37,8 +37,8 @@
                 <label class="control-label mr-2" for="estatus">Estatus</label><br>
                 <select id="estatus" formControlName="estatus" [ngClass]="{ 'is-invalid': submitted && fval.estatus.errors }" (change)="changeStatus($event.target.value)">
                     <option  disabled [value]='fval.estatus.value'>{{fval.estatus.value}}</option>
-                    <option *ngIf="userLog.rol !== 'Financiero' && updateR.estatus == 'Aprobado'" value='Aprobado'>Aprobado</option>
-                    <option *ngIf="userLog.rol !== 'Financiero' && updateR.estatus == 'Aprobado'" value='Rechazado'>Rechazado</option>
+                    <option *ngIf="userLog.rol !== 'Financiero' && updateR.estatus == 'Solicitar'" value='Aprobado'>Aprobado</option>
+                    <option *ngIf="userLog.rol !== 'Financiero' && updateR.estatus == 'Solicitar'" value='Rechazado'>Rechazado</option>
                     <option *ngIf="userLog.rol !== 'Aprobador' && updateR.estatus == 'Aprobado'" value="Pagado">Pagado</option>
                 </select>
             </div>
@@ -60,7 +60,7 @@
             </div>
 
             <div class="col-md-12 mt-3">
-                <label class="class" *ngIf="!id_reembolso">Subir comprobantes</label><br>
+                <label class="class" *ngIf="!id_reembolso">Subir comprobantes <br><small><i>Agregar archivo  xml de la factura </i></small></label><br>
                 <div *ngIf="!id_reembolso" class="around">
                     <div *ngIf="(archivos.length <=  2)" class="drop-img mt-3 col-md-4">
                         <div appNgDropFiles [archivos]="archivos" (mouseSobre)="estaSobreElemento = $event; cargarArchivos();" [ngClass]="{ 'file-over': estaSobreElemento }" class="well drop-zone">
