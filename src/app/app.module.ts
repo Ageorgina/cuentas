@@ -49,6 +49,7 @@ import { SortPipe } from './general/pipes/sort.pipe';
 import { PagoComponent } from './shared/pago/pago.component';
 import { TokenService } from './security/services/token.service';
 import { CuentasComponent } from './components/altas/cuentas/cuentas.component';
+import { NamePipe } from './general/pipes/name.pipe';
 
 @NgModule({
   declarations: [
@@ -75,6 +76,7 @@ import { CuentasComponent } from './components/altas/cuentas/cuentas.component';
     SortPipe,
     PagoComponent,
     CuentasComponent,
+    NamePipe,
   ],
   imports: [
     BrowserModule,

@@ -141,6 +141,10 @@ button#guardar {
     /* margin-left: 25%; */
 }
 
+.let {
+    text-transform: capitalize !important;
+}
+
 button#eliminar,
 button#cancelar {
     justify-content: center;
@@ -451,6 +455,10 @@ img {
 
 img#logo {
     width: 100%;
+}
+
+button#acciones {
+    border-radius: 20px !important;
 }
 
 

@@ -8,6 +8,8 @@ import { FileItem, Usuario, usuarioU, Area } from '../../../general/model';
 import { UserBase } from '../../../security/model/UserBase';
 import { AuthService } from '../../../security/services/auth.service';
 import { Cuenta } from '../../../general/model/cuenta';
+import { Clave } from '../../../general/model/clave';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-usuarios',
@@ -55,6 +57,7 @@ export class UsuariosComponent implements OnInit{
   userCreated: any = UserBase;
   cuenta: any;
   tesorero = false;
+  notification = new Clave;
 
   // tslint:disable-next-line: variable-name
   constructor( private _userS: UsuariosService , private _areaS: AreasService, private formBuilder: FormBuilder, private utils: Utils,
@@ -100,11 +103,7 @@ export class UsuariosComponent implements OnInit{
                       this.userForm.get(['banco']).setValue(this.cuenta['banco'].toUpperCase())
                     this.userForm.get(['clave']).setValue(this.cuenta['clave']);
                      }                    
-                     
-                    
-                  
-                  console.log('cuenta', this.cuenta);
-            
+
                    this.userForm.get(['nombre']).setValue(this.updateU.nombre);
                    this.userForm.get(['ap_p']).setValue(this.updateU.ap_p);
                    this.userForm.get(['ap_m']).setValue(this.updateU.ap_m);
@@ -225,6 +224,7 @@ createUser() {
         this.alert.showSuccess();
         this.getLider();
         this.limpiar();
+
       });
     }
 });

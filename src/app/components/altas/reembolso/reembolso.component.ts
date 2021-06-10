@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuariosService, ArchivosService, ProyectosService, GastosService, AlertasService  } from '../../../services';
-import { Proyecto, FileItem, Reembolso } from '../../../general/model';
+import { Proyecto, FileItem, Reembolso, Notificacion } from '../../../general/model';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Utils } from '../../../general/utils/utils';
@@ -49,6 +49,8 @@ export class ReembolsoComponent implements OnInit {
   uaprobo: string;
   proyecto = new Proyecto;
   project= new Proyecto;
+  notificacion = new Notificacion;
+  permisos = [];
   // tslint:disable-next-line: variable-name
   constructor( private _fileS: ArchivosService, private _pyt: ProyectosService, private __gastoS: GastosService,
                private user: UsuariosService, private formBuilder: FormBuilder, private router: Router,
@@ -87,22 +89,27 @@ export class ReembolsoComponent implements OnInit {
                     this.reembolsoForm.get(['observacionespagado']).setValue(this.updateR.observacionespagado);
                     this.same = this.userLog['email'] === this.updateR.solicitante;
 
-                    if (this.same) {
+
+                    if (this.same === true) {
                       this.reembolsoForm.controls['estatus'].disable();
                       this.reembolsoForm.controls['observacionesaprobador'].disable();
                       this.reembolsoForm.controls['observacionespagado'].disable();
                       if (this.updateR.estatus !== 'Solicitar') {
                         this.reembolsoForm.disable();
                         this.botonCancelar = 'Regresar';
-                      }
-                    }
-                    if (!this.same) {
+                      } 
+                    } else  {
                       this.reembolsoForm.disable();
                       this.reembolsoForm.controls['estatus'].enable();
                       if ( this.aprobador) {
                         this.reembolsoForm.controls['observacionesaprobador'].enable();
                       } else {
                         this.reembolsoForm.controls['observacionespagado'].enable();
+                      }
+                      if (this.updateR.estatus === 'Pagado' || this.updateR.estatus === 'Rechazado') {
+               
+                        this.reembolsoForm.disable();
+                        this.botonCancelar = 'Regresar';
                       }
                     }
                   });
@@ -113,6 +120,10 @@ export class ReembolsoComponent implements OnInit {
                 this.reembolsoForm.controls['observacionesaprobador'].disable();
                 this.reembolsoForm.controls['observacionespagado'].disable();
                 }
+                if (this.updateR.estatus === 'Pagado') {
+                  this.reembolsoForm.disable();
+                  this.botonCancelar = 'Regresar';
+                }
                  this._pyt.cargarProyectos().subscribe((proyectos: Proyecto[]) => {
                   this.proyectos = proyectos;
                   this.proyectos.filter(proyecto => {
@@ -121,6 +132,7 @@ export class ReembolsoComponent implements OnInit {
                     });
                  });
                  this.__gastoS.cargarTipoGtos().subscribe((tipoGtos: any[]) => { this.tipoGto = tipoGtos; });
+                 
   }
 
   ngOnInit() {
@@ -143,7 +155,6 @@ export class ReembolsoComponent implements OnInit {
     if (this.archivos.length === 0) {
       this.comprobantes = '';
     } else {
-      console.log('entro aqui')
       this.comprobantes = this.arrayUrl.join(',');
     }
     this.reembolsoForm.value.comprobantes = this.comprobantes;
@@ -192,10 +203,45 @@ export class ReembolsoComponent implements OnInit {
       }
       this.reembolso['comprobantes'] = this.updateR.comprobantes;
       this._pyt.cudProyectos().doc(this.proyecto.id_proyecto).update(this.proyecto);
-      this.__gastoS.cudReembolsos().doc(this.id_reembolso).update(this.reembolso);
-      this.alert.showSuccess();
-      this.loading = false;
-      this.router.navigate(['reembolsos']);
+      this.__gastoS.cudReembolsos().doc(this.id_reembolso).update(this.reembolso).then(()=>{
+        let url = '/mail/aprobacionReembolso';
+        this.usuarios.filter(user => {
+          if(this.reembolso.estatus ==='Aprobado' && (user.rol === 'Tesorero' || user.rol === 'Financiero')){
+            this.permisos.push(user['correo'])
+            console.log('caso5')
+        this.notificacion.correos = this.permisos;
+          } else if(this.reembolso.estatus ==='Rechazado'){
+            console.log('caso6')
+            this.notificacion.observaciones = this.updateR.observacionesaprobador;
+          } else if(this.reembolso.estatus ==='Pagado' && (user.rol === 'Financiero')){
+            console.log('caso7')
+            this.permisos.push(user['correo'])
+          }
+          
+        });
+        if(this.reembolso.estatus ==='Rechazado'){
+          url = '/mail/rechazoReembolso'
+        } else if( this.reembolso.estatus === 'Pagado'){
+          url = '/mail/aprobacionSolicitudReembolso'
+        }
+        this.notificacion.solicitante = this.updateR.solicitante;
+        this.notificacion.proyecto = this.updateR.proyecto;
+        this.notificacion.fecha = this.updateR.fecha;
+        this.notificacion.monto = this.updateR.cantidad;
+        this.notificacion.estatus = this.updateR.estatus;
+        
+        console.log('notificacion antes',url)
+
+        this.user.sendNotification(url, this.notificacion).toPromise().then(() =>{
+          this.alert.showSuccess();
+          this.loading = false;
+          this.router.navigate(['reembolsos']);
+        }).catch(() =>{
+          this.alert.showSuccess();
+          this.loading = false;
+          this.router.navigate(['reembolsos']);
+        });
+      });
       }
     if (!this.id_reembolso && this.reembolsoForm.valid) {
       this.submitted = false;
@@ -211,14 +257,34 @@ export class ReembolsoComponent implements OnInit {
       if (this.archivos.length === 0) {
         this.comprobantes = '';
       } else {
-        console.log('entro aqui')
         this.comprobantes = this.arrayUrl.join(',');
       }
-      console.log('rembolso',this.reembolso.comprobantes)
-      this.__gastoS.cudReembolsos().add(this.reembolso);
-      this.alert.showSuccess();
-      this.loading = false;
-      this.limpiar();
+      this.__gastoS.cudReembolsos().add(this.reembolso).then(()=>{
+       this.notificacion.proyecto = this.reembolso.proyecto;
+       this.notificacion.solicitante = this.reembolso.solicitante;
+       this.notificacion.fecha = this.reembolso.fecha;
+       this.notificacion.estatus = this.reembolso.estatus;
+       this.notificacion.monto = this.reembolso.cantidad;
+       this.notificacion.aprobador = this.proyectos.find(proyecto => proyecto['nombre'] === this.reembolso.proyecto).resp_asg;
+       
+       let url = '/mail/solicitudReembolsoSolicitante'
+       this.user.sendNotification(url, this.notificacion).toPromise().then(() =>{
+        this.alert.showSuccess();
+        this.loading = false;
+        this.limpiar();
+      }).catch(() =>{
+        this.alert.showSuccess();
+        this.loading = false;
+        this.limpiar();
+      });
+       this.alert.showSuccess();
+        this.loading = false;
+        this.limpiar();
+      }).catch(()=>{
+        this.alert.showError();
+        this.loading = false;
+      });
+
     }
   }
 

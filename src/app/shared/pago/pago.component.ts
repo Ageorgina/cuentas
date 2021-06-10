@@ -19,9 +19,7 @@ export class PagoComponent implements OnInit {
       clave:[''],
       correo:[''],
       banco:[''],
-      ap_p:[''],
-      ap_m:[''],
-      nombre:['']
+      ap_p:['']
    })
   
   }
@@ -37,12 +35,12 @@ export class PagoComponent implements OnInit {
 
       this.user = response.find(usuario => usuario['correo'] === this.email);
       if(this.user === undefined){
+        this.loading = false;
         return;
       }
-      this.ctaForm.get(['ap_p']).setValue(this.user.ap_p.toUpperCase())
+      this.loading = false;
+      this.ctaForm.get(['ap_p']).setValue(this.user.ap_p.toUpperCase()+' '+this.user.ap_m.toUpperCase()+ ''+ this.user.nombre.toUpperCase())
       this.ctaForm.get(['banco']).setValue(this.user.banco.toUpperCase())
-      this.ctaForm.get(['ap_m']).setValue(this.user.ap_m.toUpperCase())
-      this.ctaForm.get(['nombre']).setValue(this.user.nombre.toUpperCase())
       this.ctaForm.get(['clave']).setValue(this.user.clave)
       this.ctaForm.get(['correo']).setValue(this.user.correo)
       this.loading = false;

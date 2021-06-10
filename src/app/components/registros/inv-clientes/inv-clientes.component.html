@@ -17,8 +17,8 @@
                 <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row" class="left">{{ el.empresa }}</td>
                 <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row" class="left">{{ el.celular }}</td>
                 <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row" class="center">
-                    <button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(el)"><i class="fas fa-edit"></i> Modificar</button>
-                    <button mdbBtn mdbWavesEffect *ngIf="userLog.rol === 'Administrador'" type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(el)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
+                    <button id="acciones" #acciones mdbBtn mdbWavesEffect type="button" class="btn btn-outline-success mr-2 btn-sm" (click)="actualizar(el)"><i class="fas fa-edit"></i> Modificar</button>
+                    <button id="acciones" #acciones mdbBtn mdbWavesEffect *ngIf="userLog.rol === 'Administrador'" type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(el)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
                 </td>
             </tr>
         </tbody>

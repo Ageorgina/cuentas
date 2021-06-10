@@ -18,6 +18,7 @@ export class InvGastosGeneralesComponent implements OnInit, AfterViewInit {
   theads = ['Solicitante', 'Fecha', 'Monto', 'Tipo gasto', 'Proyecto', 'Aprobo', 'Estatus', 'Comprobantes', 'Acciones']
   loading = true;
   userLog = JSON.parse(sessionStorage.getItem('currentUser'))
+  cuentas = [];
   usuarioActual: any;
   sameU: boolean;
   aprobador: boolean;
@@ -31,7 +32,7 @@ export class InvGastosGeneralesComponent implements OnInit, AfterViewInit {
   // tslint:disable-next-line: variable-name
   constructor( private _gstS: GastosService, private _user: UsuariosService, private router: Router,private sanitizer: DomSanitizer,
                private alert: AlertasService,private http: HttpClient, private descargas: DescargasService, private cdRef: ChangeDetectorRef,) {
-
+                this._user.cargarCuentas().subscribe(response=>{this.cuentas = response;})
 
              this.init();
 
@@ -56,12 +57,10 @@ export class InvGastosGeneralesComponent implements OnInit, AfterViewInit {
 
   descargar( file ) {
     const fecha = Date.now();
-    console.log(file)
     this.descargas.descargar(file).subscribe(data => {
       const dataP = window.URL.createObjectURL(data);
       const a = document.createElement('a');
       a.href = dataP;
-      console.log(data.type)
 
       if (data.type === 'application/vnd.ms-excel') {
       a.download = String(fecha) + '.xls';

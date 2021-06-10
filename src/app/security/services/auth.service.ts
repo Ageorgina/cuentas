@@ -57,7 +57,6 @@ export class AuthService {
      this.user.cargarUsuarios().subscribe( usuarios => {
       this.userFb = usuarios.find(usuario => usuario['correo'] === username)
     });
-    
   }
 
   logout() {

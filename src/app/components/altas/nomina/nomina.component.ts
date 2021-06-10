@@ -88,7 +88,6 @@ this.init();
   }
 
   onSubmit() {
-    console.log(this.fval)
     this.submitted = true;
     if (this.fval.nombre.value == 'ASG' ) {
       this.nominaForm.get(['nombre']).setErrors({required: true});

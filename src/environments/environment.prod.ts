@@ -14,7 +14,7 @@ export const environment = {
      measurementId: 'G-3XRB47S9KQ'
      //apiKey: "AIzaSyAvLzKw9rtXbPvQaFlhrWKpRTSLU4z_t0Q",
      //authDomain: "cuentas-ffc8b.firebaseapp.com",
-     //databaseURL:  "/firebase", //"https://cuentas-ffc8b-default-rtdb.firebaseio.com",
+     //databaseURL: "https://cuentas-ffc8b-default-rtdb.firebaseio.com",
      //projectId: "cuentas-ffc8b",
      //storageBucket: "cuentas-ffc8b.appspot.com",
      //messagingSenderId: "755363435838",

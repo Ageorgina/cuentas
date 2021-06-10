@@ -11,7 +11,7 @@ import { MdbTableDirective, MdbTablePaginationComponent } from 'angular-bootstra
 export class InvReembolsoComponent implements OnInit, AfterViewInit  {
 
   titulo = 'Reembolsos';
-
+  cuentas = [];
   elements: Reembolso[] = [];
   loading = true;
   comprobantes: any[] = [];
@@ -29,6 +29,8 @@ export class InvReembolsoComponent implements OnInit, AfterViewInit  {
   previous: any = [];
   constructor( private _gstS: GastosService,  private cdRef: ChangeDetectorRef, private router: Router, private _user: UsuariosService,
                private alert: AlertasService, private descargas: DescargasService) {
+                this._user.cargarCuentas().subscribe(response=>{this.cuentas = response;})
+
                  this.init();
 
               }

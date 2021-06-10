@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Gasto, Usuario, Proyecto, FileItem } from '../../../general/model';
+import { Gasto, Usuario, Proyecto, FileItem, Notificacion } from '../../../general/model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Utils } from '../../../general/utils/utils';
 import { ArchivosService, AlertasService, ProyectosService, UsuariosService, GastosService } from '../../../services';
@@ -47,6 +47,8 @@ export class GastosGeneralesComponent {
   status: string;
   botonCancelar = 'Cancelar';
   lideres: any = [];
+  notificacion  = new Notificacion;
+  permisos = [];
 
   // tslint:disable-next-line: variable-name
   constructor( private _fileS: ArchivosService,  private _user: UsuariosService, private _pyt: ProyectosService, private _gastoS: GastosService,
@@ -114,7 +116,6 @@ export class GastosGeneralesComponent {
               this.gastosForm.controls['observacionespagado'].enable();
             }
 
-            console.log(this.proyecto)
         this.gastosForm.get(['solicitante']).setValue(this.updateG.solicitante);
         this.gastosForm.get(['fecha']).setValue(this.updateG.fecha);
         this.gastosForm.get(['motivo']).setValue(this.updateG.motivo);
@@ -138,6 +139,7 @@ this.loading = false;
   get fval() { return this.gastosForm.controls; }
 
     onSubmit() {
+      this.permisos = [];
 
       this.loading = true;
       this.submitted = true;
@@ -171,6 +173,7 @@ this.loading = false;
         this.loading = false;
         return ;
       }
+
     if (this.id_gasto && this.gastosForm.valid) {
         if (this.userLog.rol !== 'Aprobador' &&  !this.sameU) {
           if (this.gasto.estatus === 'Pagado') {
@@ -182,14 +185,42 @@ this.loading = false;
         }
         if (this.sameU) {
           this.proyecto['monto_d'] = (Number(this.saldoDisp) + Number(this.updateG.cantidad));
-
         }
         this._pyt.cudProyectos().doc(this.proyecto.id_proyecto).update(this.proyecto);
-        this._gastoS.cudGastos().doc(this.id_gasto).update(this.gasto);
-        this.alert.showSuccess();
-        this.loading = false;
-        this.gasto['comprobantes'] = this.updateG.comprobantes;
-        this.router.navigate(['gastos']);
+        this._gastoS.cudGastos().doc(this.id_gasto).update(this.gasto).then(() => {
+          if(this.gasto.estatus === 'Pagado' && this.sameU === false){
+        
+            this.notificacion.solicitante = this.updateG['solicitante'];
+            this.notificacion.proyecto = this.updateG['proyecto'];
+            this.notificacion.fecha = this.updateG['fecha'];
+            this.notificacion.monto = this.updateG['cantidad'];
+            this.notificacion.estatus = this.gasto['estatus'];
+            console.log('pagado', this.notificacion)
+            const url = '/mail/gastoRembolsoAprobacion'
+        this._user.sendNotification(url, this.notificacion).toPromise().then(() =>{
+          this.alert.showSuccess();
+          this.loading = false;
+          this.gasto['comprobantes'] = this.updateG.comprobantes;
+          this.router.navigate(['gastos']);
+        }).catch(() =>{
+          this.alert.showSuccess();
+          this.loading = false;
+          this.gasto['comprobantes'] = this.updateG.comprobantes;
+          this.router.navigate(['gastos']);
+        });
+          } else {
+            this.alert.showSuccess();
+            this.loading = false;
+            this.gasto['comprobantes'] = this.updateG.comprobantes;
+            this.router.navigate(['gastos']);
+          }
+
+
+        }).catch(()=> {
+          this.loading = false;
+          this.alert.showError;
+        });
+
       }
     if (!this.id_gasto && this.gastosForm.valid) {
       this.gasto.createdby = this.userLog.email;
@@ -214,10 +245,40 @@ this.loading = false;
         }
  
         this._pyt.cudProyectos().doc(this.proyecto.id_proyecto).update(this.proyecto);
-        this._gastoS.cudGastos().add(this.gasto);
-        this.alert.showSuccess();
-        this.loading = false;
-        this.limpiar();
+        this._gastoS.cudGastos().add(this.gasto).then(() => {
+          
+          this.usuarios.filter(user => {
+            
+            if(this.gasto.estatus ==='Aprobado' && (user.rol === 'Tesorero' || user.rol === 'Financiero')){
+              this.permisos.push(user['correo'])
+              console.log('caso1')
+            } else if(this.gasto.estatus ==='Pagado' && user.rol === 'Financiero'){
+              this.permisos.push(user['correo'])
+              console.log('caso2')
+            }
+          })
+          let url  ='/mail/gastoRembolsoRegistro';
+          this.notificacion.correos = this.permisos;
+          this.notificacion.solicitante = this.gasto.solicitante;
+          this.notificacion.proyecto = this.gasto.proyecto;
+          this.notificacion.fecha = this.gasto.fecha;
+          this.notificacion.monto = this.gasto.cantidad;
+          this.notificacion.estatus = this.gasto.estatus;
+           if( this.gasto.reembolso === false){
+            url = '/mail/gastoPagadoRegistro'
+          }
+
+        this._user.sendNotification(url, this.notificacion).toPromise().then(() =>{
+          this.alert.showSuccess();
+          this.loading = false;
+          this.limpiar();
+        }).catch(() =>{
+          this.alert.showSuccess();
+          this.loading = false;
+          this.limpiar();
+        });
+      });
+
       }
     }
 
@@ -263,8 +324,6 @@ this.loading = false;
     }
   buscarProyecto(valor) {
     const nombre = valor.toLowerCase();
-   
-    console.log('this.p', this.proyectos)
     this.proyecto = this.proyectos.find(response => nombre === response.nombre.toLowerCase());
 
     this.gastosForm.get(['fecha']).enable();

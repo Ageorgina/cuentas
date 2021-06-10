@@ -33,7 +33,7 @@ export class NavbarComponent {
     }
   }
   descargar( ) {
-    window.open('https://firebasestorage.googleapis.com/v0/b/cuentas-ffc8b.appspot.com/o/guia.pdf?alt=media&token=75670271-0c25-4a09-9af8-9f0e282a525f')
+    window.open('https://firebasestorage.googleapis.com/v0/b/gastos-asg.appspot.com/o/guia.jpg?alt=media&token=9a1643d2-9018-42f9-a7ff-3bd80c0e5a16')
   }
 
   logout() {

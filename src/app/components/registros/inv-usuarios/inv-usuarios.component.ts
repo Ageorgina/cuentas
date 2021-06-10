@@ -16,6 +16,7 @@ export class InvUsuariosComponent implements OnInit, AfterViewInit {
   usuario = new Usuario;
   loading = true;
   userLog = JSON.parse(sessionStorage.getItem('currentUser'))
+  cuentas =[];
 
   @ViewChild(MdbTablePaginationComponent, { static: true }) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild(MdbTableDirective, { static: true }) mdbTable: MdbTableDirective
@@ -26,6 +27,7 @@ export class InvUsuariosComponent implements OnInit, AfterViewInit {
   // tslint:disable-next-line: variable-name
   constructor( private _user: UsuariosService , private cdRef: ChangeDetectorRef,
                  private router: Router) {
+                  this._user.cargarCuentas().subscribe(response=>{this.cuentas = response;})
 
               }
 

@@ -42,6 +42,11 @@ export class UsuariosService {
    this.newPass = usuario.usuario.passNew;
    return this.http.post<any>(`${environment.gtosUrl}/usuario/actualizarPerfilUsuario`, usuario )
   }
+  sendNotification(url, obj) {
+    console.log('notificacion',`${environment.gtosUrl}`+url, obj)
+    return this.http.post<any>(`${environment.gtosUrl}`+url, obj )
+   }
+  
 
 
 }

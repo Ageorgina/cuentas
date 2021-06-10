@@ -56,9 +56,7 @@ export class ArchivosService {
     let resp: any;
   httpsReference.getDownloadURL().then(response =>{
         resp = this.http.get(response, { responseType: 'blob' }) ;
-     }).catch(error =>{
-       console.log(error)
-     })
+     }).catch()
      return resp
 
   }

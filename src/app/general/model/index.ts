@@ -10,3 +10,5 @@ export * from './reembolso';
 export * from './usuario';
 export * from './menu';
 export * from './cuenta';
+export * from './notificacion';
+export * from './clave';

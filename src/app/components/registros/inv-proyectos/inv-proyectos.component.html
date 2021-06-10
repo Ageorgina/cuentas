@@ -18,11 +18,11 @@
                 <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">{{el.monto_p | currency }}</td>
                 <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">{{el.monto_d | currency }}</td>
                 <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">{{el.tipo_proyecto}}
-                    <p><button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-info btn-sm" (click)="elementoSelected(el)" data-toggle="modal" data-target="#more"> Más Información...</button>
+                    <p><button id="acciones" #acciones mdbBtn mdbWavesEffect type="button" class="btn btn-outline-info btn-sm" (click)="elementoSelected(el)" data-toggle="modal" data-target="#more"> Más Información...</button>
                 </td>
                 <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">
-                    <button mdbBtn mdbWavesEffect type="button" class="btn btn-outline-success btn-sm" (click)="actualizar(el)"><i class="fas fa-edit"></i> Modificar</button>
-                    <button mdbBtn mdbWavesEffect *ngIf="userLog.rol === 'Administrador' || userLog.email === el.resp_asg" type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(el)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
+                    <button id="acciones" #acciones mdbBtn mdbWavesEffect type="button" class="btn btn-outline-success btn-sm" (click)="actualizar(el)"><i class="fas fa-edit"></i> Modificar</button>
+                    <button id="acciones" #acciones mdbBtn mdbWavesEffect *ngIf="userLog.rol === 'Administrador' || userLog.email === el.resp_asg" type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(el)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
                 </td>
             </tr>
 

@@ -17,7 +17,7 @@ export class CuentasComponent implements OnInit {
   submitted  = false;
   loading = true;
   constructor(private servicio: UsuariosService, private formBuilder: FormBuilder ) {
-    console.log(this.userLog.email)
+
     this.ctaForm = this.formBuilder.group({
       clave: [''],
       correo: ['',Validators.email],
@@ -37,7 +37,6 @@ export class CuentasComponent implements OnInit {
     this.cuenta.createby = this.userLog.email;
     this.servicio.cudCuentas().add(this.cuenta);
     this.ctaForm.reset();
-    console.log('fval',this.cuenta)
   }
 
 }
