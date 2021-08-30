@@ -2,7 +2,7 @@
 export const environment = {
   production: false,
   //gtosUrl: 'http://localhost:11200',
-  gtosUrl: 'https://cuentas.wintermute.network:443',
+  gtosUrl: 'https://cuentasback.wintermute.network:443',
   firebaseConfig: false,
   firebase: {
      apiKey: 'AIzaSyBKYXOwuYivzLms7JPUGNLlkdRrD1b5lf8',
